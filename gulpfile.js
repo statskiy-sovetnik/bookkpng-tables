@@ -18,7 +18,7 @@ gulp.task('bundle-js', () => {
 });
 
 gulp.task('gulp-sass', () => {
-    return gulp.src('src/index.sass')
+    return gulp.src(['src/index.sass', 'src/libs.sass'])
         .pipe(sass())
         .pipe(prefix())
         .pipe(rename({
@@ -33,7 +33,13 @@ gulp.task('build', () => {
 });
 
 gulp.task("watch", () => {
-    gulp.watch(["src/pages/**/*", "src/index.js", 'src/index.html'], gulp.series('build', "gulp-sass", "bundle-js"));
+    gulp.watch([
+        "src/pages/**/*",
+        'src/blocks/**/*',
+        "src/index.js",
+        'src/index.html'
+    ],
+    gulp.series('build', "gulp-sass", "bundle-js"));
 });
 
 gulp.task('default', gulp.series('bundle-js', 'gulp-sass', 'build', 'watch'));
