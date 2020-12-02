@@ -5,7 +5,7 @@ export default function LinksList(props) {
 
     return (
         <ul className={list_classes}>
-            <li className={'text text_color-grey text_size-small'}>
+            <li className={'text text_color-grey text_size-11'}>
                 О сайте
             </li>
         </ul>
