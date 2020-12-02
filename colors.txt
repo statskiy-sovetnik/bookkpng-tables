@@ -1,0 +1,27 @@
+green: #77da90 (not yet used)
+table_light_grey: #cfcfcf
+text_grey: #949494
+text_black: #303030
+
+______ Bootstrap _________________
+
+light_active: #e2e6ea
+light_active_border: #dae0e5
+input_light_backgr: #e9ecef
+input_border_grey:#ced4da
+input_text_dark_grey: #495057
+dark: #343a40
+dark_active: #1d2124
+danger: #dc3545
+success: #28a745
+modal_dark_grey: #212529
+______________ 
+
+expenses_red: #e06c5d
+expenses_purple: #826de0
+expenses_blue: #69ade0
+expenses_green: #43e093
+expenses_yellow: #d7e049
+expenses_pink: #e060b4
+expenses_acid_green: #90e049
+expenses_orange: #e09c4b
