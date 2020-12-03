@@ -6,14 +6,14 @@ import mapStateToProps from "../../store/mapStateToProps";
 
 /*___ Blocks________________*/
 import Menu from '../../blocks/menu/menu'
-import Journal from '../../blocks/journal/journal'
+import TableArea from '../../blocks/table-area/table-area'
 
 class App extends React.Component {
     render() {
         return(
             <div>
                 <Menu/>
-                <Journal/>
+                <TableArea data={'journal'}/>
             </div>
         )
     }

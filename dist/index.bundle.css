@@ -38,6 +38,7 @@ html, body {
   align-items: center;
   justify-content: space-between;
   padding: 10px 30px;
+  margin-bottom: 80px;
   background-color: #e6e6e6; }
 
 .ulist_flex-row {
@@ -52,6 +53,13 @@ html, body {
 .button_size-small {
   font-size: 11px;
   padding: 4px 8px; }
+
+.heading {
+  font-size: 20px;
+  font-weight: 500; }
+
+.table-area {
+  padding: 0 50px; }
 
 .ulist_flex-row {
   display: flex;
