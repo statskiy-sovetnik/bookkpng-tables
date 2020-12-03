@@ -25,6 +25,36 @@ html, body {
 .text {
   font-family: 'Roboto', sans-serif; }
 
+.button_size-small {
+  font-size: 11px;
+  padding: 4px 8px; }
+
+.button__btstrap-icon {
+  margin-right: 5px; }
+
+.button {
+  display: flex;
+  flex-direction: row;
+  align-items: center; }
+
+.ulist_flex-row {
+  display: flex;
+  flex-direction: row; }
+
+.ulist {
+  list-style: none;
+  margin: 0;
+  padding: 0; }
+
+.btstrap-icon_size-12 {
+  font-size: 12px; }
+
+.btstrap-icon_size-14 {
+  font-size: 14px; }
+
+.btstrap-icon_color-white {
+  color: #fff; }
+
 .menu__user-block {
   display: flex;
   flex-direction: row; }
@@ -40,19 +70,6 @@ html, body {
   padding: 10px 30px;
   margin-bottom: 80px;
   background-color: #e6e6e6; }
-
-.ulist_flex-row {
-  display: flex;
-  flex-direction: row; }
-
-.ulist {
-  list-style: none;
-  margin: 0;
-  padding: 0; }
-
-.button_size-small {
-  font-size: 11px;
-  padding: 4px 8px; }
 
 .heading {
   font-size: 20px;
