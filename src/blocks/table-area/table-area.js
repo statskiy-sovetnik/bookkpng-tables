@@ -5,6 +5,7 @@ import mapStateToProps from "../../store/mapStateToProps";
 
 //______ Blocks ________________
 import Heading from "../heading/heading";
+import ButtonSection from "./elements/button-section";
 
 class TableArea extends React.Component {
     render() {
@@ -23,6 +24,9 @@ class TableArea extends React.Component {
         return (
             <div className={'table-area'}>
                 <Heading className={'text_color-dark'}>{area_name}</Heading>
+                <ButtonSection>
+                    <button type={'button'} className={'btn btn-success button button_size-small'}>Добавить запись</button>
+                </ButtonSection>
             </div>
         )
     }

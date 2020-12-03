@@ -56,7 +56,12 @@ html, body {
 
 .heading {
   font-size: 20px;
-  font-weight: 500; }
+  font-weight: 500;
+  margin-bottom: 40px; }
+
+.table-area__button-section {
+  margin-bottom: 15px;
+  padding: 0 8px; }
 
 .table-area {
   padding: 0 50px; }
