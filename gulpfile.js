@@ -36,12 +36,8 @@ gulp.task("watch", () => {
     gulp.watch([
         "src/pages/**/*",
         'src/blocks/**/*',
-        "src/index.js",
-        'src/index.html',
-        'src/index.sass',
-        'src/common.sass',
-        'src/libs.sass',
-        'src/vars.sass'
+        'src/store/**/*',
+        "src/*",
     ],
     gulp.series('build', "gulp-sass", "bundle-js"));
 });
