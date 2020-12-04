@@ -14,6 +14,12 @@ export default function mapStateToProps(component) {
                     sortFromLeast: state.journal.sortFromLeast,
                 }
             }
+        case 'SortDirectionJournal':
+            return function (state) {
+                return {
+                    sortFromLeast: state.journal.sortFromLeast,
+                }
+            }
     }
 }
 

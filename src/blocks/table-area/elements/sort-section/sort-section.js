@@ -1,15 +1,22 @@
 import React from 'react';
 
-import {SORT_JOURNAL_W as SortJournal} from "../sort/sort";
+import {
+    SORT_JOURNAL_W as SortJournal,
+    SORT_DIRECTION_JOURNAL_W as SortDirectionJournal,
+} from "../sort/sort";
 
 export default function SortSection(props) {
-    let sort;
+    let sort = [];
 
     switch (props.data) {
         case 'journal':
-            sort = (
-                <SortJournal data={'journal'}  sort_names={props.sort_names}/>
+            sort.push(
+                <SortJournal data={'journal-name'}  sort_names={props.sort_names} key={'journal-sort-name'}/>
             );
+            sort.push(
+                <SortDirectionJournal data={'journal-direction'} key={'journal-sort-dir'}/>
+            );
+            break;
     }
 
     return (
