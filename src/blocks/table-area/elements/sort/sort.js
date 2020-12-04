@@ -1,10 +1,11 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import mapStateToProps from "../../../../store/mapStateToProps";
+import mapDispatchToProps from "../../../../store/mapDispatchToProps";
 
 import BtstrapIcon from "../../../btstrap-icon/btstrap-icon";
 import DropdownButton from "../../../dropdown-button/dropdown-button";
-import mapDispatchToProps from "../../../../store/mapDispatchToProps";
+import DropdownList from "../../../dropdown-list/dropdown-list";
 
 export default function Sort(props) {
     let sort_classes = 'table-area__sort button button_size-small btn btn-sm btn-light text_weight-medium';
@@ -24,11 +25,11 @@ export default function Sort(props) {
                 {props.sortName}
                 <BtstrapIcon data={icon_class_name} className={icon_class_name}/>
             </DropdownButton>
-            <div className="dropdown-menu" aria-labelledby={sort_btn_id}>
+            <DropdownList className={'text text_size-12'} aria_labelledby={sort_btn_id}>
                 <a className="dropdown-item" href="#">Action</a>
                 <a className="dropdown-item" href="#">Another action</a>
                 <a className="dropdown-item" href="#">Something else here</a>
-            </div>
+            </DropdownList>
         </div>
     )
 }
