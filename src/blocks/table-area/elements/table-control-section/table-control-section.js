@@ -17,7 +17,7 @@ class TableControlSection extends React.Component {
         switch (this.props.data) {
             case 'journal':
                 sort_section = (
-                    <SortSection key={'sort-section'} data={'journal'}/>
+                    <SortSection key={'sort-section'} data={'journal'} sort_names={this.props.sort_names}/>
                 )
                 period_sort_section = (<PeriodSort key={'period-sort'}/>)
                 entry_length_switch_section = (<EntryLengthSwitch key={'entry-length-switch'}/>)

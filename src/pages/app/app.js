@@ -13,10 +13,12 @@ import '../../../node_modules/bootstrap/dist/js/bootstrap.bundle'
 
 class App extends React.Component {
     render() {
+        const journal_sort_names = ['Наименованию', 'Дате', 'Поставщику', 'Кол-ву', 'Цене', 'Сумме', 'Расходам'];
+
         return(
             <div>
                 <Menu/>
-                <JournalArea data={'journal'}/>
+                <JournalArea data={'journal'} sort_names={journal_sort_names}/>
             </div>
         )
     }

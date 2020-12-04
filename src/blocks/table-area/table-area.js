@@ -24,7 +24,7 @@ class TableArea extends React.Component {
                                  className={'bi-bookmark-plus button__btstrap-icon btstrap-icon_size-14 btstrap-icon_color-white'}/>
                 );
                 control_section = (
-                    <JournalControlSection store={this.props.store} data={'journal'}/>
+                    <JournalControlSection data={'journal'} sort_names={this.props.sort_names}/>
                 );
                 break;
             case 'expenses':

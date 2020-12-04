@@ -8,8 +8,8 @@ export default function SortSection(props) {
     switch (props.data) {
         case 'journal':
             sort = (
-                <SortJournal data={'journal'}/>
-            )
+                <SortJournal data={'journal'}  sort_names={props.sort_names}/>
+            );
     }
 
     return (
