@@ -63,6 +63,17 @@ html, body {
 .btstrap-icon_side-left {
   margin-right: 5px; }
 
+.prepend-input_width-small .prepend-input__input {
+  width: 80px; }
+
+.prepend-input_size-small .prepend-input__prepend-text {
+  height: 26px !important;
+  font-size: 12px !important; }
+
+.prepend-input_size-small .prepend-input__input {
+  font-size: 12px !important;
+  height: 26px !important; }
+
 .menu__user-block {
   display: flex;
   flex-direction: row; }
@@ -101,6 +112,17 @@ html, body {
   margin-left: 7px; }
 
 .table-area__sort-section {
+  display: flex;
+  flex-direction: row;
+  align-items: center; }
+
+.table-area__period-sort .table-area__period-sort__prepend-input {
+  margin-left: 15px; }
+
+.table-area__period-sort .table-area__period-sort__button {
+  margin-left: 15px; }
+
+.table-area__period-sort-section {
   display: flex;
   flex-direction: row;
   align-items: center; }
