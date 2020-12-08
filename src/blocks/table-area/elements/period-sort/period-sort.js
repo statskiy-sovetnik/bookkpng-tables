@@ -43,6 +43,10 @@ export default function PeriodSort(props) {
                 <button type={'button'}
                         className={apply_btn_classes}
                         key={'apply-date-filter-btn-journal'}
+                        onClick={(event) => {
+                            event.preventDefault();
+                            props.changeAppliedDates(props.localFromDate, props.localToDate);
+                        }}
                 >
                     Применить
                 </button>

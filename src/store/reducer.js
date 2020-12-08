@@ -1,12 +1,18 @@
 import actionTypes from './actionTypes'
 
 export default function reducer(state, action) {
-    let additional_state = {};
-
     switch(action.type) {
         //____ JOURNAL _______________
         // ________Journal period _____________
-
+        case actionTypes.JOURNAL_APPLY_PERIOD_BTN_CLICK:
+            return {
+                ...state,
+                journal: {
+                    ...state.journal,
+                    appliedFromDate: action.date_1,
+                    appliedToDate: action.date_2,
+                }
+            }
         case actionTypes.JOURNAL_FROM_DATE_CHANGE:
             return {
                 ...state,

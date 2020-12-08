@@ -16,6 +16,13 @@ export default function mapStateToProps(component) {
                 }
             }
         //______ Journal Period Filter ______________
+        case 'JournalPeriodSort':
+            return function (state) {
+                return {
+                    localFromDate: state.journal.localFromDate,
+                    localToDate: state.journal.localToDate,
+                }
+            }
         case 'PrependInputFromJournal':
             return function (state) {
                 return {
