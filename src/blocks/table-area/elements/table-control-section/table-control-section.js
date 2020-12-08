@@ -9,8 +9,11 @@ import EntryLengthSwitch from "../entry-length-switch/entry-length-switch";
 import SortSection from "../sort-section/sort-section";
 
 class TableControlSection extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
     render() {
-        console.log("control renders");
 
         let sort_section,
             period_sort_section,

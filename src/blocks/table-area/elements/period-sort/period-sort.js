@@ -9,7 +9,6 @@ import {
 } from "../../../prepend-input/prepend-input";
 
 export default function PeriodSort(props) {
-    console.log("period renders");
 
     let label_id_from,
         label_id_to,

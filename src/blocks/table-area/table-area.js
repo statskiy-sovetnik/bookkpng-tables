@@ -11,8 +11,11 @@ import BtstrapIcon from "../btstrap-icon/btstrap-icon";
 import {JOURNAL_CONTROL_SECTION_W as JournalControlSection} from "./elements/table-control-section/table-control-section";
 
 class TableArea extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
     render() {
-        console.log("journal renders");
         let area_name,
             add_entry_button_icon,
             control_section;

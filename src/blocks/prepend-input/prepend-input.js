@@ -8,6 +8,10 @@ import mapDispatchToProps from "../../store/mapDispatchToProps";
 registerLocale('ru', ru);
 
 export default class PrependInput extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
     render() {
         const datepicker_class = 'date-input';
         const is_datepicker = this.props.className.indexOf(datepicker_class) !== -1;
