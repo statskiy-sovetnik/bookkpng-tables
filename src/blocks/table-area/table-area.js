@@ -12,6 +12,7 @@ import {JOURNAL_CONTROL_SECTION_W as JournalControlSection} from "./elements/tab
 
 class TableArea extends React.Component {
     render() {
+        console.log("journal renders");
         let area_name,
             add_entry_button_icon,
             control_section;

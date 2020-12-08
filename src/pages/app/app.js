@@ -13,6 +13,7 @@ import '../../../node_modules/bootstrap/dist/js/bootstrap.bundle'
 
 class App extends React.Component {
     render() {
+        console.log("The whole app renders");
         const journal_sort_names = ['Наименованию', 'Дате', 'Поставщику', 'Кол-ву', 'Цене', 'Сумме', 'Расходам'];
 
         return(

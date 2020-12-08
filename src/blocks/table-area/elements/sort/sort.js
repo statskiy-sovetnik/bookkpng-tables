@@ -10,7 +10,6 @@ import DropdownList from "../../../dropdown-list/dropdown-list";
 export default function Sort(props) {
     let sort_classes = 'table-area__sort button button_size-small btn btn-sm btn-light text_weight-medium';
     sort_classes += (props.className ? ' ' + props.className : '');
-    let icon_class_name = props.sortFromLeast ? 'bi-arrow-up' : 'bi-arrow-down';
     let sort_btn_id,
         dropdown_items = [],
         current_sort_name;

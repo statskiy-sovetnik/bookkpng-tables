@@ -1,12 +1,7 @@
 export default function mapStateToProps(component) {
     switch (component) {
-        case 'JournalArea':
-            return function (state) {
-                return {
-                    myValue: state.myValue,
-                    journal: state.journal,
-                }
-            }
+        //______ Journal Sort ________________
+
         case 'SortJournal':
             return function (state) {
                 return {
@@ -18,6 +13,20 @@ export default function mapStateToProps(component) {
             return function (state) {
                 return {
                     sortFromLeast: state.journal.sortFromLeast,
+                }
+            }
+        //______ Journal Period Filter ______________
+        case 'PrependInputFromJournal':
+            return function (state) {
+                return {
+                    localFromDate: state.journal.localFromDate,
+                }
+            }
+
+        case 'PrependInputToJournal':
+            return function (state) {
+                return {
+                    localToDate: state.journal.localToDate,
                 }
             }
     }

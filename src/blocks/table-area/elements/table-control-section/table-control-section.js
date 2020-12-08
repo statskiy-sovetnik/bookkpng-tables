@@ -10,6 +10,8 @@ import SortSection from "../sort-section/sort-section";
 
 class TableControlSection extends React.Component {
     render() {
+        console.log("control renders");
+
         let sort_section,
             period_sort_section,
             entry_length_switch_section;

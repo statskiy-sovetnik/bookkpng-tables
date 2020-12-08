@@ -4,6 +4,7 @@
  * Copyright 2011-2020 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
+@import url(../node_modules/react-datepicker/dist/react-datepicker.css);
 :root {
   --blue: #007bff;
   --indigo: #6610f2;

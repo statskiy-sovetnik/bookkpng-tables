@@ -1,8 +1,11 @@
 const initialState = {
-    myValue: 'Heeeeer',
     journal: {
         sortName: 'Наименованию',
         sortFromLeast: true,
+        localFromDate: '',
+        localToDate: '',
+        appliedFromDate: '',
+        appliedToDate: ''
     }
 }
 
