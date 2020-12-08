@@ -5,7 +5,8 @@ const initialState = {
         localFromDate: '',
         localToDate: '',
         appliedFromDate: '',
-        appliedToDate: ''
+        appliedToDate: '',
+        showEntries: 5,
     }
 }
 

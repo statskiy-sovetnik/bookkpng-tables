@@ -5,7 +5,9 @@ import mapDispatchToProps from "../../../../store/mapDispatchToProps";
 
 //Blocks______
 import PeriodSortSection from "../period-sort-section/period-sort-section";
-import EntryLengthSwitch from "../entry-length-switch/entry-length-switch";
+import {
+    JOURNAL_ENTRY_LENGTH_SWITCH as EntryLengthSwitchJournal
+} from "../entry-length-switch-section/entry-length-switch-section";
 import SortSection from "../sort-section/sort-section";
 
 class TableControlSection extends React.Component {
@@ -25,7 +27,7 @@ class TableControlSection extends React.Component {
                     <SortSection key={'sort-section'} data={'journal'} sort_names={this.props.sort_names}/>
                 )
                 period_sort_section = (<PeriodSortSection data={'journal'} key={'period-sort'}/>)
-                entry_length_switch_section = (<EntryLengthSwitch key={'entry-length-switch'}/>)
+                entry_length_switch_section = (<EntryLengthSwitchJournal key={'entry-length-switch'}/>)
                 break;
         }
 

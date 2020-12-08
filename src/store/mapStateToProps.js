@@ -35,6 +35,14 @@ export default function mapStateToProps(component) {
                     localToDate: state.journal.localToDate,
                 }
             }
+        //______ Journal Entry Length Switch ____________
+
+        case 'EntrySwitchLengthSectionJournal':
+            return function (state) {
+                return {
+                    showEntries: state.journal.showEntries,
+                }
+            }
     }
 }
 

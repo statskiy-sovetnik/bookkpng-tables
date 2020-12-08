@@ -31,8 +31,8 @@ html, body {
   font-family: 'Roboto', sans-serif; }
 
 .button_size-small {
-  font-size: 11px;
-  padding: 4px 8px; }
+  font-size: 11px !important;
+  padding: 4px 8px !important; }
 
 .button__btstrap-icon {
   margin-right: 5px; }
@@ -129,6 +129,13 @@ html, body {
   flex-direction: column;
   align-items: flex-start;
   align-self: flex-start; }
+
+.table-area__entry-length-switch {
+  margin-top: 10px; }
+
+.table-area__entry-length-switch-section {
+  display: flex;
+  flex-direction: column; }
 
 .table-area__table-control-section {
   display: flex;
