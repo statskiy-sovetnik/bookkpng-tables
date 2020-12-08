@@ -34,12 +34,20 @@ gulp.task('build', () => {
 
 gulp.task("watch", () => {
     gulp.watch([
-        "src/pages/**/*",
-        'src/blocks/**/*',
-        'src/store/**/*',
-        "src/*",
+        "src/pages/**/*.js",
+        'src/blocks/**/*.js',
+        'src/store/**/*.js',
+        "src/*.js",
     ],
-    gulp.series('build', "gulp-sass", "bundle-js"));
+    gulp.series('build', "bundle-js"));
+
+    gulp.watch([
+        "src/pages/**/*.sass",
+        'src/blocks/**/*.sass',
+        'src/store/**/*.sass',
+        "src/*.sass",
+    ],
+        gulp.series('build', 'gulp-sass'))
 });
 
 gulp.task('default', gulp.series('bundle-js', 'gulp-sass', 'build', 'watch'));

@@ -10,12 +10,12 @@ export default function SortSection(props) {
 
     switch (props.data) {
         case 'journal':
-            sort.push(
-                <SortJournal data={'journal-name'}  sort_names={props.sort_names} key={'journal-sort-name'}/>
-            );
-            sort.push(
-                <SortDirectionJournal data={'journal-direction'} key={'journal-sort-dir'}/>
-            );
+            sort = (
+                <span className={'table-area__sorts-wrapper'}>
+                    <SortJournal data={'journal-name'}  sort_names={props.sort_names} key={'journal-sort-name'}/>
+                    <SortDirectionJournal data={'journal-direction'} key={'journal-sort-dir'}/>
+                </span>
+            )
             break;
     }
 

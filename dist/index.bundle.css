@@ -108,29 +108,31 @@ html, body {
   align-items: center;
   padding: 3px 6px;
   background-color: #e8edf0;
-  border-radius: 4px;
-  margin-left: 7px; }
+  border-radius: 4px; }
 
 .table-area__sort-section {
   display: flex;
-  flex-direction: row;
-  align-items: center; }
+  flex-direction: column;
+  align-items: flex-start; }
 
-.table-area__period-sort .table-area__period-sort__prepend-input {
-  margin-left: 15px; }
-
-.table-area__period-sort .table-area__period-sort__button {
-  margin-left: 15px; }
+.table-area__period-sort {
+  margin-top: 10px; }
+  .table-area__period-sort .table-area__period-sort__prepend-input {
+    margin-left: 8px; }
+    .table-area__period-sort .table-area__period-sort__prepend-input:first-of-type {
+      margin-left: 0; }
+  .table-area__period-sort .table-area__period-sort__button {
+    margin-left: 15px; }
 
 .table-area__period-sort-section {
   display: flex;
-  flex-direction: row;
-  align-items: center; }
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: flex-start; }
 
 .table-area__table-control-section {
   display: flex;
   flex-direction: row;
-  align-items: center;
   justify-content: space-between;
   padding: 0 8px; }
 
@@ -140,8 +142,12 @@ html, body {
   align-items: center;
   padding: 3px 6px;
   background-color: #e8edf0;
-  border-radius: 4px;
-  margin-left: 7px; }
+  border-radius: 4px; }
+
+.table-area__sorts-wrapper {
+  display: flex;
+  flex-direction: row;
+  margin-top: 10px; }
 
 .table-area {
   padding: 0 50px; }
