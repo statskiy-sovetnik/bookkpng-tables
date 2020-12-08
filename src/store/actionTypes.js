@@ -9,4 +9,7 @@ export default {
     JOURNAL_FROM_DATE_CHANGE: 'journalFromDateChange',
     JOURNAL_TO_DATE_CHANGE: 'journalToDateChange',
     JOURNAL_APPLY_PERIOD_BTN_CLICK: 'journalApplyPeriodBtnClick',
+
+    //Journal Entry Legth Switcher
+    ENTRY_LENGTH_BTN_CLICK_JOURNAL: 'entryLengthBtnClickJournal',
 }

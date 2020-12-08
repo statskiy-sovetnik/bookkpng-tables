@@ -21,7 +21,12 @@ class EntryLengthSwitchSection extends React.Component{
             }
 
             buttons.push(
-                <button type="button" className={cur_btn_classname} key={i + '-btn-length-switch'}>
+                <button
+                    onClick={(event) => {
+                        event.preventDefault();
+                        this.props.changeShowEntries(+event.currentTarget.innerHTML);
+                    }}
+                    type="button" className={cur_btn_classname} key={i + '-btn-length-switch'}>
                     {entry_length_values[i]}
                 </button>
             )

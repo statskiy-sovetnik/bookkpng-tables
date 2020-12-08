@@ -5,6 +5,7 @@ import journalToDateChange from "./actionCreators/journalToDateChange";
 import journalApplyPeriodBtnClick from "./actionCreators/journalApplyPeriodBtnClick";
 import journalSortTypeChange from "./actionCreators/journalSortTypeChange";
 import journalSortDirChange from "./actionCreators/journalSortDirChange";
+import entryLengthSwitchBtnClick from "./actionCreators/entryLengthSwitchBtnClick";
 
 export default function mapDispatchToProps(component) {
     switch (component) {
@@ -39,6 +40,13 @@ export default function mapDispatchToProps(component) {
             return function (dispatch) {
                 return {
                     changeLocalToDate: (value) => dispatch(journalToDateChange(value))
+                }
+            }
+        //______Journal Entry Length switch _________
+        case 'EntrySwitchLengthSectionJournal':
+            return function (dispatch) {
+                return {
+                    changeShowEntries: (value) => dispatch(entryLengthSwitchBtnClick(value)),
                 }
             }
     }

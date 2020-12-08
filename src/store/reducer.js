@@ -48,6 +48,16 @@ export default function reducer(state, action) {
                     localToDate: action.value,
                 }
             }
+        //________ Journal Entry Length Switch ___________
+        case actionTypes.ENTRY_LENGTH_BTN_CLICK_JOURNAL:
+            return {
+                ...state,
+                journal: {
+                    ...state.journal,
+                    showEntries: action.value,
+                }
+            }
+
         default:
             return state;
     }
