@@ -99,7 +99,7 @@ html, body {
   margin-bottom: 40px; }
 
 .table-area__button-section {
-  margin-bottom: 12px;
+  margin-bottom: 20px;
   padding: 0 8px; }
 
 .table-area__sort {
@@ -141,7 +141,8 @@ html, body {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding: 0 8px; }
+  padding: 0 8px;
+  margin-bottom: 15px; }
 
 .table-area__sort {
   display: flex;
