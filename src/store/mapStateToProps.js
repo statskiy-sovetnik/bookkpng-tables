@@ -1,5 +1,15 @@
 export default function mapStateToProps(component) {
     switch (component) {
+        //_____ JOURNAL ______________
+        case 'JournalArea':
+            return function (state) {
+                return {
+                    journalRows: state.journal.rows,
+                    journalColOrder: state.journal.columns_order,
+                    journalColNames: state.journal.head_col_names,
+                    journalColWidths: state.journal.col_widths,
+                }
+            }
         //______ Journal Sort ________________
 
         case 'SortJournal':
@@ -43,6 +53,9 @@ export default function mapStateToProps(component) {
                     showEntries: state.journal.showEntries,
                 }
             }
+        //______ Journal Table ____________
+
+
     }
 }
 

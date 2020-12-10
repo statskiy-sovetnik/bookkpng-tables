@@ -6,10 +6,19 @@ import journalApplyPeriodBtnClick from "./actionCreators/journalApplyPeriodBtnCl
 import journalSortTypeChange from "./actionCreators/journalSortTypeChange";
 import journalSortDirChange from "./actionCreators/journalSortDirChange";
 import entryLengthSwitchBtnClick from "./actionCreators/entryLengthSwitchBtnClick";
+import loadDataBaseJournal from "./actionCreators/loadDataBaseJournal";
 
 export default function mapDispatchToProps(component) {
     switch (component) {
+        case 'App':
+            return function (dispatch) {
+                return {
+                    loadDataBaseJournal: (rows) => dispatch(loadDataBaseJournal(rows))
+                }
+            }
         //__________JOURNAL _____________
+
+        //__________Journal Sort _____________
         case 'SortJournal':
             return function (dispatch) {
                 return {
@@ -43,11 +52,13 @@ export default function mapDispatchToProps(component) {
                 }
             }
         //______Journal Entry Length switch _________
+
         case 'EntrySwitchLengthSectionJournal':
             return function (dispatch) {
                 return {
                     changeShowEntries: (value) => dispatch(entryLengthSwitchBtnClick(value)),
                 }
             }
+
     }
 }

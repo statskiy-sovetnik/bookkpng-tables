@@ -12,4 +12,7 @@ export default {
 
     //Journal Entry Legth Switcher
     ENTRY_LENGTH_BTN_CLICK_JOURNAL: 'entryLengthBtnClickJournal',
+
+    //Journal Table
+    LOAD_DATA_BASE_JOURNAL: 'loadDataBaseJournal',
 }

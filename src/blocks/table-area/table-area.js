@@ -16,24 +16,59 @@ class TableArea extends React.Component {
         super(props);
     }
 
-    renderTableHead(data, head_cols_names, class_names) {
-        let head_row_cols = [];
+    renderTableHead(data, head_cols, cols_order, col_widths, class_names) {
+        let head_row_elems = [];
         let extra_classes = (class_names ? ' ' + class_names : '');
 
-        for(let i in head_cols_names) {
-            head_row_cols.push(
-                <th scope="col" key={i + '-table-head-elem'}>
-                    {head_cols_names[i]}
+        cols_order.forEach((col_name) => {
+            head_row_elems.push(
+                <th key={data + '-'+ col_name + '-head'} className={'col-' + col_widths[col_name]}>
+                    {head_cols[col_name]}
                 </th>
+            )
+        })
+
+        return (
+            <thead key={data + '-table-head'} className={extra_classes}>
+            <tr className={'d-flex'}>
+                {head_row_elems}
+            </tr>
+            </thead>
+        )
+    }
+
+    renderTableBody(data, rows, cols_order, col_widths, body_classnames) {
+        let table_rows = [];
+
+        for(let id in rows) {
+            let cur_row = [];
+            const row_data = rows[id];
+
+            cols_order.forEach((col_name) => {
+                console.log("From " + col_name);
+                console.log(row_data[col_name]);
+                if(col_name !== 'expenses') {
+                    cur_row.push(
+                        <td className={'col-' + col_widths[col_name]}
+                            key={data + '-' + id + '-' + row_data[col_name]}
+                        >
+                            {row_data[col_name]}
+                        </td>
+                    )
+                }
+            })
+
+            table_rows.push(
+                <tr className={'d-flex'} key={data + '-' + id + '-row'}>
+                    {cur_row}
+                </tr>
             )
         }
 
         return (
-            <thead key={'table-head'} className={extra_classes}>
-            <tr>
-                {head_row_cols}
-            </tr>
-            </thead>
+            <tbody key={data + '-tablebody'} className={body_classnames}>
+                {table_rows}
+            </tbody>
         )
     }
 
@@ -41,9 +76,14 @@ class TableArea extends React.Component {
         let area_name,
             add_entry_button_icon,
             table_area_content = [];
-        const journal_head_cols = ['Дата', 'Наименование', 'Поставщик', 'Кол-во (кг)',
-            'Цена (руб)', 'Сумма', 'Расходы', 'Итого с учетом расходов'];
-        const head_classnames = 'text text_size-13 text_color-dark';
+
+        const journal_col_names = this.props.journalColNames;
+        const journal_col_order = this.props.journalColOrder;
+        const journal_col_widths = this.props.journalColWidths;
+        const journal_rows_data = this.props.journalRows;
+
+        const head_classnames = 'text text_size-13 text_color-dark thead-light';
+        const tbody_classnames = 'text text_size-13 text_color-dark';
 
         switch(this.props.data) {
             case 'journal':
@@ -58,19 +98,30 @@ class TableArea extends React.Component {
                         data={'journal'} sort_names={this.props.sort_names}/>
                 )
                 table_area_content.push(
-                    <TableJournal
-                        className={'table-sm'}
-                        key={'journal-table'}
-                    >
-                        {[
-                            this.renderTableHead(
-                                'journal',
-                                journal_head_cols,
-                                head_classnames,
-                            ),
-                        ]}
+                    <div className={'table-responsive-md container-xl'}>
+                        <TableJournal
+                            className={'table-sm table-hover'}
+                            key={'journal-table'}
+                        >
+                            {[
+                                this.renderTableHead(
+                                    'journal',
+                                    journal_col_names,
+                                    journal_col_order,
+                                    journal_col_widths,
+                                    head_classnames,
+                                ),
+                                this.renderTableBody(
+                                    'journal',
+                                    journal_rows_data,
+                                    journal_col_order,
+                                    journal_col_widths,
+                                    tbody_classnames,
+                                ),
+                            ]}
 
-                    </TableJournal>
+                        </TableJournal>
+                    </div>
                 )
                 break;
             case 'expenses':
@@ -81,7 +132,7 @@ class TableArea extends React.Component {
         }
 
         return (
-            <div className={'table-area'}>
+            <div className={'table-area container-xl'}>
                 <Heading className={'text_color-dark'}>{area_name}</Heading>
                 <ButtonSection>
                     <button type={'button'}

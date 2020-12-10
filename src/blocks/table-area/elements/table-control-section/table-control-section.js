@@ -32,7 +32,7 @@ class TableControlSection extends React.Component {
         }
 
         return (
-            <div className={'table-area__table-control-section'}>
+            <div className={'table-area__table-control-section container-xl'}>
                 {[
                     sort_section,
                     period_sort_section,

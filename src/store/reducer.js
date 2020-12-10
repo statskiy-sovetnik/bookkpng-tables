@@ -3,6 +3,15 @@ import actionTypes from './actionTypes'
 export default function reducer(state, action) {
     switch(action.type) {
         //____ JOURNAL _______________
+        case actionTypes.LOAD_DATA_BASE_JOURNAL:
+            return {
+                ...state,
+                journal: {
+                    ...state.journal,
+                    rows: action.value,
+                }
+            }
+
         //_______ Journal Sort _________
 
         case actionTypes.JOURNAL_SORT_DIR_CHANGE:
@@ -49,6 +58,7 @@ export default function reducer(state, action) {
                 }
             }
         //________ Journal Entry Length Switch ___________
+
         case actionTypes.ENTRY_LENGTH_BTN_CLICK_JOURNAL:
             return {
                 ...state,
@@ -57,6 +67,9 @@ export default function reducer(state, action) {
                     showEntries: action.value,
                 }
             }
+        //________ Journal Table ___________
+
+
 
         default:
             return state;
