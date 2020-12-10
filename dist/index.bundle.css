@@ -74,6 +74,9 @@ html, body {
   font-size: 12px !important;
   height: 26px !important; }
 
+.table__body-cell {
+  word-break: break-all; }
+
 .menu__user-block {
   display: flex;
   flex-direction: row; }

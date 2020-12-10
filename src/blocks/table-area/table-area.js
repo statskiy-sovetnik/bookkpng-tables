@@ -49,7 +49,10 @@ class TableArea extends React.Component {
                 console.log(row_data[col_name]);
                 if(col_name !== 'expenses') {
                     cur_row.push(
-                        <td className={'col-' + col_widths[col_name]}
+                        <td className={
+                                'col-' + col_widths[col_name] + ' '
+                                + 'table__body-cell'
+                            }
                             key={data + '-' + id + '-' + row_data[col_name]}
                         >
                             {row_data[col_name]}
