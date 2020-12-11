@@ -50,6 +50,13 @@ const initialState = {
             expenses: 2,
             total: 2,
         }
+    },
+
+    expenses_data: {
+        /*0: {
+            color: '#e06c5d',
+            name: 'Транспорт'
+        }*/
     }
 }
 

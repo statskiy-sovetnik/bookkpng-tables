@@ -8,6 +8,7 @@ export default function mapStateToProps(component) {
                     journalColOrder: state.journal.columns_order,
                     journalColNames: state.journal.head_col_names,
                     journalColWidths: state.journal.col_widths,
+                    expensesData: state.expenses_data,
                 }
             }
         //______ Journal Sort ________________

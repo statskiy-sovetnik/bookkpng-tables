@@ -160,8 +160,28 @@ html, body {
   flex-direction: row;
   margin-top: 10px; }
 
+.table-area__expenses-squares-list {
+  flex-wrap: wrap;
+  max-width: 42px; }
+
+.table-area__expenses-cell {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  align-items: center; }
+
+.table-area__expenses-colors-block {
+  margin-left: 7px; }
+
 .table-area {
   padding: 0 50px; }
+
+.expense-color-square {
+  display: flex;
+  width: 7px;
+  height: 7px;
+  margin: 0;
+  padding: 0; }
 
 .ulist_flex-row {
   display: flex;

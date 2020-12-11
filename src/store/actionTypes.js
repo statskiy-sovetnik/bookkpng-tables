@@ -1,4 +1,8 @@
 export default {
+    //APP Common
+    LOAD_EXPENSES_DATA: 'loadExpensesData',
+
+    //JOURNAL
     JOURNAL_ADD_ENTRY_BTN_CLICK: 'journalAddEntryBtnClick',
 
     //Journal Sorts Section

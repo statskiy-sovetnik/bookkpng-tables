@@ -37,7 +37,7 @@ class TableArea extends React.Component {
         )
     }
 
-    renderTableBody(data, rows, cols_order, col_widths, body_classnames) {
+    renderTableBody(data, rows, cols_order, col_widths, expenses_data, body_classnames) {
         let table_rows = [];
 
         for(let row_id in rows) {
@@ -60,9 +60,23 @@ class TableArea extends React.Component {
                 else {
                     let cur_expenses_arr = row_data[col_name];
                     let cur_expenses_total = 0;
+                    let expenses_color_cells = [];
+
                     cur_expenses_arr.forEach((expense) => {
                         cur_expenses_total += expense.amount;
+
+                        expenses_color_cells.push(
+                            <li>
+                                <a onClick={event => {event.preventDefault()}} href={'#'}
+                                   className={'expense-color-square'}
+                                   style={{backgroundColor: expenses_data[expense.id].color}}
+                                   title={expenses_data[expense.id].name}
+                                   key={'color-cell_row-' + row_id + '_id-' + expense.id}
+                                />
+                            </li>
+                        )
                     });
+
 
                     cur_row.push(
                         <td className={
@@ -71,7 +85,14 @@ class TableArea extends React.Component {
                         }
                             key={data + '-' + row_id + '-' + 'expenses'}
                         >
-                            {cur_expenses_total}
+                            <div className={'table-area__expenses-cell'}>
+                                {cur_expenses_total}
+                                <span className={'table-area__expenses-colors-block'}>
+                                    <ul className={'ulist ulist_flex-row table-area__expenses-squares-list'}>
+                                        {expenses_color_cells}
+                                    </ul>
+                                </span>
+                            </div>
                         </td>
                     )
                 }
@@ -95,6 +116,8 @@ class TableArea extends React.Component {
         let area_name,
             add_entry_button_icon,
             table_area_content = [];
+
+        const expenses_data = this.props.expensesData;
 
         const journal_col_names = this.props.journalColNames;
         const journal_col_order = this.props.journalColOrder;
@@ -135,6 +158,7 @@ class TableArea extends React.Component {
                                     journal_rows_data,
                                     journal_col_order,
                                     journal_col_widths,
+                                    expenses_data,
                                     tbody_classnames,
                                 ),
                             ]}

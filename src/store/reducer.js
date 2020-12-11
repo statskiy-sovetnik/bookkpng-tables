@@ -2,6 +2,13 @@ import actionTypes from './actionTypes'
 
 export default function reducer(state, action) {
     switch(action.type) {
+        //__APP _________________
+        case actionTypes.LOAD_EXPENSES_DATA:
+            return {
+                ...state,
+                expenses_data: action.value,
+            }
+
         //____ JOURNAL _______________
         case actionTypes.LOAD_DATA_BASE_JOURNAL:
             return {

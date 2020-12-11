@@ -18,7 +18,7 @@ class App extends React.Component {
 
         //Здесь инициализируешь journal.rows:
 
-        const rows_data = {
+        const journal_rows_data = {
             0: {
                 date: '27/04/2020',
                 name: 'Название сырья среднее',
@@ -61,12 +61,51 @@ class App extends React.Component {
                 ]
             }
         }
-        const rows_updated = this.getUpdatedRows(rows_data);
+        const journal_rows_updated = this.getUpdatedJournalRows(journal_rows_data);
 
-        this.props.loadDataBaseJournal(rows_updated)
+        //Здесь собираешь данные о расходах
+
+        const expenses_data = {
+            0: {
+                color: '#e06c5d',
+                name: 'Транспорт',
+            },
+            1: {
+                color: '#826de0',
+                name: 'Ритуальные услуги',
+            },
+            2: {
+                color: '#69ade0',
+                name: 'Электроэнергия и подписка Netflix',
+            },
+            3: {
+                color: '#43e093',
+                name: 'Пиццы с ананасом',
+            },
+            4: {
+                color: '#e09c4b',
+                name: 'Лазертаг с персоналом'
+            },
+            5: {
+                color: '#d7e049',
+                name: 'Прочие расходы',
+            },
+            6: {
+                color: '#e060b4',
+                name: 'Персонал',
+            },
+            7: {
+                color: '#90e049',
+                name: 'Mercedes AMG GT S 4-door Coupe',
+            },
+        }
+
+        //Загрузка:
+        this.props.loadDataBaseJournal(journal_rows_updated);
+        this.props.loadExpensesData(expenses_data);
     }
 
-    getUpdatedRows(rows_data) {
+    getUpdatedJournalRows(rows_data) {
         let rows_updated = {};
 
         for(let id in rows_data) {

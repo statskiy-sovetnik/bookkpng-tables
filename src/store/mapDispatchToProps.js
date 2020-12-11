@@ -7,13 +7,15 @@ import journalSortTypeChange from "./actionCreators/journalSortTypeChange";
 import journalSortDirChange from "./actionCreators/journalSortDirChange";
 import entryLengthSwitchBtnClick from "./actionCreators/entryLengthSwitchBtnClick";
 import loadDataBaseJournal from "./actionCreators/loadDataBaseJournal";
+import loadExpensesData from "./actionCreators/loadExpensesData";
 
 export default function mapDispatchToProps(component) {
     switch (component) {
         case 'App':
             return function (dispatch) {
                 return {
-                    loadDataBaseJournal: (rows) => dispatch(loadDataBaseJournal(rows))
+                    loadDataBaseJournal: (rows) => dispatch(loadDataBaseJournal(rows)),
+                    loadExpensesData: (expenses_obj) => dispatch(loadExpensesData(expenses_obj)),
                 }
             }
         //__________JOURNAL _____________
