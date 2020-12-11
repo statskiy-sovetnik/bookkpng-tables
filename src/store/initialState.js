@@ -18,13 +18,18 @@ const initialState = {
                 amount: 0,
                 price: 0,
                 sum: 0,
-                expenses: [],
+                expenses: [
+                    {
+                        id: 0,
+                        amount: 1680.50
+                    },
+                ],
                 expenses_total: 0,
                 total: 0,
             }*/
         },
         columns_order: ['date', 'name', 'provider_name', 'amount', 'price',
-        'sum', 'expenses_total', 'total'],
+        'sum', 'expenses', 'total'],
         head_col_names: {
             date: 'Дата',
             name: 'Наименование',
@@ -32,7 +37,7 @@ const initialState = {
             amount: 'Кол-во (кг)',
             price: 'Цена (руб)',
             sum: 'Сумма',
-            expenses_total: 'Расходы',
+            expenses: 'Расходы',
             total: 'Итого с учётом расходов',
         },
         col_widths: {
@@ -42,7 +47,7 @@ const initialState = {
             sum: 1,
             name: 2,
             provider_name: 2,
-            expenses_total: 2,
+            expenses: 2,
             total: 2,
         }
     }

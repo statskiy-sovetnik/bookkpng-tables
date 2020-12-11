@@ -40,29 +40,45 @@ class TableArea extends React.Component {
     renderTableBody(data, rows, cols_order, col_widths, body_classnames) {
         let table_rows = [];
 
-        for(let id in rows) {
+        for(let row_id in rows) {
             let cur_row = [];
-            const row_data = rows[id];
+            const row_data = rows[row_id];
 
             cols_order.forEach((col_name) => {
-                console.log("From " + col_name);
-                console.log(row_data[col_name]);
                 if(col_name !== 'expenses') {
                     cur_row.push(
                         <td className={
                                 'col-' + col_widths[col_name] + ' '
                                 + 'table__body-cell'
                             }
-                            key={data + '-' + id + '-' + row_data[col_name]}
+                            key={data + '-' + row_id + '-' + row_data[col_name]}
                         >
                             {row_data[col_name]}
+                        </td>
+                    )
+                }
+                else {
+                    let cur_expenses_arr = row_data[col_name];
+                    let cur_expenses_total = 0;
+                    cur_expenses_arr.forEach((expense) => {
+                        cur_expenses_total += expense.amount;
+                    });
+
+                    cur_row.push(
+                        <td className={
+                            'col-' + col_widths[col_name] + ' '
+                            + 'table__body-cell'
+                        }
+                            key={data + '-' + row_id + '-' + 'expenses'}
+                        >
+                            {cur_expenses_total}
                         </td>
                     )
                 }
             })
 
             table_rows.push(
-                <tr className={'d-flex'} key={data + '-' + id + '-row'}>
+                <tr className={'d-flex'} key={data + '-' + row_id + '-row'}>
                     {cur_row}
                 </tr>
             )
