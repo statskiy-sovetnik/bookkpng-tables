@@ -7,7 +7,7 @@ export default function mapStateToProps(component) {
                     journalRows: state.journal.rows,
                     journalColOrder: state.journal.columns_order,
                     journalColNames: state.journal.head_col_names,
-                    journalColWidths: state.journal.col_widths,
+                    journalTableWidth: state.journal.table_width,
                     expensesData: state.expenses_data,
                 }
             }

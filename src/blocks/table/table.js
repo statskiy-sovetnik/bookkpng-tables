@@ -12,7 +12,7 @@ class Table extends React.Component {
         const  extra_table_classes = this.props.className ? ' ' + this.props.className : '';
 
         return (
-            <table className={"table" + extra_table_classes}>
+            <table className={"table" + extra_table_classes} style={this.props.style}>
                 {this.props.children}
             </table>
         )

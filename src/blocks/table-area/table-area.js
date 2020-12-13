@@ -16,13 +16,13 @@ class TableArea extends React.Component {
         super(props);
     }
 
-    renderTableHead(data, head_cols, cols_order, col_widths, class_names) {
+    renderTableHead(data, head_cols, cols_order, class_names) {
         let head_row_elems = [];
         let extra_classes = (class_names ? ' ' + class_names : '');
 
         cols_order.forEach((col_name) => {
             head_row_elems.push(
-                <th key={data + '-'+ col_name + '-head'} className={'col-' + col_widths[col_name]}>
+                <th key={data + '-'+ col_name + '-head'}>
                     {head_cols[col_name]}
                 </th>
             )
@@ -30,34 +30,32 @@ class TableArea extends React.Component {
 
         return (
             <thead key={data + '-table-head'} className={extra_classes}>
-            <tr className={'d-flex'}>
+            <tr>
                 {head_row_elems}
             </tr>
             </thead>
         )
     }
 
-    renderTableBody(data, rows, cols_order, col_widths, expenses_data, body_classnames) {
+    renderTableBody(data, rows, cols_order, expenses_data, body_classnames) {
         let table_rows = [];
 
         for(let row_id in rows) {
             let cur_row = [];
             const row_data = rows[row_id];
+            let cell_class = 'table__body-cell';
 
             cols_order.forEach((col_name) => {
-                if(col_name !== 'expenses') {
+                if(col_name === 'control') {
                     cur_row.push(
-                        <td className={
-                                'col-' + col_widths[col_name] + ' '
-                                + 'table__body-cell'
-                            }
+                        <td className={cell_class}
                             key={data + '-' + row_id + '-' + row_data[col_name]}
                         >
-                            {row_data[col_name]}
+                            Контроль)
                         </td>
                     )
                 }
-                else {
+                else if(col_name === 'expenses') {
                     let cur_expenses_arr = row_data[col_name];
                     let cur_expenses_total = 0;
                     let expenses_color_cells = [];
@@ -77,12 +75,8 @@ class TableArea extends React.Component {
                         )
                     });
 
-
                     cur_row.push(
-                        <td className={
-                            'col-' + col_widths[col_name] + ' '
-                            + 'table__body-cell'
-                        }
+                        <td className={cell_class}
                             key={data + '-' + row_id + '-' + 'expenses'}
                         >
                             <div className={'table-area__expenses-cell'}>
@@ -96,10 +90,19 @@ class TableArea extends React.Component {
                         </td>
                     )
                 }
+                else {
+                    cur_row.push(
+                        <td className={cell_class}
+                            key={data + '-' + row_id + '-' + row_data[col_name]}
+                        >
+                            {row_data[col_name]}
+                        </td>
+                    )
+                }
             })
 
             table_rows.push(
-                <tr className={'d-flex'} key={data + '-' + row_id + '-row'}>
+                <tr key={data + '-' + row_id + '-row'}>
                     {cur_row}
                 </tr>
             )
@@ -121,11 +124,11 @@ class TableArea extends React.Component {
 
         const journal_col_names = this.props.journalColNames;
         const journal_col_order = this.props.journalColOrder;
-        const journal_col_widths = this.props.journalColWidths;
         const journal_rows_data = this.props.journalRows;
+        const journal_table_width = this.props.journalTableWidth;
 
         const head_classnames = 'text text_size-13 text_color-dark thead-light';
-        const tbody_classnames = 'text text_size-13 text_color-dark';
+        const tbody_classnames = 'text text_size-13 text_color-black';
 
         switch(this.props.data) {
             case 'journal':
@@ -140,9 +143,10 @@ class TableArea extends React.Component {
                         data={'journal'} sort_names={this.props.sort_names}/>
                 )
                 table_area_content.push(
-                    <div className={'table-responsive-md container-xl'}>
+                    <div className={'table-responsive'}>
                         <TableJournal
-                            className={'table-sm table-hover'}
+                            className={'table-hover'}
+                            style={{'width': journal_table_width}}
                             key={'journal-table'}
                         >
                             {[
@@ -150,14 +154,12 @@ class TableArea extends React.Component {
                                     'journal',
                                     journal_col_names,
                                     journal_col_order,
-                                    journal_col_widths,
                                     head_classnames,
                                 ),
                                 this.renderTableBody(
                                     'journal',
                                     journal_rows_data,
                                     journal_col_order,
-                                    journal_col_widths,
                                     expenses_data,
                                     tbody_classnames,
                                 ),
@@ -165,6 +167,7 @@ class TableArea extends React.Component {
 
                         </TableJournal>
                     </div>
+
                 )
                 break;
             case 'expenses':

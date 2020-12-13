@@ -34,6 +34,9 @@ html, body {
   font-size: 11px !important;
   padding: 4px 8px !important; }
 
+.button_inline-flex {
+  display: inline-flex !important; }
+
 .button__btstrap-icon {
   margin-right: 5px; }
 
@@ -73,9 +76,6 @@ html, body {
 .prepend-input_size-small .prepend-input__input {
   font-size: 12px !important;
   height: 26px !important; }
-
-.table__body-cell {
-  word-break: break-all; }
 
 .menu__user-block {
   display: flex;
