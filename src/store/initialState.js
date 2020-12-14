@@ -26,10 +26,11 @@ const initialState = {
                 ],
                 expenses_total: 0,
                 total: 0,
+                cost_price: 0,
             }*/
         },
-        columns_order: ['date', 'name', 'provider_name', 'amount', 'price',
-        'sum', 'expenses', 'total', 'control'],
+        columns_order: [ 'control', 'date', 'name', 'provider_name', 'amount', 'price',
+        'sum', 'expenses', 'total', 'cost_price'],
         head_col_names: {
             date: 'Дата',
             name: 'Наименование',
@@ -39,9 +40,10 @@ const initialState = {
             sum: 'Сумма',
             expenses: 'Расходы',
             total: 'Итого с учётом расходов',
+            cost_price: 'Себестоимость',
             control: 'Управление',
         },
-        table_width: 1150,
+        table_width: 1250,
     },
 
     expenses_data: {

@@ -59,7 +59,139 @@ class App extends React.Component {
                         amount: 1145.00
                     }
                 ]
-            }
+            },
+            1: {
+                date: '27/04/2020',
+                name: 'Так я назвал сырьё',
+                provider_name: '\"ОАО\" Китай Голимый',
+                amount: 54.00,
+                price: 184.50,
+                expenses: [
+                    {
+                        id: 0,
+                        amount: 1680.50
+                    },
+                    {
+                        id: 2,
+                        amount: 480.00
+                    },
+                    {
+                        id: 4,
+                        amount: 111.18
+                    },
+                    {
+                        id: 5,
+                        amount: 560.00
+                    },
+                ]
+            },
+            2: {
+                date: '27/04/2020',
+                name: 'Название сырья среднее',
+                provider_name: '\"ООО\" Мясо России',
+                amount: 180.00,
+                price: 457.50,
+                expenses: [
+                    {
+                        id: 0,
+                        amount: 1680.50
+                    },
+                    {
+                        id: 1,
+                        amount: 440.33
+                    },
+                    {
+                        id: 2,
+                        amount: 480.00
+                    },
+                    {
+                        id: 3,
+                        amount: 5402.00
+                    },
+                    {
+                        id: 4,
+                        amount: 111.18
+                    },
+                    {
+                        id: 5,
+                        amount: 560.00
+                    },
+                    {
+                        id: 6,
+                        amount: 1340.00
+                    },
+                    {
+                        id: 7,
+                        amount: 1145.00
+                    }
+                ]
+            },
+            3: {
+                date: '27/04/2020',
+                name: 'Название сырья среднее',
+                provider_name: '\"ООО\" Мясо России',
+                amount: 180.00,
+                price: 457.50,
+                expenses: [
+                    {
+                        id: 0,
+                        amount: 1680.50
+                    },
+                    {
+                        id: 1,
+                        amount: 440.33
+                    },
+                    {
+                        id: 2,
+                        amount: 480.00
+                    },
+                    {
+                        id: 3,
+                        amount: 5402.00
+                    },
+                    {
+                        id: 4,
+                        amount: 111.18
+                    },
+                    {
+                        id: 5,
+                        amount: 560.00
+                    },
+                    {
+                        id: 6,
+                        amount: 1340.00
+                    },
+                    {
+                        id: 7,
+                        amount: 1145.00
+                    }
+                ]
+            },
+            4: {
+                date: '27/04/2020',
+                name: 'Так я назвал сырьё',
+                provider_name: '\"ОАО\" Китай Голимый',
+                amount: 54.00,
+                price: 184.50,
+                expenses: [
+                    {
+                        id: 0,
+                        amount: 1680.50
+                    },
+                    {
+                        id: 2,
+                        amount: 480.00
+                    },
+                    {
+                        id: 4,
+                        amount: 111.18
+                    },
+                    {
+                        id: 5,
+                        amount: 560.00
+                    },
+                ]
+            },
         }
         const journal_rows_updated = this.getUpdatedJournalRows(journal_rows_data);
 
@@ -119,7 +251,8 @@ class App extends React.Component {
             rows_updated[id] = {
                 ...rows_data[id],
                 sum: cur_sum,
-                total: cur_sum - cur_expenses_total,
+                total: cur_sum + cur_expenses_total,
+                cost_price: (cur_sum + cur_expenses_total) / rows_data[id].amount,
             }
         }
 

@@ -51,7 +51,12 @@ class TableArea extends React.Component {
                         <td className={cell_class}
                             key={data + '-' + row_id + '-' + row_data[col_name]}
                         >
-                            Контроль)
+                            <a className={'btn btn-dark button button_size-small button_inline-flex'}
+                               href={'#'} onClick={event => {event.preventDefault()}}
+                               title={'Удалить'}
+                            >
+                                <BtstrapIcon data={'bi-trash'} className={'bi-trash'}/>
+                            </a>
                         </td>
                     )
                 }
