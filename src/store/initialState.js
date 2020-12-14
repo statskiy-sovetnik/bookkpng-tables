@@ -43,7 +43,7 @@ const initialState = {
             cost_price: 'Себестоимость',
             control: 'Управление',
         },
-        table_width: 1250,
+        table_width: 1300,
     },
 
     expenses_data: {

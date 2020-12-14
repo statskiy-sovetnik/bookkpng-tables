@@ -90,6 +90,14 @@ class TableArea extends React.Component {
                                     <ul className={'ulist ulist_flex-row table-area__expenses-squares-list'}>
                                         {expenses_color_cells}
                                     </ul>
+                                    <div className={'table-area__expenses-icons-block'}>
+                                        <BtstrapIcon data={'bi-eye-fill'}
+                                                     className={'bi-eye-fill btstrap-icon_size-12 btstrap-icon_color-dark ' +
+                                                     'table-area__expenses-icons-block__btstrap-icon'}/>
+                                        <BtstrapIcon data={'bi-plus-circle'}
+                                                     className={'bi-plus-circle btstrap-icon_size-10 btstrap-icon_color-dark ' +
+                                                     'table-area__expenses-icons-block__btstrap-icon'}/>
+                                    </div>
                                 </span>
                             </div>
                         </td>
