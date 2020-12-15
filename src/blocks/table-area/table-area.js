@@ -178,6 +178,30 @@ class TableArea extends React.Component {
         )
     }
 
+    renderTableBottomPanel(rows_num, show_entries_num) {
+        return (
+            <Container key={'table-area-bottom-panel'} className={'table-area__bottom-panel'} xl={'true'}>
+                <div className={'content-area'}>
+                    <span className={'table-area__bottom-panel__entries-num-text text text_size-14 text_color-grey'}>
+                        Ещё записей: {rows_num}
+                    </span>
+                    <Button className={'button button_size-small table-area__bottom-panel__button'}
+                            variant={'dark'}
+                            size={'sm'}
+                    >
+                        Показать ещё {show_entries_num}
+                    </Button>
+                    <Button className={'button button_size-small table-area__bottom-panel__button'}
+                            variant={'dark'}
+                            size={'sm'}
+                    >
+                        Показать всё
+                    </Button>
+                </div>
+            </Container>
+        )
+    }
+
     render() {
         let area_name,
             add_entry_button_icon,
@@ -189,9 +213,12 @@ class TableArea extends React.Component {
         const journal_col_order = this.props.journalColOrder;
         const journal_rows_data = this.props.journalRows;
         const journal_table_width = this.props.journalTableWidth;
+        const journal_rows_num = Object.keys(journal_rows_data).length;
+        const journal_show_entries_num = this.props.journalShowEntries;
 
         const head_classnames = 'text text_size-13 text_color-dark thead-light';
         const tbody_classnames = 'text text_size-13 text_color-black';
+
 
         switch(this.props.data) {
             case 'journal':
@@ -228,6 +255,9 @@ class TableArea extends React.Component {
                         ]}
                     </TableJournal>
                 )
+                table_area_content.push(
+                    this.renderTableBottomPanel(journal_rows_num, journal_show_entries_num)
+                );
                 break;
             case 'expenses':
                 area_name = 'Расходы';

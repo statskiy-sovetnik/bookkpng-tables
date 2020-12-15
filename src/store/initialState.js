@@ -9,6 +9,7 @@ const initialState = {
         appliedFromDate: '',
         appliedToDate: '',
         showEntries: SHOW_ENTRIES,
+        currentlyShown: SHOW_ENTRIES,
         rowsOpened: new Array(SHOW_ENTRIES).fill(0),
         rows: { //the keys of this object are id's of rows
             /*0: {

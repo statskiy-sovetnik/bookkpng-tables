@@ -9,6 +9,7 @@ export default function mapStateToProps(component) {
                     journalColNames: state.journal.head_col_names,
                     journalTableWidth: state.journal.table_width,
                     expensesData: state.expenses_data,
+                    journalShowEntries: state.showEntries,
                 }
             }
         //______ Journal Sort ________________
