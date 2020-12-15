@@ -1,6 +1,7 @@
 import React from 'react';
 
 import UserName from "../user-name/user-name";
+import Button from "react-bootstrap/Button";
 
 export default function UserBlock() {
     let classes = 'menu__user-block';
@@ -8,7 +9,7 @@ export default function UserBlock() {
     return (
         <div className={classes}>
             <UserName/>
-            <button className={'button button_size-small btn btn-danger btn-sm'}>Выйти</button>
+            <Button className={'button button_size-small btn btn-danger btn-sm'}>Выйти</Button>
         </div>
     )
 }

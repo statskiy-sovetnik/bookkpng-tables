@@ -3,9 +3,8 @@ import {connect} from 'react-redux';
 import mapStateToProps from "../../../../store/mapStateToProps";
 import mapDispatchToProps from "../../../../store/mapDispatchToProps";
 
-import BtstrapIcon from "../../../btstrap-icon/btstrap-icon";
-import DropdownButton from "../../../dropdown-button/dropdown-button";
-import DropdownList from "../../../dropdown-list/dropdown-list";
+//Bootstrap
+import Dropdown from "react-bootstrap/Dropdown";
 
 export default class Sort extends React.Component{
     changeSortValue(event, onchange_handler, is_dir_sort, direction_names) {
@@ -14,10 +13,8 @@ export default class Sort extends React.Component{
             let arg;
             if(is_dir_sort) {
                 arg = (event.target.innerHTML === direction_names[0]);
-                console.log(arg);
             }
             else {
-                console.log(event.target.innerHTML);
                 arg = event.target.innerHTML;
             }
             onchange_handler(arg);
@@ -25,7 +22,7 @@ export default class Sort extends React.Component{
     }
 
     render() {
-        let sort_classes = 'table-area__sort button button_size-small btn btn-sm btn-light text_weight-medium';
+        let sort_classes = 'table-area__sort button button_size-small text_weight-medium';
         sort_classes += (this.props.className ? ' ' + this.props.className : '');
         let sort_btn_id,
             dropdown_items = [],
@@ -35,18 +32,22 @@ export default class Sort extends React.Component{
         const sort_names = this.props.sort_names ? this.props.sort_names.slice() : [];
         const direction_names = ['По возраст.', 'По убыв.']
         const sort_directions = [
-            <a  onClick={(event) => {
+            <Dropdown.Item
+                onClick={(event) => {
                     this.changeSortValue(event, onchange_handler, is_dir_sort, direction_names);
                 }}
-                className="dropdown-item" href="#" key={"sort-dir-up"}>
+                href="#" key={"sort-dir-up"}
+            >
                 {direction_names[0]}
-            </a>,
-            <a  onClick={(event) => {
+            </Dropdown.Item>,
+            <Dropdown.Item
+                onClick={(event) => {
                     this.changeSortValue(event, onchange_handler, is_dir_sort, direction_names);
                 }}
-                className="dropdown-item" href="#" key={"sort-dir-down"}>
+                href="#" key={"sort-dir-down"}
+            >
                 {direction_names[1]}
-            </a>
+            </Dropdown.Item>
         ];
 
         switch(this.props.data) {
@@ -64,30 +65,34 @@ export default class Sort extends React.Component{
                 is_dir_sort = false;
                 for(let i = 0; i < sort_names.length; i++) {
                     dropdown_items.push(
-                        <a  onClick={(event) => {
+                        <Dropdown.Item
+                            onClick={(event) => {
                                 this.changeSortValue(event, onchange_handler, is_dir_sort, direction_names);
                             }}
-                            className="dropdown-item" href="#" key={"sort-type-" + sort_names[i] + "-up"}>
+                            href="#" key={"sort-type-" + sort_names[i] + "-up"}
+                        >
                             {sort_names[i]}
-                        </a>
+                        </Dropdown.Item>
                     )
                 }
                 break;
         }
 
         return (
-            <div className={'dropdown'}>
-                <DropdownButton
+            <Dropdown>
+                <Dropdown.Toggle
+                    variant={'light'}
+                    size={'sm'}
                     onChange={(event) => {
                         this.changeSortValue(event, onchange_handler, is_dir_sort, direction_names);
                     }}
                     className={sort_classes} id={sort_btn_id}>
                     {current_sort_name}
-                </DropdownButton>
-                <DropdownList className={'text text_size-12'} aria_labelledby={sort_btn_id}>
+                </Dropdown.Toggle>
+                <Dropdown.Menu className={'text text_size-12'} aria_labelledby={sort_btn_id}>
                     {dropdown_items}
-                </DropdownList>
-            </div>
+                </Dropdown.Menu>
+            </Dropdown>
         )
     }
 }

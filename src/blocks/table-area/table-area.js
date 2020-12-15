@@ -11,6 +11,10 @@ import BtstrapIcon from "../btstrap-icon/btstrap-icon";
 import {JOURNAL_CONTROL_SECTION_W as JournalControlSection} from "./elements/table-control-section/table-control-section";
 import {JOURNAL_TABLE as TableJournal} from "../table/table";
 
+/*___ Bootstrap _________________*/
+import Button from "react-bootstrap/Button";
+import Container from "react-bootstrap/Container";
+
 class TableArea extends React.Component {
     constructor(props) {
         super(props);
@@ -51,12 +55,13 @@ class TableArea extends React.Component {
                         <td className={cell_class}
                             key={data + '-' + row_id + '-' + row_data[col_name]}
                         >
-                            <a className={'btn btn-dark button button_size-small button_inline-flex'}
-                               href={'#'} onClick={event => {event.preventDefault()}}
-                               title={'Удалить'}
+                            <Button className={'button button_size-small button_inline-flex'}
+                               variant={'dark'}
+                               href={'#'}
+                               onClick={event => {event.preventDefault()}}
                             >
                                 <BtstrapIcon data={'bi-trash'} className={'bi-trash'}/>
-                            </a>
+                            </Button>
                         </td>
                     )
                 }
@@ -102,6 +107,7 @@ class TableArea extends React.Component {
                             </div>
                         </td>
                     )
+
                 }
                 else {
                     cur_row.push(
@@ -156,31 +162,27 @@ class TableArea extends React.Component {
                         data={'journal'} sort_names={this.props.sort_names}/>
                 )
                 table_area_content.push(
-                    <div className={'table-responsive'}>
-                        <TableJournal
-                            className={'table-hover'}
-                            style={{'width': journal_table_width}}
-                            key={'journal-table'}
-                        >
-                            {[
-                                this.renderTableHead(
-                                    'journal',
-                                    journal_col_names,
-                                    journal_col_order,
-                                    head_classnames,
-                                ),
-                                this.renderTableBody(
-                                    'journal',
-                                    journal_rows_data,
-                                    journal_col_order,
-                                    expenses_data,
-                                    tbody_classnames,
-                                ),
-                            ]}
-
-                        </TableJournal>
-                    </div>
-
+                    <TableJournal
+                        responsive={true}
+                        style={{'width': journal_table_width}}
+                        key={'journal-table'}
+                    >
+                        {[
+                            this.renderTableHead(
+                                'journal',
+                                journal_col_names,
+                                journal_col_order,
+                                head_classnames,
+                            ),
+                            this.renderTableBody(
+                                'journal',
+                                journal_rows_data,
+                                journal_col_order,
+                                expenses_data,
+                                tbody_classnames,
+                            ),
+                        ]}
+                    </TableJournal>
                 )
                 break;
             case 'expenses':
@@ -191,23 +193,24 @@ class TableArea extends React.Component {
         }
 
         return (
-            <div className={'table-area container-xl'}>
+            <Container xl='true' className={'table-area'}>
                 <Heading className={'text_color-dark'}>{area_name}</Heading>
                 <ButtonSection>
-                    <button type={'button'}
-                            className={'btn btn-success button button_size-small'}
+                    <Button id={'journal-add-entry-btn'}
+                            variant={'success'}
+                            className={'button button_size-small'}
                             onClick={() => alert('Не сейчас..')}
                     >
                         {add_entry_button_icon}
                         Добавить запись
-                    </button>
+                    </Button>
                 </ButtonSection>
                 {
                     //Control section and the table itself:
                     //____________________________
                     table_area_content
                 }
-            </div>
+            </Container>
         )
     }
 }

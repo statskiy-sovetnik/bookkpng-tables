@@ -9,9 +9,14 @@ import Menu from '../../blocks/menu/menu'
 import {JOURNAL_AREA_W as JournalArea} from '../../blocks/table-area/table-area'
 
 /*___ Libs _________________*/
-import '../../../node_modules/bootstrap/dist/js/bootstrap.bundle'
+
 
 class App extends React.Component {
+    constructor(props) {
+        super(props);
+
+    }
+
     componentDidMount() {
         //здесь взять все данные из базы
         //и добавить их в store

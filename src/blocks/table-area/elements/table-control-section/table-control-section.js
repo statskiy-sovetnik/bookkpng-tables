@@ -10,6 +10,9 @@ import {
 } from "../entry-length-switch-section/entry-length-switch-section";
 import SortSection from "../sort-section/sort-section";
 
+//Bootstrap
+import Container from "react-bootstrap/Container";
+
 class TableControlSection extends React.Component {
     constructor(props) {
         super(props);
@@ -26,19 +29,21 @@ class TableControlSection extends React.Component {
                 sort_section = (
                     <SortSection key={'sort-section'} data={'journal'} sort_names={this.props.sort_names}/>
                 )
-                period_sort_section = (<PeriodSortSection data={'journal'} key={'period-sort'}/>)
+                period_sort_section = (<PeriodSortSection size={'sm'} data={'journal'} key={'period-sort'}/>)
                 entry_length_switch_section = (<EntryLengthSwitchJournal key={'entry-length-switch'}/>)
                 break;
         }
 
         return (
-            <div className={'table-area__table-control-section container-xl'}>
+            <Container
+                xl='true'
+                className={'table-area__table-control-section'}>
                 {[
                     sort_section,
                     period_sort_section,
                     entry_length_switch_section
                 ]}
-            </div>
+            </Container>
         )
     }
 }

@@ -3,7 +3,9 @@ import {connect} from 'react-redux';
 import mapStateToProps from "../../store/mapStateToProps";
 import mapDispatchToProps from "../../store/mapDispatchToProps";
 
-class Table extends React.Component {
+import Table from 'react-bootstrap/Table'
+
+class CustomTable extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -12,9 +14,12 @@ class Table extends React.Component {
         const  extra_table_classes = this.props.className ? ' ' + this.props.className : '';
 
         return (
-            <table className={"table" + extra_table_classes} style={this.props.style}>
+            <Table hover={this.props.hover}
+                   responsive={this.props.responsive}
+                   style={this.props.style}
+                   className={extra_table_classes}>
                 {this.props.children}
-            </table>
+            </Table>
         )
     }
 }
@@ -22,6 +27,6 @@ class Table extends React.Component {
 const JOURNAL_TABLE = connect(
     mapStateToProps('TableJournal'),
     mapDispatchToProps('TableJournal')
-)(Table);
+)(CustomTable);
 
 export {JOURNAL_TABLE};

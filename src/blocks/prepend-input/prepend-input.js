@@ -7,7 +7,11 @@ import mapStateToProps from "../../store/mapStateToProps";
 import mapDispatchToProps from "../../store/mapDispatchToProps";
 registerLocale('ru', ru);
 
-export default class PrependInput extends React.Component {
+//Bootstrap
+import FormControl from 'react-bootstrap/FormControl';
+import InputGroup from 'react-bootstrap/InputGroup';
+
+class PrependInput extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -16,7 +20,6 @@ export default class PrependInput extends React.Component {
         const datepicker_class = 'date-input';
         const is_datepicker = this.props.className.indexOf(datepicker_class) !== -1;
         let group_extra_classes = this.props.className ? ' ' + this.props.className : '';
-
 
         let start_date = this.props.localFromDate || this.props.localToDate;
         start_date = start_date ? start_date : new Date();
@@ -34,17 +37,22 @@ export default class PrependInput extends React.Component {
                         locale='ru'
             />
         ) : (
-            <input id={this.props.id} type="text" className="form-control prepend-input__input" placeholder="" aria-label=""
-                   aria-describedby={this.props.label_id}/>
+            <FormControl type={this.props.type}
+                         size={this.props.size}
+                          className={'prepend-input__input'}
+                          placeholder={this.props.placeholder}
+                          aria-describedby={this.props.label_id}
+                          id={this.props.id}
+            />
         );
 
         return (
-            <div className={"prepend-input input-group input-group-sm" + group_extra_classes}>
-                <div className="input-group-prepend">
-                    <span className="prepend-input__prepend-text input-group-text" id={this.props.label_id}>{this.props.prepend}</span>
-                </div>
+            <InputGroup size={this.props.size} className={"prepend-input" + group_extra_classes}>
+                <InputGroup.Prepend>
+                    <InputGroup.Text className="prepend-input__prepend-text" id={this.props.label_id}>{this.props.prepend}</InputGroup.Text>
+                </InputGroup.Prepend>
                 {needed_input}
-            </div>
+            </InputGroup>
         )
     }
 }
