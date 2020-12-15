@@ -14,6 +14,8 @@ import {JOURNAL_TABLE as TableJournal} from "../table/table";
 /*___ Bootstrap _________________*/
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
+import Popover from "react-bootstrap/Popover";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 
 class TableArea extends React.Component {
     constructor(props) {
@@ -69,21 +71,51 @@ class TableArea extends React.Component {
                     let cur_expenses_arr = row_data[col_name];
                     let cur_expenses_total = 0;
                     let expenses_color_cells = [];
+                    let popover_list = [];
 
                     cur_expenses_arr.forEach((expense) => {
                         cur_expenses_total += expense.amount;
 
                         expenses_color_cells.push(
-                            <li>
+                            <li
+                                key={'color-cell_row-' + row_id + '_id-' + expense.id}
+                            >
                                 <a onClick={event => {event.preventDefault()}} href={'#'}
                                    className={'expense-color-square'}
                                    style={{backgroundColor: expenses_data[expense.id].color}}
                                    title={expenses_data[expense.id].name}
-                                   key={'color-cell_row-' + row_id + '_id-' + expense.id}
                                 />
                             </li>
                         )
+
+                        popover_list.push(
+                            <li
+                                key={'popover_color-cell_row-' + row_id + '_id-' + expense.id}
+                            >
+                                <a className={'expense-color-square'}
+                                    onClick={event => {event.preventDefault()}}
+                                    style={{backgroundColor: expenses_data[expense.id].color}}
+                                    href="#"
+                                />
+                                <span className={'expenses-name text text_color-black text_size-13'}>
+                                    {expenses_data[expense.id].name}
+                                </span>
+                            </li>
+                        )
                     });
+
+                    const eye_expenses_popover = (
+                        <Popover id={'expenses-popover_' + data + '_row-' + row_id}>
+                            <Popover.Title as="h5">
+                                Расходы
+                            </Popover.Title>
+                            <Popover.Content>
+                                <ul className={'ulist table-area__popover-expenses-list'}>
+                                    {popover_list}
+                                </ul>
+                            </Popover.Content>
+                        </Popover>
+                    );
 
                     cur_row.push(
                         <td className={cell_class}
@@ -96,12 +128,24 @@ class TableArea extends React.Component {
                                         {expenses_color_cells}
                                     </ul>
                                     <div className={'table-area__expenses-icons-block'}>
-                                        <BtstrapIcon data={'bi-eye-fill'}
-                                                     className={'bi-eye-fill btstrap-icon_size-12 btstrap-icon_color-dark ' +
-                                                     'table-area__expenses-icons-block__btstrap-icon'}/>
-                                        <BtstrapIcon data={'bi-plus-circle'}
+                                        <OverlayTrigger trigger={'focus'} overlay={eye_expenses_popover} placement={'bottom'}>
+                                            <a
+                                                className={'text text_color-dark'}
+                                                href="#"
+                                                onClick={event => {event.preventDefault()}}>
+                                                <BtstrapIcon data={'bi-eye-fill'}
+                                                         className={'bi-eye-fill btstrap-icon_size-12 btstrap-icon_color-dark ' +
+                                                         'table-area__expenses-icons-block__btstrap-icon'}/>
+                                            </a>
+                                        </OverlayTrigger>
+                                        <a className="text text_color-dark"
+                                           href={'#'}
+                                           onClick={event => {event.preventDefault()}}
+                                        >
+                                            <BtstrapIcon data={'bi-plus-circle'}
                                                      className={'bi-plus-circle btstrap-icon_size-10 btstrap-icon_color-dark ' +
                                                      'table-area__expenses-icons-block__btstrap-icon'}/>
+                                        </a>
                                     </div>
                                 </span>
                             </div>
@@ -191,6 +235,7 @@ class TableArea extends React.Component {
             default:
                 area_name = 'Журнал';
         }
+
 
         return (
             <Container xl='true' className={'table-area'}>
