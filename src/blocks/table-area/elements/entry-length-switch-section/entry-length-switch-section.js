@@ -12,6 +12,13 @@ class EntryLengthSwitchSection extends React.Component{
         super(props);
     }
 
+    changeEntriesDisplayed(new_entries_pack, prev_entries_pack, prev_entries_should_be_shown) {
+        const new_entries_should_be_shown = prev_entries_should_be_shown + (new_entries_pack - prev_entries_pack);
+
+        this.props.changeEntriesPack(new_entries_pack);
+        this.props.changeEntriesShouldBeShown(new_entries_should_be_shown);
+    }
+
     render () {
         const entry_length_values = [5, 10, 20, 30, 50];
         let buttons = [],
@@ -28,7 +35,11 @@ class EntryLengthSwitchSection extends React.Component{
                     variant={'light'}
                     onClick={(event) => {
                         event.preventDefault();
-                        this.props.changeShowEntries(+event.currentTarget.innerHTML);
+                        this.changeEntriesDisplayed(
+                            +event.currentTarget.innerHTML,
+                            this.props.entriesPack,
+                            this.props.entriesShouldBeShown,
+                        );
                     }}
                     className={cur_btn_classname}
                     key={i + '-btn-length-switch'}>

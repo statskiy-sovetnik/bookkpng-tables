@@ -8,6 +8,7 @@ import journalSortDirChange from "./actionCreators/journalSortDirChange";
 import entryLengthSwitchBtnClick from "./actionCreators/entryLengthSwitchBtnClick";
 import loadDataBaseJournal from "./actionCreators/loadDataBaseJournal";
 import loadExpensesData from "./actionCreators/loadExpensesData";
+import entriesShownChangeJournal from "./actionCreators/journalEntriesShownChange";
 
 export default function mapDispatchToProps(component) {
     switch (component) {
@@ -58,7 +59,8 @@ export default function mapDispatchToProps(component) {
         case 'EntrySwitchLengthSectionJournal':
             return function (dispatch) {
                 return {
-                    changeShowEntries: (value) => dispatch(entryLengthSwitchBtnClick(value)),
+                    changeEntriesPack: (value) => dispatch(entryLengthSwitchBtnClick(value)),
+                    changeEntriesShouldBeShown: (value) => dispatch(entriesShownChangeJournal(value)),
                 }
             }
 

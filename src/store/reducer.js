@@ -74,6 +74,14 @@ export default function reducer(state, action) {
                     entriesPack: action.value,
                 }
             }
+        case actionTypes.ENTRIES_SHOWN_CHANGE_JOURNAL:
+            return {
+                ...state,
+                journal: {
+                    ...state.journal,
+                    entriesShouldBeShown: action.value,
+                }
+            }
         //________ Journal Table ___________
 
 

@@ -10,7 +10,7 @@ export default function mapStateToProps(component) {
                     journalTableWidth: state.journal.table_width,
                     expensesData: state.expenses_data,
                     journalEntriesPack: state.journal.entriesPack,
-                    journalEntriesShown: state.journal.entriesShown,
+                    journalEntriesShown: state.journal.entriesShouldBeShown,
                 }
             }
         //______ Journal Sort ________________
@@ -54,6 +54,7 @@ export default function mapStateToProps(component) {
             return function (state) {
                 return {
                     entriesPack: state.journal.entriesPack,
+                    entriesShouldBeShown: state.journal.entriesShouldBeShown,
                 }
             }
         //______ Journal Table ____________

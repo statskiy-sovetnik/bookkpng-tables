@@ -9,7 +9,7 @@ const initialState = {
         appliedFromDate: '',
         appliedToDate: '',
         entriesPack: ENTRIES_PACK,
-        entriesShown: ENTRIES_PACK,
+        entriesShouldBeShown: ENTRIES_PACK,
         rowsOpened: new Array(ENTRIES_PACK).fill(0),
         rows: { //the keys of this object are id's of rows
             /*0: {
