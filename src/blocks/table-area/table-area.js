@@ -59,8 +59,6 @@ class TableArea extends React.Component {
             const to_date_obj = new Date(toDate);
             const from_date_timestamp = +from_date_obj;
             const to_date_timestamp = +to_date_obj;
-            console.log('Sort from: ' + from_date_obj);
-            console.log('Sort to: ' + to_date_obj);
 
             if(to_date_timestamp >= from_date_timestamp) {
                 for(let i = 0; i < rows_keys.length; i++) {
@@ -68,10 +66,8 @@ class TableArea extends React.Component {
                     const row_id = +rows_keys[i];
                     const cur_row_date_obj = parse(rows[row_id].date, 'dd/MM/yyyy', new Date());
                     const cur_row_timestamp = +cur_row_date_obj;
-                    console.log('And row ' + row_id + ' date: ' + cur_row_date_obj);
 
                     if(cur_row_timestamp < from_date_timestamp || cur_row_timestamp > to_date_timestamp) {
-                        console.log('I delete ' + row_id);
                         if(rows_keys_sorted.length === 1) {
                             rows_keys_sorted = [];
                         }
@@ -90,7 +86,6 @@ class TableArea extends React.Component {
             }
 
         }
-        console.log('See, not changed!: ' + rows_keys);
 
         //RENDERING ROWS _________________________
 
@@ -152,7 +147,8 @@ class TableArea extends React.Component {
                                     href="#"
                                 />
                                 <span className={'expenses-name text text_color-black text_size-13'}>
-                                    {expenses_data[expense.id].name}
+                                    {expenses_data[expense.id].name + ': '}
+                                    <strong>{expense.amount}</strong>
                                 </span>
                             </li>
                         )
@@ -349,7 +345,6 @@ class TableArea extends React.Component {
             default:
                 area_name = 'Журнал';
         }
-
 
         return (
             <Container xl='true' className={'table-area'}>
