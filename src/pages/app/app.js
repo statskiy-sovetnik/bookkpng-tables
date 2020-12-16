@@ -14,7 +14,6 @@ import {JOURNAL_AREA_W as JournalArea} from '../../blocks/table-area/table-area'
 class App extends React.Component {
     constructor(props) {
         super(props);
-
     }
 
     componentDidMount() {
@@ -197,6 +196,31 @@ class App extends React.Component {
                     },
                 ]
             },
+            5: {
+                date: '27/08/2004',
+                name: 'Совершенно другое сырьё',
+                provider_name: '\"ООО\" Lazorbeam',
+                amount: 2080.00,
+                price: 999.50,
+                expenses: [
+                    {
+                        id: 1,
+                        amount: 440.33
+                    },
+                    {
+                        id: 2,
+                        amount: 480.00
+                    },
+                    {
+                        id: 6,
+                        amount: 1340.00
+                    },
+                    {
+                        id: 7,
+                        amount: 1145.00
+                    }
+                ]
+            }
         }
         const journal_rows_updated = this.getUpdatedJournalRows(journal_rows_data);
 

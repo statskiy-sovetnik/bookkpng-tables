@@ -43,10 +43,14 @@ class TableArea extends React.Component {
         )
     }
 
-    renderTableBody(data, rows, cols_order, expenses_data, body_classnames) {
+    renderTableBody(data, rows, cols_order, expenses_data, body_classnames, show_how_many) {
         let table_rows = [];
 
         for(let row_id in rows) {
+            if(row_id >= show_how_many) {
+                break;
+            }
+
             let cur_row = [];
             const row_data = rows[row_id];
             let cell_class = 'table__body-cell';
@@ -178,26 +182,36 @@ class TableArea extends React.Component {
         )
     }
 
-    renderTableBottomPanel(rows_num, show_entries_num) {
+    renderTableBottomPanel(entries_left, show_entries_num) {
+        const content = (entries_left > 0 ? (
+            <div className={'content-area'}>
+                    <span className={'table-area__bottom-panel__entries-num-text text text_size-14 text_color-grey'}>
+                    Ещё записей: {entries_left}
+                </span>
+                <Button className={'button button_size-small table-area__bottom-panel__button'}
+                        variant={'dark'}
+                        size={'sm'}
+                >
+                    Показать ещё {show_entries_num}
+                </Button>
+                <Button className={'button button_size-small table-area__bottom-panel__button'}
+                        variant={'dark'}
+                        size={'sm'}
+                >
+                    Показать всё
+                </Button>
+            </div>
+        ) : (
+            <div className={'content-area'}>
+                <span className={'table-area__bottom-panel__entries-num-text text text_size-14 text_color-grey'}>
+                   Все записи отображены
+                </span>
+            </div>
+        ));
+
         return (
             <Container key={'table-area-bottom-panel'} className={'table-area__bottom-panel'} xl={'true'}>
-                <div className={'content-area'}>
-                    <span className={'table-area__bottom-panel__entries-num-text text text_size-14 text_color-grey'}>
-                        Ещё записей: {rows_num}
-                    </span>
-                    <Button className={'button button_size-small table-area__bottom-panel__button'}
-                            variant={'dark'}
-                            size={'sm'}
-                    >
-                        Показать ещё {show_entries_num}
-                    </Button>
-                    <Button className={'button button_size-small table-area__bottom-panel__button'}
-                            variant={'dark'}
-                            size={'sm'}
-                    >
-                        Показать всё
-                    </Button>
-                </div>
+                {content}
             </Container>
         )
     }
@@ -214,11 +228,12 @@ class TableArea extends React.Component {
         const journal_rows_data = this.props.journalRows;
         const journal_table_width = this.props.journalTableWidth;
         const journal_rows_num = Object.keys(journal_rows_data).length;
-        const journal_show_entries_num = this.props.journalShowEntries;
+        const journal_entries_pack = this.props.journalEntriesPack;
+        const journal_entries_shown = this.props.journalEntriesShown;
+        const journal_entries_left = journal_rows_num - journal_entries_shown;
 
         const head_classnames = 'text text_size-13 text_color-dark thead-light';
         const tbody_classnames = 'text text_size-13 text_color-black';
-
 
         switch(this.props.data) {
             case 'journal':
@@ -251,12 +266,13 @@ class TableArea extends React.Component {
                                 journal_col_order,
                                 expenses_data,
                                 tbody_classnames,
+                                journal_entries_shown,
                             ),
                         ]}
                     </TableJournal>
                 )
                 table_area_content.push(
-                    this.renderTableBottomPanel(journal_rows_num, journal_show_entries_num)
+                    this.renderTableBottomPanel(journal_entries_left, journal_entries_pack)
                 );
                 break;
             case 'expenses':

@@ -71,7 +71,7 @@ export default function reducer(state, action) {
                 ...state,
                 journal: {
                     ...state.journal,
-                    showEntries: action.value,
+                    entriesPack: action.value,
                 }
             }
         //________ Journal Table ___________

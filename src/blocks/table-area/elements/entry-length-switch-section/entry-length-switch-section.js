@@ -19,7 +19,7 @@ class EntryLengthSwitchSection extends React.Component{
 
         for(let i in entry_length_values) {
             let cur_btn_classname = btn_classname;
-            if(entry_length_values[i] === this.props.showEntries) {
+            if(entry_length_values[i] === this.props.entriesPack) {
                 cur_btn_classname += ' active';
             }
 

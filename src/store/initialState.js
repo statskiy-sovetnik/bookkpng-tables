@@ -1,4 +1,4 @@
-const SHOW_ENTRIES = 5;
+const ENTRIES_PACK = 5;
 
 const initialState = {
     journal: {
@@ -8,9 +8,9 @@ const initialState = {
         localToDate: '',
         appliedFromDate: '',
         appliedToDate: '',
-        showEntries: SHOW_ENTRIES,
-        currentlyShown: SHOW_ENTRIES,
-        rowsOpened: new Array(SHOW_ENTRIES).fill(0),
+        entriesPack: ENTRIES_PACK,
+        entriesShown: ENTRIES_PACK,
+        rowsOpened: new Array(ENTRIES_PACK).fill(0),
         rows: { //the keys of this object are id's of rows
             /*0: {
                 date: '',

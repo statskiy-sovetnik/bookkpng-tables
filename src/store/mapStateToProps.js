@@ -9,7 +9,8 @@ export default function mapStateToProps(component) {
                     journalColNames: state.journal.head_col_names,
                     journalTableWidth: state.journal.table_width,
                     expensesData: state.expenses_data,
-                    journalShowEntries: state.showEntries,
+                    journalEntriesPack: state.journal.entriesPack,
+                    journalEntriesShown: state.journal.entriesShown,
                 }
             }
         //______ Journal Sort ________________
@@ -52,7 +53,7 @@ export default function mapStateToProps(component) {
         case 'EntrySwitchLengthSectionJournal':
             return function (state) {
                 return {
-                    showEntries: state.journal.showEntries,
+                    entriesPack: state.journal.entriesPack,
                 }
             }
         //______ Journal Table ____________
