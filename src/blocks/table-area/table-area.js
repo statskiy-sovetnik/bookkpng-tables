@@ -4,6 +4,8 @@ import store from '../../store/store'
 import mapDispatchToProps from "../../store/mapDispatchToProps";
 import mapStateToProps from "../../store/mapStateToProps";
 
+import parse from 'date-fns/parse'
+
 //______ Blocks ________________
 import Heading from "../heading/heading";
 import ButtonSection from "./elements/button-section/button-section";
@@ -43,11 +45,59 @@ class TableArea extends React.Component {
         )
     }
 
-    renderTableBody(data, rows, cols_order, expenses_data, body_classnames, show_how_many) {
+    renderTableBody(data, rows, cols_order, expenses_data, body_classnames, show_how_many,
+                    fromDate, toDate) {
         let table_rows = [];
+        let rows_keys_sorted = Object.keys(rows).slice();
+        let rows_keys = Object.keys(rows).slice();
 
-        for(let row_id in rows) {
-            if(row_id >= show_how_many) {
+        //Sorting Rows By Date Range ________________
+
+        if(fromDate && toDate) { //если какая-то из дат не задана, то не сортировать
+
+            const from_date_obj = new Date(fromDate);
+            const to_date_obj = new Date(toDate);
+            const from_date_timestamp = +from_date_obj;
+            const to_date_timestamp = +to_date_obj;
+            console.log('Sort from: ' + from_date_obj);
+            console.log('Sort to: ' + to_date_obj);
+
+            if(to_date_timestamp >= from_date_timestamp) {
+                for(let i = 0; i < rows_keys.length; i++) {
+                    //console.log('Now rows length: ' + rows_keys_sorted.length);
+                    const row_id = +rows_keys[i];
+                    const cur_row_date_obj = parse(rows[row_id].date, 'dd/MM/yyyy', new Date());
+                    const cur_row_timestamp = +cur_row_date_obj;
+                    console.log('And row ' + row_id + ' date: ' + cur_row_date_obj);
+
+                    if(cur_row_timestamp < from_date_timestamp || cur_row_timestamp > to_date_timestamp) {
+                        console.log('I delete ' + row_id);
+                        if(rows_keys_sorted.length === 1) {
+                            rows_keys_sorted = [];
+                        }
+                        else {
+                            let del_id = rows_keys_sorted.indexOf('' + row_id);
+                            rows_keys_sorted.splice(del_id, 1);
+                        }
+                    }
+                }
+
+                /*rows_keys_sorted = Object.keys(rows).sort((row_id_1, row_id_2) => {
+                    const date_1 = parse(rows[row_id_1].date, 'dd/MM/yyyy', new Date());
+                    const date_2 = parse(rows[row_id_2].date, 'dd/MM/yyyy', new Date());
+                    return +date_1 - +date_2;
+                });*/
+            }
+
+        }
+        console.log('See, not changed!: ' + rows_keys);
+
+        //RENDERING ROWS _________________________
+
+        for(let i in rows_keys_sorted) {
+            const row_id = +rows_keys_sorted[i];
+
+            if(i >= show_how_many) {
                 break;
             }
 
@@ -244,6 +294,8 @@ class TableArea extends React.Component {
         const journal_rows_num = Object.keys(journal_rows_data).length;
         const journal_entries_pack = this.props.journalEntriesPack;
         const journal_entries_should_be_shown = this.props.journalEntriesShown;
+        const journal_applied_from_date = this.props.journalAppliedFromDate;
+        const journal_applied_to_date = this.props.journalAppliedToDate;
         const journal_entries_left = journal_rows_num - journal_entries_should_be_shown;
 
         const head_classnames = 'text text_size-13 text_color-dark thead-light';
@@ -281,6 +333,8 @@ class TableArea extends React.Component {
                                 expenses_data,
                                 tbody_classnames,
                                 journal_entries_should_be_shown,
+                                journal_applied_from_date,
+                                journal_applied_to_date,
                             ),
                         ]}
                     </TableJournal>

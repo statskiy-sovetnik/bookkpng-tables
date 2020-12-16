@@ -63,7 +63,9 @@ function PeriodSort(props) {
                             size={'sm'}
                             onClick={(event) => {
                                 event.preventDefault();
-                                props.changeAppliedDates(props.localFromDate, props.localToDate);
+                                let apply_from_date = props.localFromDate ? props.localFromDate : new Date();
+                                let apply_to_date = props.localToDate ? props.localToDate : new Date();
+                                props.changeAppliedDates(apply_from_date, apply_to_date);
                             }}
                     >
                         Применить

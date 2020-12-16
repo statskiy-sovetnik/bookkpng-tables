@@ -13,10 +13,8 @@ class EntryLengthSwitchSection extends React.Component{
     }
 
     changeEntriesDisplayed(new_entries_pack, prev_entries_pack, prev_entries_should_be_shown) {
-        const new_entries_should_be_shown = prev_entries_should_be_shown + (new_entries_pack - prev_entries_pack);
-
         this.props.changeEntriesPack(new_entries_pack);
-        this.props.changeEntriesShouldBeShown(new_entries_should_be_shown);
+        this.props.changeEntriesShouldBeShown(new_entries_pack);
     }
 
     render () {

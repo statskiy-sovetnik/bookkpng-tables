@@ -27,7 +27,10 @@ class PrependInput extends React.Component {
 
         let needed_input = is_datepicker ? (
             <DatePicker selected={start_date}
-                        onChange={(date) => changeLocalDate(date)}
+                        onChange={(date) => {
+                            let date_from_begin = date.setHours(0, 0, 0, 0);
+                            changeLocalDate(date_from_begin);
+                        }}
                         className={'form-control prepend-input__input'}
                         aria-describedby={this.props.label_id}
                         id={this.props.id}

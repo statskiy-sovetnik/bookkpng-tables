@@ -11,6 +11,8 @@ export default function mapStateToProps(component) {
                     expensesData: state.expenses_data,
                     journalEntriesPack: state.journal.entriesPack,
                     journalEntriesShown: state.journal.entriesShouldBeShown,
+                    journalAppliedFromDate: state.journal.appliedFromDate,
+                    journalAppliedToDate: state.journal.appliedToDate,
                 }
             }
         //______ Journal Sort ________________
