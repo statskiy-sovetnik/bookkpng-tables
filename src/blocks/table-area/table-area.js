@@ -182,21 +182,35 @@ class TableArea extends React.Component {
         )
     }
 
-    renderTableBottomPanel(entries_left, show_entries_num) {
+    renderTableBottomPanel(entries_left, entries_pack, entries_should_be_shown) {
         const content = (entries_left > 0 ? (
             <div className={'content-area'}>
-                    <span className={'table-area__bottom-panel__entries-num-text text text_size-14 text_color-grey'}>
+                <span className={'table-area__bottom-panel__entries-num-text text text_size-14 text_color-grey'}>
                     Ещё записей: {entries_left}
                 </span>
                 <Button className={'button button_size-small table-area__bottom-panel__button'}
                         variant={'dark'}
                         size={'sm'}
+                        onClick={event => {
+                            event.preventDefault();
+
+                            this.props.changeEntriesShouldBeShown(
+                                entries_should_be_shown + entries_pack
+                            );
+                        }}
                 >
-                    Показать ещё {show_entries_num}
+                    Показать ещё {entries_pack}
                 </Button>
                 <Button className={'button button_size-small table-area__bottom-panel__button'}
                         variant={'dark'}
                         size={'sm'}
+                        onClick={event => {
+                            event.preventDefault();
+
+                            this.props.changeEntriesShouldBeShown(
+                                entries_should_be_shown + entries_left
+                            );
+                        }}
                 >
                     Показать всё
                 </Button>
@@ -229,8 +243,8 @@ class TableArea extends React.Component {
         const journal_table_width = this.props.journalTableWidth;
         const journal_rows_num = Object.keys(journal_rows_data).length;
         const journal_entries_pack = this.props.journalEntriesPack;
-        const journal_entries_shown = this.props.journalEntriesShown;
-        const journal_entries_left = journal_rows_num - journal_entries_shown;
+        const journal_entries_should_be_shown = this.props.journalEntriesShown;
+        const journal_entries_left = journal_rows_num - journal_entries_should_be_shown;
 
         const head_classnames = 'text text_size-13 text_color-dark thead-light';
         const tbody_classnames = 'text text_size-13 text_color-black';
@@ -266,13 +280,13 @@ class TableArea extends React.Component {
                                 journal_col_order,
                                 expenses_data,
                                 tbody_classnames,
-                                journal_entries_shown,
+                                journal_entries_should_be_shown,
                             ),
                         ]}
                     </TableJournal>
                 )
                 table_area_content.push(
-                    this.renderTableBottomPanel(journal_entries_left, journal_entries_pack)
+                    this.renderTableBottomPanel(journal_entries_left, journal_entries_pack, journal_entries_should_be_shown)
                 );
                 break;
             case 'expenses':

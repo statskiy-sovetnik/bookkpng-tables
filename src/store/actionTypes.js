@@ -19,6 +19,6 @@ export default {
 
     //Journal Table
     LOAD_DATA_BASE_JOURNAL: 'loadDataBaseJournal',
-    ENTRIES_SHOWN_CHANGE_JOURNAL: 'entriesShownChangeJournal',
+    ENTRIES_SHOWN_CHANGE_JOURNAL: 'entriesShouldBeShownChangeJournal',
 
 }
