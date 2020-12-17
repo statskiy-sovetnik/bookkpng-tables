@@ -18,6 +18,7 @@ import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Popover from "react-bootstrap/Popover";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import sort from "./elements/sort/sort";
 
 class TableArea extends React.Component {
     constructor(props) {
@@ -46,7 +47,9 @@ class TableArea extends React.Component {
     }
 
     renderTableBody(data, rows, cols_order, expenses_data, body_classnames, show_how_many,
-                    fromDate, toDate) {
+                    fromDate, toDate, sort_type, sort_from_least) {
+        if(Object.keys(rows).length === 0) {return}
+
         let table_rows = [];
         let rows_keys_sorted = Object.keys(rows).slice();
         let rows_keys = Object.keys(rows).slice();
@@ -78,13 +81,100 @@ class TableArea extends React.Component {
                     }
                 }
 
-                /*rows_keys_sorted = Object.keys(rows).sort((row_id_1, row_id_2) => {
-                    const date_1 = parse(rows[row_id_1].date, 'dd/MM/yyyy', new Date());
-                    const date_2 = parse(rows[row_id_2].date, 'dd/MM/yyyy', new Date());
-                    return +date_1 - +date_2;
-                });*/
             }
 
+        }
+
+        console.log("Тип: " + sort_type);
+        console.log("Дир: " + sort_from_least);
+        switch (sort_type) {
+            case 'Наименованию':
+                rows_keys_sorted.sort((row_id_1, row_id_2) => {
+                    const name_1 = rows[row_id_1].name;
+                    const name_2 = rows[row_id_2].name;
+                    let sort_from_least_coef = sort_from_least ? 1 : -1;
+
+                    if(name_1 < name_2) {
+                        return -1 * sort_from_least_coef;
+                    }
+                    else if(name_1 > name_2) {
+                        return sort_from_least_coef;
+                    }
+                    else {
+                        return 0;
+                    }
+                })
+                break;
+            case 'Поставщику':
+                rows_keys_sorted.sort((row_id_1, row_id_2) => {
+                    const name_1 = rows[row_id_1].provider_name;
+                    const name_2 = rows[row_id_2].provider_name;
+                    let sort_from_least_coef = sort_from_least ? 1 : -1;
+
+                    if(name_1 < name_2) {
+                        return -1 * sort_from_least_coef;
+                    }
+                    else if(name_1 > name_2) {
+                        return sort_from_least_coef;
+                    }
+                    else {
+                        return 0;
+                    }
+                })
+                break;
+            case 'Сумме':
+                rows_keys_sorted.sort((row_id_1, row_id_2) => {
+                    const sum_1 = +rows[row_id_1].sum;
+                    const sum_2 = +rows[row_id_2].sum;
+                    let sort_from_least_coef = sort_from_least ? 1 : -1;
+
+                    return (sum_1 - sum_2) * sort_from_least_coef;
+                })
+                break;
+            case 'Кол-ву':
+                rows_keys_sorted.sort((row_id_1, row_id_2) => {
+                    const sum_1 = +rows[row_id_1].amount;
+                    const sum_2 = +rows[row_id_2].amount;
+                    let sort_from_least_coef = sort_from_least ? 1 : -1;
+
+                    return (sum_1 - sum_2) * sort_from_least_coef;
+                })
+                break;
+            case 'Цене':
+                rows_keys_sorted.sort((row_id_1, row_id_2) => {
+                    const sum_1 = +rows[row_id_1].price;
+                    const sum_2 = +rows[row_id_2].price;
+                    let sort_from_least_coef = sort_from_least ? 1 : -1;
+
+                    return (sum_1 - sum_2) * sort_from_least_coef;
+                })
+                break;
+            case 'Расходам':
+                rows_keys_sorted.sort((row_id_1, row_id_2) => {
+                    const exp_arr_1 = rows[row_id_1].expenses;
+                    const exp_arr_2 = rows[row_id_2].expenses;
+                    let total_1 = 0, total_2 = 0;
+                    let sort_from_least_coef = sort_from_least ? 1 : -1;
+
+                    exp_arr_1.forEach((exp) => {
+                        total_1 += +exp.amount;
+                    });
+                    exp_arr_2.forEach((exp) => {
+                        total_2 += +exp.amount;
+                    })
+
+                    return (total_1 - total_2) * sort_from_least_coef;
+                })
+                break;
+            case 'Дате':
+                rows_keys_sorted.sort((row_id_1, row_id_2) => {
+                    const date_1 = parse(rows[row_id_1].date, 'dd/MM/yyyy', new Date());
+                    const date_2 = parse(rows[row_id_2].date, 'dd/MM/yyyy', new Date());
+                    const sort_from_least_coef = sort_from_least ? 1 : -1;
+
+                    return (+date_1 - +date_2) * sort_from_least_coef;
+                });
+                break;
         }
 
         //RENDERING ROWS _________________________
@@ -292,6 +382,8 @@ class TableArea extends React.Component {
         const journal_entries_should_be_shown = this.props.journalEntriesShown;
         const journal_applied_from_date = this.props.journalAppliedFromDate;
         const journal_applied_to_date = this.props.journalAppliedToDate;
+        const journal_sort_name = this.props.journalSortType;
+        const journal_sort_from_least = this.props.journalSortFromLeast;
         const journal_entries_left = journal_rows_num - journal_entries_should_be_shown;
 
         const head_classnames = 'text text_size-13 text_color-dark thead-light';
@@ -331,6 +423,8 @@ class TableArea extends React.Component {
                                 journal_entries_should_be_shown,
                                 journal_applied_from_date,
                                 journal_applied_to_date,
+                                journal_sort_name,
+                                journal_sort_from_least,
                             ),
                         ]}
                     </TableJournal>

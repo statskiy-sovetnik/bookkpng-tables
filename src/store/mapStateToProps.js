@@ -13,6 +13,8 @@ export default function mapStateToProps(component) {
                     journalEntriesShown: state.journal.entriesShouldBeShown,
                     journalAppliedFromDate: state.journal.appliedFromDate,
                     journalAppliedToDate: state.journal.appliedToDate,
+                    journalSortType: state.journal.sortName,
+                    journalSortFromLeast: state.journal.sortFromLeast,
                 }
             }
         //______ Journal Sort ________________
