@@ -21,4 +21,7 @@ export default {
     LOAD_DATA_BASE_JOURNAL: 'loadDataBaseJournal',
     ENTRIES_SHOWN_CHANGE_JOURNAL: 'entriesShouldBeShownChangeJournal',
 
+    // AUTH_______________
+
+    CHANGE_AUTH_TYPE: 'changeAuthType',
 }

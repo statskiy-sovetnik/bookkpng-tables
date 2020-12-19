@@ -9,6 +9,7 @@ import entryLengthSwitchBtnClick from "./actionCreators/entryLengthSwitchBtnClic
 import loadDataBaseJournal from "./actionCreators/loadDataBaseJournal";
 import loadExpensesData from "./actionCreators/loadExpensesData";
 import entriesShouldBeShownChangeJournal from "./actionCreators/journalEntriesShouldBeShownChange";
+import changeAuthType from "./actionCreators/changeAuthType";
 
 export default function mapDispatchToProps(component) {
     switch (component) {
@@ -19,6 +20,15 @@ export default function mapDispatchToProps(component) {
                     loadExpensesData: (expenses_obj) => dispatch(loadExpensesData(expenses_obj)),
                 }
             }
+
+        //__________ AUTH ______________
+        case 'Auth':
+            return function (dispatch) {
+                return {
+                    changeAuthType: (value) => dispatch(changeAuthType(value))
+                }
+            }
+
         //__________JOURNAL _____________
         case 'JournalArea':
             return function (dispatch) {

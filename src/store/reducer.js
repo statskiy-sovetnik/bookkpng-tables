@@ -2,6 +2,16 @@ import actionTypes from './actionTypes'
 
 export default function reducer(state, action) {
     switch(action.type) {
+        //___ AUTH _________________
+        case actionTypes.CHANGE_AUTH_TYPE:
+            return {
+                ...state,
+                auth: {
+                    ...state.auth,
+                    type: action.value,
+                }
+            }
+
         //__APP _________________
         case actionTypes.LOAD_EXPENSES_DATA:
             return {
@@ -83,8 +93,6 @@ export default function reducer(state, action) {
                 }
             }
         //________ Journal Table ___________
-
-
 
         default:
             return state;

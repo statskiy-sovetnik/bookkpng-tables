@@ -1,6 +1,10 @@
 const ENTRIES_PACK = 5;
 
 const initialState = {
+    auth: {
+        type: 'signin',
+    },
+
     journal: {
         sortName: 'Наименованию',
         sortFromLeast: true,

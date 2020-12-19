@@ -64,6 +64,14 @@ export default function mapStateToProps(component) {
         //______ Journal Table ____________
 
 
+        //_______AUTHENTIFICATION __________
+
+        case 'Auth':
+            return function (state) {
+                return {
+                    authType: state.auth.type,
+                }
+            }
     }
 }
 
