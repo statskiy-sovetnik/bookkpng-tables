@@ -70,12 +70,6 @@ export default function mapStateToProps(component) {
             return function (state) {
                 return {
                     authType: state.auth.type,
-                    signInFormValidated: state.auth.signInFormValidated,
-                    signUpFormValidated: state.auth.signUpFormValidated,
-                    signInCorrect: state.auth.signInCorrect,
-                    signUpCorrect: state.auth.signUpCorrect,
-                    signInValidation: state.auth.signInValidation,
-                    signUpValidation: state.auth.signUpValidation,
                     signInKeyCorrect: state.auth.signInValidation.key,
                     signUpKeyCorrect: state.auth.signUpValidation.key,
                     signInEmailCorrect: state.auth.signInValidation.email,

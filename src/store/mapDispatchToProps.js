@@ -10,10 +10,6 @@ import loadDataBaseJournal from "./actionCreators/loadDataBaseJournal";
 import loadExpensesData from "./actionCreators/loadExpensesData";
 import entriesShouldBeShownChangeJournal from "./actionCreators/journalEntriesShouldBeShownChange";
 import changeAuthType from "./actionCreators/changeAuthType";
-import changeSignInValidated from "./actionCreators/changeSignInValidated";
-import changeSignUpValidated from "./actionCreators/changeSignUpValidated";
-import changeSignInCorrect from "./actionCreators/changeSignInCorrect";
-import changeSignUpCorrect from "./actionCreators/changeSignUpCorrect";
 import changeSignInKeyCorrect from "./actionCreators/auth/changeSignInKeyCorrect";
 import changeSignUpKeyCorrect from "./actionCreators/auth/changeSignUpKeyCorrect";
 import changeSignInEmailCorrect from "./actionCreators/auth/changeSignInEmailCorrect";
@@ -39,10 +35,6 @@ export default function mapDispatchToProps(component) {
             return function (dispatch) {
                 return {
                     changeAuthType: (value) => dispatch(changeAuthType(value)),
-                    changeSignInValidated: (value) => dispatch(changeSignInValidated(value)),
-                    changeSignUpValidated: (value) => dispatch(changeSignUpValidated(value)),
-                    changeSignInCorrect: (value) => dispatch(changeSignInCorrect(value)),
-                    changeSignUpCorrect: (value) => dispatch(changeSignUpCorrect(value)),
                     changeSignInKeyCorrect: (value) => dispatch(changeSignInKeyCorrect(value)),
                     changeSignUpKeyCorrect: (value) => dispatch(changeSignUpKeyCorrect(value)),
                     changeSignInEmailCorrect: (value) => dispatch(changeSignInEmailCorrect(value)),

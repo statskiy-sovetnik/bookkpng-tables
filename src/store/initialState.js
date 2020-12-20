@@ -3,10 +3,6 @@ const ENTRIES_PACK = 5;
 const initialState = {
     auth: {
         type: 'signin',
-        signInFormValidated: '',
-        signInCorrect: false,
-        signUpFormValidated: '',
-        signUpCorrect: false,
         signInPasswordEntered: '',
         signUpPasswordEntered: '',
         signUpValidation: {

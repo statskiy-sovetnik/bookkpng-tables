@@ -15,14 +15,12 @@ class Auth extends React.Component {
     handleSignInSubmit(form) {
         if(form.checkValidity() === false) {
         }
-        this.props.changeSignInValidated(true);
     }
 
     handleSignUpSubmit(form) {
         if(form.checkValidity() === false) {
 
         }
-        this.props.changeSignUpValidated(true);
     }
 
     validateSignInKey(input) {
@@ -107,7 +105,6 @@ class Auth extends React.Component {
                  auth_form = (
                     <Form
                         noValidate
-                        validated={this.props.signInFormValidated}
                         onSubmit={event => {
                             event.preventDefault();
                             event.stopPropagation();
@@ -173,7 +170,6 @@ class Auth extends React.Component {
                 auth_form = (
                     <Form
                         noValidate
-                        validated={this.props.signUpFormValidated}
                         onSubmit={event => {
                             event.preventDefault();
                             event.stopPropagation();

@@ -13,38 +13,6 @@ export default function reducer(state, action) {
                     type: action.value,
                 }
             }
-        case actionTypes.CHANGE_SIGN_UP_VALIDATED:
-            return {
-                ...state,
-                auth: {
-                    ...state.auth,
-                    signUpFormValidated: action.value,
-                }
-            }
-        case actionTypes.CHANGE_SIGN_IN_VALIDATED:
-            return {
-                ...state,
-                auth: {
-                    ...state.auth,
-                    signInFormValidated: action.value,
-                }
-            }
-        case actionTypes.CHANGE_SIGN_IN_CORRECT:
-            return {
-                ...state,
-                auth: {
-                    ...state.auth,
-                    signInCorrect: action.value,
-                }
-            }
-        case actionTypes.CHANGE_SIGN_UP_CORRECT:
-            return {
-                ...state,
-                auth: {
-                    ...state.auth,
-                    signUpCorrect: action.value,
-                }
-            }
         case actionTypes.CHANGE_SIGN_IN_KEY_CORRECT:
             return {
                 ...state,
