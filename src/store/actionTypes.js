@@ -24,4 +24,17 @@ export default {
     // AUTH_______________
 
     CHANGE_AUTH_TYPE: 'changeAuthType',
+    CHANGE_SIGN_IN_VALIDATED: 'changeSignInValidated',
+    CHANGE_SIGN_UP_VALIDATED: 'changeSignUpValidated',
+    CHANGE_SIGN_IN_CORRECT: 'changeSignInCorrect',
+    CHANGE_SIGN_UP_CORRECT: 'changeSignUpCorrect',
+    CHANGE_SIGN_IN_KEY_CORRECT: 'changeSignInKeyCorrect',
+    CHANGE_SIGN_UP_KEY_CORRECT: 'changeSignUpKeyCorrect',
+    CHANGE_SIGN_IN_EMAIL_CORRECT: 'changeSignInEmailCorrect',
+    CHANGE_SIGN_UP_EMAIL_CORRECT: 'changeSignUpEmailCorrect',
+    CHANGE_SIGN_IN_PASSWORD_CORRECT: 'changeSignInPasswordCorrect',
+    CHANGE_SIGN_UP_PASSWORD_CORRECT: 'changeSignUpPasswordCorrect',
+    CHANGE_SIGN_UP_PASSWORD_CONFIRM_CORRECT: 'changeSignUpPasswordConfirmCorrect',
+    CHANGE_SIGN_IN_PASSWORD_ENTERED: 'changeSignInPasswordEntered',
+    CHANGE_SIGN_UP_PASSWORD_ENTERED: 'changeSignUpPasswordEntered',
 }

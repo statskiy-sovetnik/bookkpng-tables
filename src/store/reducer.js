@@ -2,13 +2,140 @@ import actionTypes from './actionTypes'
 
 export default function reducer(state, action) {
     switch(action.type) {
+
         //___ AUTH _________________
+
         case actionTypes.CHANGE_AUTH_TYPE:
             return {
                 ...state,
                 auth: {
                     ...state.auth,
                     type: action.value,
+                }
+            }
+        case actionTypes.CHANGE_SIGN_UP_VALIDATED:
+            return {
+                ...state,
+                auth: {
+                    ...state.auth,
+                    signUpFormValidated: action.value,
+                }
+            }
+        case actionTypes.CHANGE_SIGN_IN_VALIDATED:
+            return {
+                ...state,
+                auth: {
+                    ...state.auth,
+                    signInFormValidated: action.value,
+                }
+            }
+        case actionTypes.CHANGE_SIGN_IN_CORRECT:
+            return {
+                ...state,
+                auth: {
+                    ...state.auth,
+                    signInCorrect: action.value,
+                }
+            }
+        case actionTypes.CHANGE_SIGN_UP_CORRECT:
+            return {
+                ...state,
+                auth: {
+                    ...state.auth,
+                    signUpCorrect: action.value,
+                }
+            }
+        case actionTypes.CHANGE_SIGN_IN_KEY_CORRECT:
+            return {
+                ...state,
+                auth: {
+                    ...state.auth,
+                    signInValidation: {
+                        ...state.auth.signInValidation,
+                        key: action.value,
+                    }
+                }
+            }
+        case actionTypes.CHANGE_SIGN_UP_KEY_CORRECT:
+            return {
+                ...state,
+                auth: {
+                    ...state.auth,
+                    signUpValidation: {
+                        ...state.auth.signUpValidation,
+                        key: action.value,
+                    }
+                }
+            }
+        case actionTypes.CHANGE_SIGN_IN_EMAIL_CORRECT:
+            return {
+                ...state,
+                auth: {
+                    ...state.auth,
+                    signInValidation: {
+                        ...state.auth.signInValidation,
+                        email: action.value,
+                    }
+                }
+            }
+        case actionTypes.CHANGE_SIGN_UP_EMAIL_CORRECT:
+            return {
+                ...state,
+                auth: {
+                    ...state.auth,
+                    signUpValidation: {
+                        ...state.auth.signUpValidation,
+                        email: action.value,
+                    }
+                }
+            }
+        case actionTypes.CHANGE_SIGN_IN_PASSWORD_CORRECT:
+            return {
+                ...state,
+                auth: {
+                    ...state.auth,
+                    signInValidation: {
+                        ...state.auth.signInValidation,
+                        password: action.value,
+                    }
+                }
+            }
+        case actionTypes.CHANGE_SIGN_UP_PASSWORD_CORRECT:
+            return {
+                ...state,
+                auth: {
+                    ...state.auth,
+                    signUpValidation: {
+                        ...state.auth.signUpValidation,
+                        password: action.value,
+                    }
+                }
+            }
+        case actionTypes.CHANGE_SIGN_UP_PASSWORD_CONFIRM_CORRECT:
+            return {
+                ...state,
+                auth: {
+                    ...state.auth,
+                    signUpValidation: {
+                        ...state.auth.signUpValidation,
+                        passwordConfirm: action.value,
+                    }
+                }
+            }
+        case actionTypes.CHANGE_SIGN_IN_PASSWORD_ENTERED:
+            return {
+                ...state,
+                auth: {
+                    ...state.auth,
+                    signInPasswordEntered: action.value,
+                }
+            }
+        case actionTypes.CHANGE_SIGN_UP_PASSWORD_ENTERED:
+            return {
+                ...state,
+                auth: {
+                    ...state.auth,
+                    signUpPasswordEntered: action.value,
                 }
             }
 

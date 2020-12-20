@@ -10,6 +10,19 @@ import loadDataBaseJournal from "./actionCreators/loadDataBaseJournal";
 import loadExpensesData from "./actionCreators/loadExpensesData";
 import entriesShouldBeShownChangeJournal from "./actionCreators/journalEntriesShouldBeShownChange";
 import changeAuthType from "./actionCreators/changeAuthType";
+import changeSignInValidated from "./actionCreators/changeSignInValidated";
+import changeSignUpValidated from "./actionCreators/changeSignUpValidated";
+import changeSignInCorrect from "./actionCreators/changeSignInCorrect";
+import changeSignUpCorrect from "./actionCreators/changeSignUpCorrect";
+import changeSignInKeyCorrect from "./actionCreators/auth/changeSignInKeyCorrect";
+import changeSignUpKeyCorrect from "./actionCreators/auth/changeSignUpKeyCorrect";
+import changeSignInEmailCorrect from "./actionCreators/auth/changeSignInEmailCorrect";
+import changeSignUpEmailCorrect from "./actionCreators/auth/changeSignUpEmailCorrect";
+import changeSignInPasswordCorrect from "./actionCreators/auth/changeSignInPasswordCorrect";
+import changeSignUpPasswordCorrect from "./actionCreators/auth/changeSignUpPasswordCorrect";
+import changeSignUpPasswordConfirmCorrect from "./actionCreators/auth/changeSignUpPasswordConfirmCorrect";
+import changeSignInPasswordEntered from "./actionCreators/auth/changeSignInPasswordEntered";
+import changeSignUpPasswordEntered from "./actionCreators/auth/changeSignUpPasswordEntered";
 
 export default function mapDispatchToProps(component) {
     switch (component) {
@@ -25,7 +38,20 @@ export default function mapDispatchToProps(component) {
         case 'Auth':
             return function (dispatch) {
                 return {
-                    changeAuthType: (value) => dispatch(changeAuthType(value))
+                    changeAuthType: (value) => dispatch(changeAuthType(value)),
+                    changeSignInValidated: (value) => dispatch(changeSignInValidated(value)),
+                    changeSignUpValidated: (value) => dispatch(changeSignUpValidated(value)),
+                    changeSignInCorrect: (value) => dispatch(changeSignInCorrect(value)),
+                    changeSignUpCorrect: (value) => dispatch(changeSignUpCorrect(value)),
+                    changeSignInKeyCorrect: (value) => dispatch(changeSignInKeyCorrect(value)),
+                    changeSignUpKeyCorrect: (value) => dispatch(changeSignUpKeyCorrect(value)),
+                    changeSignInEmailCorrect: (value) => dispatch(changeSignInEmailCorrect(value)),
+                    changeSignUpEmailCorrect: (value) => dispatch(changeSignUpEmailCorrect(value)),
+                    changeSignInPasswordCorrect: (value) => dispatch(changeSignInPasswordCorrect(value)),
+                    changeSignUpPasswordCorrect: (value) => dispatch(changeSignUpPasswordCorrect(value)),
+                    changeSignUpPasswordConfirmCorrect: (value) => dispatch(changeSignUpPasswordConfirmCorrect(value)),
+                    changeSignInPasswordEntered: (value) => dispatch(changeSignInPasswordEntered(value)),
+                    changeSignUpPasswordEntered: (value) => dispatch(changeSignUpPasswordEntered(value)),
                 }
             }
 
