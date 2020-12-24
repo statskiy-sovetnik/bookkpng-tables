@@ -18,9 +18,50 @@ class Auth extends React.Component {
     }
 
     handleSignUpSubmit(form) {
-        if(form.checkValidity() === false) {
+        const check_value = document.getElementById('signUpRememberCheck').value;
+        const do_remember_user = check_value === 'on';
+        const data = new FormData(form);
 
+        //Проверка заполненности полей
+        if(!this.isSignUpCorrect()) {
+            alert('Заполните все поля формы корректно');
+            return;
         }
+
+        fetch('/src/php/sign_up.php', {
+            method: 'POST',
+            body: data,
+        }).then(
+            (response) => {
+                if(response.status === 520) {
+                    alert('Ошибка при подключении к базе данных');
+                    return;
+                }
+                if(response.status === 507) {
+                    alert('База данных с таким ключом уже существует');
+                    return;
+                }
+                if(response.status === 500) {
+                    alert('Ошибка запроса mysql');
+                    return;
+                }
+                if(response.status !== 200) {
+                    alert('Неизвестная ошибка при обработке запроса: ' + response.status);
+                    return;
+                }
+
+                document.cookie = 'auth=true';
+                if(do_remember_user) {
+                    document.cookie = 'max-age=' + (24 * 3600 * 3); //3 дня
+                }
+                location.reload();
+            },
+            (err) => {
+                alert('Неизвестная ошибка при отправке запроса');
+                console.log('Fetch error: ', err);
+            }
+        );
+
     }
 
     validateSignInKey(input) {
@@ -81,6 +122,7 @@ class Auth extends React.Component {
 
     saveEnteredSignUpPassword(input) {
         this.props.changeSignUpPasswordEntered(input.value || '');
+        this.props.changeSignUpPasswordConfirmCorrect(false);
     }
 
     handleSignUpPasswordConfirmInput(input) {
@@ -92,6 +134,15 @@ class Auth extends React.Component {
         else {
             this.props.changeSignUpPasswordConfirmCorrect(false);
         }
+    }
+
+    isSignInCorrect() {
+        return (this.props.signInKeyCorrect && this.props.signInPasswordCorrect && this.props.signInEmailCorrect);
+    }
+
+    isSignUpCorrect() {
+        return (this.props.signUpKeyCorrect && this.props.signUpEmailCorrect && this.props.signUpPasswordEntered &&
+            this.props.signUpPasswordConfirmCorrect);
     }
 
     render() {
@@ -157,8 +208,7 @@ class Auth extends React.Component {
                             />
                         </Form.Group>
                         <Button type={'submit'} variant={'primary'} block
-                                disabled={!(this.props.signInKeyCorrect && this.props.signInEmailCorrect &&
-                                    this.props.signInPasswordCorrect)}
+                                disabled={!this.isSignInCorrect()}
                         >
                             Войти
                         </Button>
@@ -174,6 +224,10 @@ class Auth extends React.Component {
                             event.preventDefault();
                             event.stopPropagation();
 
+                            if(!this.isSignUpCorrect()) {
+                                return;
+                            }
+
                             this.handleSignUpSubmit(event.currentTarget);
                         }}
                     >
@@ -182,6 +236,8 @@ class Auth extends React.Component {
                             <Form.Control
                                 type={'text'}
                                 className={this.props.signUpKeyCorrect ? 'is-valid' : 'is-invalid'}
+                                id={'signUpKeyInput'}
+                                name={'key'}
                                 required
                                 onInput={(event) => {
                                     this.validateSignUpKey(event.currentTarget);
@@ -199,6 +255,8 @@ class Auth extends React.Component {
                             <Form.Control
                                 type={'email'}
                                 required
+                                name={'email'}
+                                id={'signUpEmailInput'}
                                 className={this.props.signUpEmailCorrect ? 'is-valid' : 'is-invalid'}
                                 onInput={(event => {
                                     this.validateSignUpEmail(event.currentTarget);
@@ -216,6 +274,8 @@ class Auth extends React.Component {
                             <Form.Control
                                 type={'password'}
                                 required
+                                name={'password'}
+                                id={'signUpPasswordInput'}
                                 className={this.props.signUpPasswordCorrect ? 'is-valid' : 'is-invalid'}
                                 onInput={event => {
                                     this.saveEnteredSignUpPassword(event.currentTarget);
@@ -234,6 +294,8 @@ class Auth extends React.Component {
                             <Form.Control
                                 type={'password'}
                                 required
+                                name={'password_confirm'}
+                                id={'signUpPasswordConfirmInput'}
                                 className={this.props.signUpPasswordConfirmCorrect ? 'is-valid': 'is-invalid'}
                                 onInput={event => {
                                     this.handleSignUpPasswordConfirmInput(event.currentTarget);
@@ -246,14 +308,13 @@ class Auth extends React.Component {
                         <Form.Group>
                             <Form.Check
                                 type={'checkbox'}
-                                id={'sign-in-remember-ckeck'}
+                                name={'remember_check'}
+                                id={'signUpRememberCheck'}
                                 label={'Запомнить меня'}
                             />
                         </Form.Group>
                         <Button type={'submit'} variant={'primary'} block
-                                disabled={!(this.props.signUpKeyCorrect && this.props.signUpEmailCorrect &&
-                                    this.props.signUpPasswordCorrect && this.props.signUpPasswordConfirmCorrect)
-                                }>
+                                disabled={!this.isSignUpCorrect()}>
                             Создать базу данных
                         </Button>
                     </Form>
