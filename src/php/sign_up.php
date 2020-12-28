@@ -29,6 +29,19 @@
         die();
     }
 
+    //Добавление ключа в таблицу с аккаунтами
+
+    try {
+        $userPassHash = hash($passwordAlgo, $userPass);
+        $sqlAddKey = "INSERT INTO accounts_data(password_hash, account_key)
+                      VALUES ('$userPassHash', '$userKey')";
+        $initConn->query($sqlAddKey);
+    }
+    catch(PDOException $ex) {
+        header('HTTP/1.1 500 Mysql error', true, 500);
+        die();
+    }
+
     //Создаем таблицу с пользователями ключа
 
     $keyConn = new PDO("mysql:host=$serverName;dbname=$userKey", $adminName, $adminPassword);
@@ -36,16 +49,33 @@
 
     try {
         $createUsersTable = "CREATE TABLE db_users(
-            email VARCHAR(30) NOT NULL PRIMARY KEY,
-            pass_hash VARCHAR(64) NOT NULL 
+            email VARCHAR(30) NOT NULL PRIMARY KEY
         )";
         $keyConn->exec($createUsersTable);
 
         //Добавляем пользователя в таблицу
 
-        $addNewUser = "INSERT INTO db_users (email, pass_hash) 
-                       VALUES ('$userEmail', '$userPassHash')";
+        $addNewUser = "INSERT INTO db_users (email) 
+                       VALUES ('$userEmail')";
         $keyConn->exec($addNewUser);
+    }
+    catch(PDOException $ex) {
+        header('HTTP/1.1 500 Mysql error', true, 500);
+        die();
+    }
+
+    //Создаем таблицу журнала
+
+    try {
+        $createJournalTable = "CREATE TABLE journal(
+                id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+                date DATE,
+                name VARCHAR(40) NOT NULL,
+                provider_name VARCHAR(40),
+                amount FLOAT NOT NULL,
+                price FLOAT NOT NULL
+            )";
+        $keyConn->exec($createJournalTable);
     }
     catch(PDOException $ex) {
         header('HTTP/1.1 500 Mysql error', true, 500);

@@ -13,8 +13,53 @@ class Auth extends React.Component {
     }
 
     handleSignInSubmit(form) {
-        if(form.checkValidity() === false) {
+        const check_value = document.getElementById('sign-in-remember-ckeck').value;
+        const do_remember_user = check_value === 'on';
+        const data = new FormData(form);
+
+        //Проверка заполненности полей
+        if(!this.isSignInCorrect()) {
+            alert('Заполните все поля формы корректно');
+            return;
         }
+
+        fetch('/src/php/sign_in.php', {
+            method: 'POST',
+            body: data,
+        }).then(
+            response => {
+                if(response.status === 520) {
+                    alert('Ошибка при подключении к базе данных');
+                    return;
+                }
+                if(response.status === 507) {
+                    alert('Базы данных с таким ключом не существует');
+                    return;
+                }
+                if(response.status === 500) {
+                    alert('Ошибка запроса mysql');
+                    return;
+                }
+                if(response.status === 504) {
+                    alert('Неверный пароль');
+                    return;
+                }
+                if(response.status !== 200) {
+                    alert('Неизвестная ошибка при обработке запроса: ' + response.status);
+                    return;
+                }
+
+                document.cookie = 'auth=true';
+                if(do_remember_user) {
+                    document.cookie = 'max-age=' + (24 * 3600 * 3); //3 дня
+                }
+                location.reload();
+            },
+            error => {
+                alert('Неизвестная ошибка при отправке запроса');
+                console.log('Fetch error: ', error);
+            }
+        )
     }
 
     handleSignUpSubmit(form) {
@@ -167,6 +212,7 @@ class Auth extends React.Component {
                             <Form.Label>Ключ</Form.Label>
                             <Form.Control
                                 type={'text'}
+                                name={'key'}
                                 required
                                 className={this.props.signInKeyCorrect ? 'is-valid' : 'is-invalid'}
                                 onInput={(event) => {
@@ -181,6 +227,7 @@ class Auth extends React.Component {
                             <Form.Label>Эл. почта</Form.Label>
                             <Form.Control
                                 type={'email'}
+                                name={'email'}
                                 required
                                 className={this.props.signInEmailCorrect ? 'is-valid' : 'is-invalid'}
                                 onInput={(event => {
@@ -193,6 +240,7 @@ class Auth extends React.Component {
                             <Form.Control
                                 type={'password'}
                                 required
+                                name={'password'}
                                 className={this.props.signInPasswordCorrect ? 'is-valid' : 'is-invalid'}
                                 onInput={event => {
                                     this.saveEnteredSignInPassword(event.currentTarget);
@@ -203,6 +251,7 @@ class Auth extends React.Component {
                         <Form.Group>
                             <Form.Check
                                 type={'checkbox'}
+                                name={'do-remember-check'}
                                 id={'sign-in-remember-ckeck'}
                                 label={'Запомнить меня'}
                             />
