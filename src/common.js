@@ -14,4 +14,12 @@ function getCookieValue(name) {
     return value;
 }
 
-export {getCookieValue};
+function removeCookie(name) {
+    const old_date_str = new Date(0).toUTCString();
+
+    if(getCookieValue(name)) {
+        document.cookie = name + '=' + ";expires=" + old_date_str;
+    }
+}
+
+export {getCookieValue, removeCookie};
