@@ -19,12 +19,14 @@ import changeSignUpPasswordCorrect from "./actionCreators/auth/changeSignUpPassw
 import changeSignUpPasswordConfirmCorrect from "./actionCreators/auth/changeSignUpPasswordConfirmCorrect";
 import changeSignInPasswordEntered from "./actionCreators/auth/changeSignInPasswordEntered";
 import changeSignUpPasswordEntered from "./actionCreators/auth/changeSignUpPasswordEntered";
+import changeUserName from "./actionCreators/auth/changeUserName";
 
 export default function mapDispatchToProps(component) {
     switch (component) {
         case 'App':
             return function (dispatch) {
                 return {
+                    changeUserName: (value) => dispatch(changeUserName(value)),
                     loadDataBaseJournal: (rows) => dispatch(loadDataBaseJournal(rows)),
                     loadExpensesData: (expenses_obj) => dispatch(loadExpensesData(expenses_obj)),
                 }

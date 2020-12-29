@@ -2,6 +2,7 @@ const ENTRIES_PACK = 5;
 
 const initialState = {
     auth: {
+        userName: 'Имя Пользователя',
         type: 'signin',
         signInPasswordEntered: '',
         signUpPasswordEntered: '',

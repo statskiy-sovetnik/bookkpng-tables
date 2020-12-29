@@ -7,7 +7,7 @@ import {getCookieValue} from "./common";
 import App from './pages/app/app'
 import {AUTH_W as Auth} from "./pages/auth/auth";
 
-document.cookie = "path=/"
+document.cookie = "path=/";
 //document.cookie = 'auth=false';
 let page_component;
 

@@ -7,6 +7,7 @@ import mapStateToProps from "../../store/mapStateToProps";
 /*___ Blocks________________*/
 import Menu from '../../blocks/menu/menu'
 import {JOURNAL_AREA_W as JournalArea} from '../../blocks/table-area/table-area'
+import {getCookieValue} from "../../common";
 
 /*___ Libs _________________*/
 
@@ -14,11 +15,11 @@ import {JOURNAL_AREA_W as JournalArea} from '../../blocks/table-area/table-area'
 class App extends React.Component {
     constructor(props) {
         super(props);
-    }
 
-    componentDidMount() {
-        //здесь взять все данные из базы
-        //и добавить их в store
+        //Берешь имя пользователя из куки:
+
+        const user_name = getCookieValue('user');
+        this.props.changeUserName(user_name);
 
         //Здесь инициализируешь journal.rows:
 
@@ -264,6 +265,9 @@ class App extends React.Component {
         //Загрузка:
         this.props.loadDataBaseJournal(journal_rows_updated);
         this.props.loadExpensesData(expenses_data);
+    }
+
+    componentDidMount() {
     }
 
     getUpdatedJournalRows(rows_data) {

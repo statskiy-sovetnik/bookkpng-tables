@@ -5,6 +5,14 @@ export default function reducer(state, action) {
 
         //___ AUTH _________________
 
+        case actionTypes.CHANGE_USER_NAME:
+            return {
+                ...state,
+                auth: {
+                    ...state.auth,
+                    userName: action.value,
+                }
+            }
         case actionTypes.CHANGE_AUTH_TYPE:
             return {
                 ...state,

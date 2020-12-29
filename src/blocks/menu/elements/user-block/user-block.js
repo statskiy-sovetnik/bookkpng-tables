@@ -1,6 +1,6 @@
 import React from 'react';
 
-import UserName from "../user-name/user-name";
+import {USER_NAME_W as UserName} from "../user-name/user-name";
 import Button from "react-bootstrap/Button";
 
 export default function UserBlock() {

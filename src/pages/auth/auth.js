@@ -14,6 +14,7 @@ class Auth extends React.Component {
 
     handleSignInSubmit(form) {
         const check_value = document.getElementById('sign-in-remember-ckeck').value;
+        const user_email = document.getElementById('sign-in-email-input').value;
         const do_remember_user = check_value === 'on';
         const data = new FormData(form);
 
@@ -53,6 +54,7 @@ class Auth extends React.Component {
                 if(do_remember_user) {
                     document.cookie = 'max-age=' + (24 * 3600 * 3); //3 дня
                 }
+                document.cookie = 'user=' + user_email;
                 location.reload();
                 //return response.text();
             },
@@ -65,6 +67,7 @@ class Auth extends React.Component {
 
     handleSignUpSubmit(form) {
         const check_value = document.getElementById('signUpRememberCheck').value;
+        const user_email = document.getElementById('signUpEmailInput').value;
         const do_remember_user = check_value === 'on';
         const data = new FormData(form);
 
@@ -100,6 +103,7 @@ class Auth extends React.Component {
                 if(do_remember_user) {
                     document.cookie = 'max-age=' + (24 * 3600 * 3); //3 дня
                 }
+                document.cookie = 'user=' + user_email;
                 location.reload();
             },
             (err) => {
@@ -229,6 +233,7 @@ class Auth extends React.Component {
                             <Form.Control
                                 type={'email'}
                                 name={'email'}
+                                id={'sign-in-email-input'}
                                 required
                                 className={this.props.signInEmailCorrect ? 'is-valid' : 'is-invalid'}
                                 onInput={(event => {

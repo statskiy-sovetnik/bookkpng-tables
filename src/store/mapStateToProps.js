@@ -1,5 +1,15 @@
 export default function mapStateToProps(component) {
     switch (component) {
+
+        //_____ APP ____________
+
+        case 'UserName':
+            return function (state) {
+                return {
+                    userName: state.auth.userName,
+                }
+            }
+
         //_____ JOURNAL ______________
         case 'JournalArea':
             return function (state) {

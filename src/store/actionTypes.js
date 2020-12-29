@@ -23,6 +23,7 @@ export default {
 
     // AUTH_______________
 
+    CHANGE_USER_NAME: 'changeUserName',
     CHANGE_AUTH_TYPE: 'changeAuthType',
     CHANGE_SIGN_IN_KEY_CORRECT: 'changeSignInKeyCorrect',
     CHANGE_SIGN_UP_KEY_CORRECT: 'changeSignUpKeyCorrect',
