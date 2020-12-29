@@ -35,7 +35,7 @@
         $userPassHash = hash($passwordAlgo, $userPass);
         $sqlAddKey = "INSERT INTO accounts_data(password_hash, account_key)
                       VALUES ('$userPassHash', '$userKey')";
-        $initConn->query($sqlAddKey);
+        $initConn->exec($sqlAddKey);
     }
     catch(PDOException $ex) {
         header('HTTP/1.1 500 Mysql error', true, 500);

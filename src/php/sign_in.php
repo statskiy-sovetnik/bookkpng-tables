@@ -30,17 +30,18 @@ catch (PDOException $ex) {
 //Проверяем пароль
 
 try {
-    $sqlGetPassHash = "SELECT password_hash FROM accounts_data WHERE account_key=$userKey";
+    $sqlGetPassHash = "SELECT password_hash FROM accounts_data WHERE account_key='$userKey'";
     $passResult = $initConn->query($sqlGetPassHash);
     $userPassHash = hash($passwordAlgo, $userPass);
 
-    if($passResult->rowCount() === 0) {
+    if(!$passResult || $passResult->rowCount() == 0) {
         header('HTTP/1.1 500 Mysql error', true, 500);
         die();
     }
 
     $dbPassHash = $passResult->fetch()['password_hash'];
-    if($dbPassHash !== $userPassHash) {
+
+    if($dbPassHash != $userPassHash) {
         header('HTTP/1.1 504 Wrong password', true, 504);
         die();
     }
@@ -51,6 +52,17 @@ catch (PDOException $ex) {
 }
 
 //Добавляем пользователя
+
+try {
+    $addUserSql = "INSERT INTO db_users(email) 
+                   VALUES ('$userEmail')";
+    $userDbConn->exec($addUserSql);
+}
+catch (PDOException $ex) {
+    header('HTTP/1.1 500 Mysql error', true, 500);
+    die();
+}
+
 
 $initConn = null;
 $userDbConn = null;

@@ -54,12 +54,13 @@ class Auth extends React.Component {
                     document.cookie = 'max-age=' + (24 * 3600 * 3); //3 дня
                 }
                 location.reload();
+                //return response.text();
             },
             error => {
                 alert('Неизвестная ошибка при отправке запроса');
                 console.log('Fetch error: ', error);
             }
-        )
+        );
     }
 
     handleSignUpSubmit(form) {
