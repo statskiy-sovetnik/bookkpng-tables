@@ -91,6 +91,71 @@ export default function mapStateToProps(component) {
                     signUpPasswordEntered: state.auth.signUpPasswordEntered,
                 }
             }
+
+        //_____ INCOMES ______________
+        case 'IncomesArea':
+            return function (state) {
+                return {
+                    incomesRows: state.incomes.rows,
+                    incomesColOrder: state.incomes.columns_order,
+                    incomesColNames: state.incomes.head_col_names,
+                    incomesTableWidth: state.incomes.table_width,
+                    expensesData: state.expenses_data,
+                    incomesEntriesPack: state.incomes.entriesPack,
+                    incomesEntriesShown: state.incomes.entriesShouldBeShown,
+                    incomesAppliedFromDate: state.incomes.appliedFromDate,
+                    incomesAppliedToDate: state.incomes.appliedToDate,
+                    incomesSortType: state.incomes.sortName,
+                    incomesSortFromLeast: state.incomes.sortFromLeast,
+                }
+            }
+
+        //______ Incomes Sort ________________
+
+        case 'SortNameIncomes':
+            return function (state) {
+                return {
+                    sortName: state.incomes.sortName,
+                }
+            }
+        case 'SortDirIncomes':
+            return function (state) {
+                return {
+                    sortFromLeast: state.incomes.sortFromLeast,
+                }
+            }
+
+        //______ Incomes Period Filter ______________
+
+        case 'IncomesPeriodSort':
+            return function (state) {
+                return {
+                    localFromDate: state.incomes.localFromDate,
+                    localToDate: state.incomes.localToDate,
+                }
+            }
+        case 'PrependInputFromIncomes':
+            return function (state) {
+                return {
+                    localFromDate: state.incomes.localFromDate,
+                }
+            }
+
+        case 'PrependInputIncomes':
+            return function (state) {
+                return {
+                    localToDate: state.incomes.localToDate,
+                }
+            }
+        //______ Journal Entry Length Switch ____________
+
+        case 'EntrySwitchLengthSectionIncomes':
+            return function (state) {
+                return {
+                    entriesPack: state.incomes.entriesPack,
+                    entriesShouldBeShown: state.incomes.entriesShouldBeShown,
+                }
+            }
     }
 }
 

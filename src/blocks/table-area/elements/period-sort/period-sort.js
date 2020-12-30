@@ -73,6 +73,52 @@ function PeriodSort(props) {
                 </Form.Group>
             )
             break;
+        case 'incomes':
+            label_id_from = 'incomes-period-sort-label-from';
+            label_id_to = 'incomes-period-sort-label-to';
+            prepend_from = (
+                <Form.Group
+                    as={Col}
+                    key={'from-date-incomes'}
+                >
+                    <PrependInputFromJournal
+                        size={'sm'}
+                        className={prepend_input_from_classnames}
+                        prepend={'От'} label_id={label_id_from}
+                    />
+                </Form.Group>
+            );
+            prepend_to = (
+                <Form.Group
+                    as={Col}
+                    key={'to-date-incomes'}>
+                    <PrependInputToJournal
+                        size={'sm'}
+                        className={prepend_input_to_classnames}
+                        prepend={'До'} label_id={label_id_to}
+                    />
+                </Form.Group>
+            )
+            apply_btn = (
+                <Form.Group
+                    as={Col}
+                    key={'apply-date-filter-btn-incomes'}
+                >
+                    <Button className={apply_btn_classes}
+                            variant={'dark'}
+                            size={'sm'}
+                            onClick={(event) => {
+                                event.preventDefault();
+                                let apply_from_date = props.localFromDate ? props.localFromDate : new Date();
+                                let apply_to_date = props.localToDate ? props.localToDate : new Date();
+                                props.changeAppliedDates(apply_from_date, apply_to_date);
+                            }}
+                    >
+                        Применить
+                    </Button>
+                </Form.Group>
+            )
+            break;
     }
 
     content.push(prepend_from, prepend_to, apply_btn);
@@ -90,5 +136,9 @@ const JOURNAL_PERIOD_SORT_W = connect(
     mapStateToProps('JournalPeriodSort'),
     mapDispatchToProps('JournalPeriodSort')
 )(PeriodSort);
+const INCOMES_PERIOD_SORT_W = connect(
+    mapStateToProps('IncomesPeriodSort'),
+    mapDispatchToProps('IncomesPeriodSort')
+)(PeriodSort);
 
-export {JOURNAL_PERIOD_SORT_W};
+export {JOURNAL_PERIOD_SORT_W, INCOMES_PERIOD_SORT_W};

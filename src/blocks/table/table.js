@@ -28,5 +28,9 @@ const JOURNAL_TABLE = connect(
     mapStateToProps('TableJournal'),
     mapDispatchToProps('TableJournal')
 )(CustomTable);
+const INCOMES_TABLE = connect(
+    mapStateToProps('TableIncomes'),
+    mapDispatchToProps('TableIncomes'),
+)(CustomTable);
 
-export {JOURNAL_TABLE};
+export {JOURNAL_TABLE, INCOMES_TABLE};

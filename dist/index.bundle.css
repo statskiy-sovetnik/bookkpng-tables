@@ -211,7 +211,8 @@ html, body {
       margin-right: 10px; }
 
 .table-area {
-  padding: 0 50px; }
+  padding: 0 50px;
+  margin-bottom: 80px; }
 
 .expense-color-square {
   display: flex;

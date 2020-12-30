@@ -10,8 +10,14 @@ import parse from 'date-fns/parse'
 import Heading from "../heading/heading";
 import ButtonSection from "./elements/button-section/button-section";
 import BtstrapIcon from "../btstrap-icon/btstrap-icon";
-import {JOURNAL_CONTROL_SECTION_W as JournalControlSection} from "./elements/table-control-section/table-control-section";
-import {JOURNAL_TABLE as TableJournal} from "../table/table";
+import {
+    JOURNAL_CONTROL_SECTION_W as JournalControlSection,
+    INCOMES_CONTROL_SECTION_W as IncomesControlSection,
+} from "./elements/table-control-section/table-control-section";
+import {
+    JOURNAL_TABLE as TableJournal,
+    INCOMES_TABLE as TableIncomes,
+} from "../table/table";
 
 /*___ Bootstrap _________________*/
 import Button from "react-bootstrap/Button";
@@ -85,8 +91,6 @@ class TableArea extends React.Component {
 
         }
 
-        console.log("Тип: " + sort_type);
-        console.log("Дир: " + sort_from_least);
         switch (sort_type) {
             case 'Наименованию':
                 rows_keys_sorted.sort((row_id_1, row_id_2) => {
@@ -373,9 +377,9 @@ class TableArea extends React.Component {
 
         const expenses_data = this.props.expensesData;
 
-        const journal_col_names = this.props.journalColNames;
-        const journal_col_order = this.props.journalColOrder;
-        const journal_rows_data = this.props.journalRows;
+        const journal_col_names = this.props.journalColNames || {};
+        const journal_col_order = this.props.journalColOrder || [];
+        const journal_rows_data = this.props.journalRows || {};
         const journal_table_width = this.props.journalTableWidth;
         const journal_rows_num = Object.keys(journal_rows_data).length;
         const journal_entries_pack = this.props.journalEntriesPack;
@@ -433,6 +437,46 @@ class TableArea extends React.Component {
                     this.renderTableBottomPanel(journal_entries_left, journal_entries_pack, journal_entries_should_be_shown)
                 );
                 break;
+            case 'incomes':
+                area_name = 'Доходы';
+                add_entry_button_icon = (
+                    <BtstrapIcon data={'bi-bookmark-plus'}
+                                 className={'bi-bookmark-plus button__btstrap-icon btstrap-icon_size-14 btstrap-icon_color-white'}/>
+                );
+                table_area_content.push(
+                    <IncomesControlSection
+                        key={'journal-ctrl-section'}
+                        data={'journal'} sort_names={this.props.sort_names}/>
+                );
+                table_area_content.push(
+                    <TableIncomes
+                        responsive={true}
+                        style={{'width': this.props.incomesTableWidth}}
+                        key={'incomes-table'}
+                    >
+                        {[
+                            this.renderTableHead(
+                                'journal',
+                                this.props.incomesColNames,
+                                this.props.incomesColOrder,
+                                head_classnames,
+                            ),
+                            this.renderTableBody(
+                                'journal',
+                                this.props.incomesRows,
+                                this.props.incomesColOrder,
+                                expenses_data,
+                                tbody_classnames,
+                                this.props.incomesEntriesShown,
+                                this.props.incomesAppliedFromDate,
+                                this.props.incomesAppliedToDate,
+                                this.props.incomesSortType,
+                                this.props.incomesSortFromLeast,
+                            ),
+                        ]}
+                    </TableIncomes>
+                );
+                break;
             case 'expenses':
                 area_name = 'Расходы';
                 break;
@@ -464,5 +508,6 @@ class TableArea extends React.Component {
 }
 
 const JOURNAL_AREA_W = connect(mapStateToProps('JournalArea'), mapDispatchToProps('JournalArea'))(TableArea);
-export {JOURNAL_AREA_W};
+const INCOMES_AREA_W = connect(mapStateToProps('IncomesArea'), mapDispatchToProps('IncomesArea'))(TableArea);
+export {JOURNAL_AREA_W, INCOMES_AREA_W};
 

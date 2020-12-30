@@ -197,6 +197,17 @@ export default function reducer(state, action) {
             }
         //________ Journal Table ___________
 
+        //___ INCOMES _________________
+
+        case actionTypes.LOAD_DATA_BASE_INCOMES:
+            return {
+                ...state,
+                incomes: {
+                    ...state.incomes,
+                    rows: action.value,
+                }
+            }
+
         default:
             return state;
     }

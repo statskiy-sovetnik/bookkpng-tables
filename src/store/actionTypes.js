@@ -34,4 +34,11 @@ export default {
     CHANGE_SIGN_UP_PASSWORD_CONFIRM_CORRECT: 'changeSignUpPasswordConfirmCorrect',
     CHANGE_SIGN_IN_PASSWORD_ENTERED: 'changeSignInPasswordEntered',
     CHANGE_SIGN_UP_PASSWORD_ENTERED: 'changeSignUpPasswordEntered',
+
+    // _________ INCOMES ________________
+
+    //Incomes table ___________
+
+    LOAD_DATA_BASE_INCOMES: 'loadDataBaseIncomes',
+
 }

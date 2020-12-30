@@ -6,19 +6,21 @@ import mapDispatchToProps from "../../../../store/mapDispatchToProps";
 //Bootstrap
 import Dropdown from "react-bootstrap/Dropdown";
 
-export default class Sort extends React.Component{
+class Sort extends React.Component{
+    constructor(props) {
+        super(props);
+    }
+
     changeSortValue(event, onchange_handler, is_dir_sort, direction_names) {
-        {
-            event.preventDefault();
-            let arg;
-            if(is_dir_sort) {
-                arg = (event.target.innerHTML === direction_names[0]);
-            }
-            else {
-                arg = event.target.innerHTML;
-            }
-            onchange_handler(arg);
+        event.preventDefault();
+        let arg;
+        if(is_dir_sort) {
+            arg = (event.target.innerHTML === direction_names[0]);
         }
+        else {
+            arg = event.target.innerHTML;
+        }
+        onchange_handler(arg);
     }
 
     render() {
@@ -76,6 +78,31 @@ export default class Sort extends React.Component{
                     )
                 }
                 break;
+            case 'incomes-direction':
+                sort_btn_id = 'incomesSortDirectionBtn';
+                dropdown_items = sort_directions;
+                current_sort_name = this.props.sortFromLeast ? 'По возраст.' : 'По убыв.';
+                onchange_handler = this.props.changeSortDirection;
+                is_dir_sort = true;
+                break;
+            case 'incomes-name':
+                sort_btn_id = 'incomesSortBtn';
+                current_sort_name = this.props.sortName;
+                onchange_handler = this.props.changeSortType;
+                is_dir_sort = false;
+                for(let i = 0; i < sort_names.length; i++) {
+                    dropdown_items.push(
+                        <Dropdown.Item
+                            onClick={(event) => {
+                                this.changeSortValue(event, onchange_handler, is_dir_sort, direction_names);
+                            }}
+                            href="#" key={"sort-type-" + sort_names[i] + "-up"}
+                        >
+                            {sort_names[i]}
+                        </Dropdown.Item>
+                    )
+                }
+                break;
         }
 
         return (
@@ -106,4 +133,13 @@ const SORT_DIRECTION_JOURNAL_W = connect(
     mapDispatchToProps('SortDirectionJournal')
 )(Sort);
 
-export {SORT_JOURNAL_W, SORT_DIRECTION_JOURNAL_W}
+const SORT_INCOMES_NAME_W = connect(
+    mapStateToProps('SortNameIncomes'),
+    mapDispatchToProps('SortNameIncomes')
+)(Sort);
+const SORT_INCOMES_DIR_W = connect(
+    mapStateToProps('SortDirIncomes'),
+    mapDispatchToProps('SortDirIncomes')
+)(Sort);
+
+export {SORT_JOURNAL_W, SORT_DIRECTION_JOURNAL_W, SORT_INCOMES_NAME_W, SORT_INCOMES_DIR_W}
