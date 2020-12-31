@@ -37,8 +37,20 @@ export default {
 
     // _________ INCOMES ________________
 
+    //Incomes Sorts Section
+    INCOMES_SORT_TYPE_CHANGE: 'incomesSortTypeChange',
+    INCOMES_SORT_DIR_CHANGE: 'incomesSortDirChange',
+
+    //Journal Period Filter
+    INCOMES_FROM_DATE_CHANGE: 'incomesFromDateChange',
+    INCOMES_TO_DATE_CHANGE: 'incomesToDateChange',
+    INCOMES_APPLY_PERIOD_BTN_CLICK: 'incomesApplyPeriodBtnClick',
+
+    //Journal Entry Legth Switcher
+    ENTRY_LENGTH_BTN_CLICK_INCOMES: 'entryLengthBtnClickincomes',
+
     //Incomes table ___________
 
     LOAD_DATA_BASE_INCOMES: 'loadDataBaseIncomes',
-
+    ENTRIES_SHOWN_CHANGE_INCOMES: 'entriesShouldBeShownChangeIncomes',
 }

@@ -208,6 +208,70 @@ export default function reducer(state, action) {
                 }
             }
 
+        //_______ Incomes Sort _________
+
+        case actionTypes.INCOMES_SORT_DIR_CHANGE:
+            return {
+                ...state,
+                incomes: {
+                    ...state.incomes,
+                    sortFromLeast: action.value,
+                }
+            }
+        case actionTypes.INCOMES_SORT_TYPE_CHANGE:
+            return {
+                ...state,
+                incomes: {
+                    ...state.incomes,
+                    sortName: action.value,
+                }
+            }
+        // ________Journal period _____________
+
+        case actionTypes.INCOMES_APPLY_PERIOD_BTN_CLICK:
+            return {
+                ...state,
+                incomes: {
+                    ...state.incomes,
+                    appliedFromDate: action.date_1,
+                    appliedToDate: action.date_2,
+                }
+            }
+        case actionTypes.INCOMES_FROM_DATE_CHANGE:
+            return {
+                ...state,
+                incomes: {
+                    ...state.incomes,
+                    localFromDate: action.value,
+                }
+            }
+        case actionTypes.INCOMES_TO_DATE_CHANGE:
+            return {
+                ...state,
+                incomes: {
+                    ...state.incomes,
+                    localToDate: action.value,
+                }
+            }
+        //________ Journal Entry Length Switch ___________
+
+        case actionTypes.ENTRY_LENGTH_BTN_CLICK_INCOMES:
+            return {
+                ...state,
+                incomes: {
+                    ...state.incomes,
+                    entriesPack: action.value,
+                }
+            }
+        case actionTypes.ENTRIES_SHOWN_CHANGE_INCOMES:
+            return {
+                ...state,
+                incomes: {
+                    ...state.incomes,
+                    entriesShouldBeShown: action.value,
+                }
+            }
+
         default:
             return state;
     }

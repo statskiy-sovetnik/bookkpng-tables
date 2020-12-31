@@ -5,7 +5,7 @@ import journalToDateChange from "./actionCreators/journalToDateChange";
 import journalApplyPeriodBtnClick from "./actionCreators/journalApplyPeriodBtnClick";
 import journalSortTypeChange from "./actionCreators/journalSortTypeChange";
 import journalSortDirChange from "./actionCreators/journalSortDirChange";
-import entryLengthSwitchBtnClick from "./actionCreators/entryLengthSwitchBtnClick";
+import journalEntryLengthSwitchBtnClick from "./actionCreators/journalEntryLengthSwitchBtnClick";
 import loadDataBaseJournal from "./actionCreators/loadDataBaseJournal";
 import loadExpensesData from "./actionCreators/loadExpensesData";
 import entriesShouldBeShownChangeJournal from "./actionCreators/journalEntriesShouldBeShownChange";
@@ -21,6 +21,13 @@ import changeSignInPasswordEntered from "./actionCreators/auth/changeSignInPassw
 import changeSignUpPasswordEntered from "./actionCreators/auth/changeSignUpPasswordEntered";
 import changeUserName from "./actionCreators/auth/changeUserName";
 import loadDataBaseIncomes from "./actionCreators/incomes/loadDataBaseIncomes";
+import entriesShouldBeShownChangeIncomes from "./actionCreators/incomes/incomesEntriesShouldBeShownChange";
+import incomesSortTypeChange from "./actionCreators/incomes/incomesSortTypeChange";
+import incomesSortDirChange from "./actionCreators/incomes/incomesSortDirChange";
+import incomesApplyPeriodBtnClick from "./actionCreators/incomes/incomesApplyPeriodBtnClick";
+import incomesFromDateChange from "./actionCreators/incomes/incomesFromDateChange";
+import incomesToDateChange from "./actionCreators/incomes/incomesToDateChange";
+import entryLengthSwitchBtnClickIncomes from "./actionCreators/incomes/entryLengthSwitchBtnClickIncomes";
 
 export default function mapDispatchToProps(component) {
     switch (component) {
@@ -97,8 +104,60 @@ export default function mapDispatchToProps(component) {
         case 'EntrySwitchLengthSectionJournal':
             return function (dispatch) {
                 return {
-                    changeEntriesPack: (value) => dispatch(entryLengthSwitchBtnClick(value)),
+                    changeEntriesPack: (value) => dispatch(journalEntryLengthSwitchBtnClick(value)),
                     changeEntriesShouldBeShown: (value) => dispatch(entriesShouldBeShownChangeJournal(value)),
+                }
+            }
+
+        //__________INCOMES _____________
+
+        case 'IncomesArea':
+            return function (dispatch) {
+                return {
+                    changeEntriesShouldBeShown: (value) => dispatch(entriesShouldBeShownChangeIncomes(value))
+                }
+            }
+
+        //__________Journal Sort _____________
+        case 'SortNameIncomes':
+            return function (dispatch) {
+                return {
+                    changeSortType: (value) => dispatch(incomesSortTypeChange(value))
+                }
+            }
+        case 'SortDirectionIncomes':
+            return function (dispatch) {
+                return {
+                    changeSortDirection: (from_least) => dispatch(incomesSortDirChange(from_least))
+                }
+            }
+
+        //Journal Period Sort ___________
+        case 'IncomesPeriodSort':
+            return function (dispatch) {
+                return {
+                    changeAppliedDates: (date_1, date_2) => dispatch(incomesApplyPeriodBtnClick(date_1, date_2))
+                }
+            }
+        case 'PrependInputFromIncomes':
+            return function (dispatch) {
+                return {
+                    changeLocalFromDate: (value) => dispatch(incomesFromDateChange(value))
+                }
+            }
+        case 'PrependInputToIncomes':
+            return function (dispatch) {
+                return {
+                    changeLocalToDate: (value) => dispatch(incomesToDateChange(value))
+                }
+            }
+        //______Journal Entry Length switch _________
+
+        case 'EntrySwitchLengthSectionIncomes':
+            return function (dispatch) {
+                return {
+                    changeEntriesPack: (value) => dispatch(entryLengthSwitchBtnClickIncomes(value)),
+                    changeEntriesShouldBeShown: (value) => dispatch(entriesShouldBeShownChangeIncomes(value)),
                 }
             }
 

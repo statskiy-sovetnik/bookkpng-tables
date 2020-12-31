@@ -24,7 +24,6 @@ import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Popover from "react-bootstrap/Popover";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import sort from "./elements/sort/sort";
 
 class TableArea extends React.Component {
     constructor(props) {
@@ -248,6 +247,8 @@ class TableArea extends React.Component {
                         )
                     });
 
+                    cur_expenses_total = +cur_expenses_total.toFixed(2);
+
                     const eye_expenses_popover = (
                         <Popover id={'expenses-popover_' + data + '_row-' + row_id}>
                             <Popover.Title as="h5">
@@ -298,21 +299,26 @@ class TableArea extends React.Component {
 
                 }
                 else {
+                    let cur_value = row_data[col_name];
+                    if(typeof cur_value === 'number') {
+                        cur_value = +cur_value.toFixed(3);
+                    }
+
                     cur_row.push(
                         <td className={cell_class}
-                            key={data + '-' + row_id + '-' + row_data[col_name]}
+                            key={data + '-' + row_id + '-' + cur_value}
                         >
-                            {row_data[col_name]}
+                            {cur_value}
                         </td>
                     )
                 }
-            })
+            });
 
             table_rows.push(
                 <tr key={data + '-' + row_id + '-row'}>
                     {cur_row}
                 </tr>
-            )
+            );
         }
 
         return (
@@ -390,6 +396,10 @@ class TableArea extends React.Component {
         const journal_sort_from_least = this.props.journalSortFromLeast;
         const journal_entries_left = journal_rows_num - journal_entries_should_be_shown;
 
+        const incomes_rows = this.props.incomesRows || {};
+        const incomes_rows_num = Object.keys(incomes_rows).length;
+        const incomes_entries_left = incomes_rows_num - this.props.incomesEntriesShown;
+
         const head_classnames = 'text text_size-13 text_color-dark thead-light';
         const tbody_classnames = 'text text_size-13 text_color-black';
 
@@ -432,7 +442,7 @@ class TableArea extends React.Component {
                             ),
                         ]}
                     </TableJournal>
-                )
+                );
                 table_area_content.push(
                     this.renderTableBottomPanel(journal_entries_left, journal_entries_pack, journal_entries_should_be_shown)
                 );
@@ -445,8 +455,8 @@ class TableArea extends React.Component {
                 );
                 table_area_content.push(
                     <IncomesControlSection
-                        key={'journal-ctrl-section'}
-                        data={'journal'} sort_names={this.props.sort_names}/>
+                        key={'incomes-ctrl-section'}
+                        data={'incomes'} sort_names={this.props.sort_names}/>
                 );
                 table_area_content.push(
                     <TableIncomes
@@ -456,13 +466,13 @@ class TableArea extends React.Component {
                     >
                         {[
                             this.renderTableHead(
-                                'journal',
+                                'incomes',
                                 this.props.incomesColNames,
                                 this.props.incomesColOrder,
                                 head_classnames,
                             ),
                             this.renderTableBody(
-                                'journal',
+                                'incomes',
                                 this.props.incomesRows,
                                 this.props.incomesColOrder,
                                 expenses_data,
@@ -475,6 +485,9 @@ class TableArea extends React.Component {
                             ),
                         ]}
                     </TableIncomes>
+                );
+                table_area_content.push(
+                    this.renderTableBottomPanel(incomes_entries_left, this.props.incomesEntriesPack, this.props.incomesEntriesShown)
                 );
                 break;
             case 'expenses':

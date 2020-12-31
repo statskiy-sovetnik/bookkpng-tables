@@ -1,6 +1,5 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {Provider} from 'react-redux';
 import mapDispatchToProps from "../../store/mapDispatchToProps";
 import mapStateToProps from "../../store/mapStateToProps";
 
@@ -437,6 +436,33 @@ class App extends React.Component {
                         id: 7,
                         amount: 1145.00
                     }
+                ],
+                sum_of_raw: 43050.00,
+            },
+            6: {
+                date: '09/02/2019',
+                name: 'Недодроблёнка',
+                provider_name: 'Газпром Нефтьть',
+                amount: 865.70,
+                amount_of_raw: 1350.00,
+                price: 83.50,
+                expenses: [
+                    {
+                        id: 1,
+                        amount: 12340.33
+                    },
+                    {
+                        id: 4,
+                        amount: 8111.18
+                    },
+                    {
+                        id: 5,
+                        amount: 5460.00
+                    },
+                    {
+                        id: 6,
+                        amount: 1340.00
+                    },
                 ],
                 sum_of_raw: 43050.00,
             },
