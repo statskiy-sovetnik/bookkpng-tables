@@ -6,6 +6,8 @@ import mapDispatchToProps from "../../../../store/mapDispatchToProps";
 import {
     PREPEND_INPUT_FROM_JOURNAL as PrependInputFromJournal,
     PREPEND_INPUT_TO_JOURNAL as PrependInputToJournal,
+    PREPEND_INPUT_FROM_INCOMES as PrependInputFromIncomes,
+    PREPEND_INPUT_TO_INCOMES as PrependInputToIncomes,
 } from "../../../prepend-input/prepend-input";
 
 //Bootstrap
@@ -81,7 +83,7 @@ function PeriodSort(props) {
                     as={Col}
                     key={'from-date-incomes'}
                 >
-                    <PrependInputFromJournal
+                    <PrependInputFromIncomes
                         size={'sm'}
                         className={prepend_input_from_classnames}
                         prepend={'От'} label_id={label_id_from}
@@ -92,7 +94,7 @@ function PeriodSort(props) {
                 <Form.Group
                     as={Col}
                     key={'to-date-incomes'}>
-                    <PrependInputToJournal
+                    <PrependInputToIncomes
                         size={'sm'}
                         className={prepend_input_to_classnames}
                         prepend={'До'} label_id={label_id_to}

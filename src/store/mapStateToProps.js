@@ -141,7 +141,7 @@ export default function mapStateToProps(component) {
                 }
             }
 
-        case 'PrependInputIncomes':
+        case 'PrependInputToIncomes':
             return function (state) {
                 return {
                     localToDate: state.incomes.localToDate,

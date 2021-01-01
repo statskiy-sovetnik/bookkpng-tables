@@ -226,7 +226,7 @@ export default function reducer(state, action) {
                     sortName: action.value,
                 }
             }
-        // ________Journal period _____________
+        // ________Incomes period _____________
 
         case actionTypes.INCOMES_APPLY_PERIOD_BTN_CLICK:
             return {
@@ -253,7 +253,7 @@ export default function reducer(state, action) {
                     localToDate: action.value,
                 }
             }
-        //________ Journal Entry Length Switch ___________
+        //________ Incomes Entry Length Switch ___________
 
         case actionTypes.ENTRY_LENGTH_BTN_CLICK_INCOMES:
             return {

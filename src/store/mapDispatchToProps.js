@@ -118,7 +118,7 @@ export default function mapDispatchToProps(component) {
                 }
             }
 
-        //__________Journal Sort _____________
+        //__________ Incomes Sort _____________
         case 'SortNameIncomes':
             return function (dispatch) {
                 return {
