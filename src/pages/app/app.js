@@ -294,6 +294,7 @@ class App extends React.Component {
             let cur_sum = rows_data[id].amount_data.amount_total * rows_data[id].price;
             let cur_expenses_total = 0;
             let cur_raw_mat_used = [];
+            let cur_raw_mat_used_total = 0;
 
             rows_data[id].expenses.forEach((expense, i) => {
                 cur_expenses_total += expense.amount;
@@ -301,11 +302,12 @@ class App extends React.Component {
 
             //Устанавливаем amount_used для текущей строки
             raw_mat_usage_for_journal.forEach((raw_mat_obj) => {
-                const cur_journal_id = raw_mat_obj.incomes_id;
-                if(cur_journal_id !== id) {
+                const cur_journal_id = raw_mat_obj.journal_id;
+                if(cur_journal_id !== +id) {
                     return;
                 }
 
+                cur_raw_mat_used_total = raw_mat_obj.raw_mat_used_total;
                 cur_raw_mat_used = raw_mat_obj.raw_mat_used_by.slice()
             });
 
@@ -316,6 +318,7 @@ class App extends React.Component {
                 cost_price: (cur_sum + cur_expenses_total) / rows_data[id].amount_data.amount_total,
                 amount_data: {
                     amount_total: rows_data[id].amount_data.amount_total,
+                    amount_used_total: cur_raw_mat_used_total,
                     amount_used: cur_raw_mat_used,
                 }
             }
@@ -401,15 +404,19 @@ class App extends React.Component {
                         raw_mat_used_by: [],
                     })
                 }
+                journal_ids_used.push(raw_mat_obj.journal_id);
 
                 //Добавим используемое сырьё
 
                 raw_mat_usage_reformed.forEach((obj) => {
                     if(obj.journal_id === raw_mat_obj.journal_id) {
+
                         obj.raw_mat_used_by.push({
                             incomes_id: incomes_id,
-                            used: raw_mat_used.used,
-                        })
+                            used: raw_mat_obj.used,
+                        });
+
+                        obj.raw_mat_used_total += raw_mat_obj.used;
                     }
                 });
             });

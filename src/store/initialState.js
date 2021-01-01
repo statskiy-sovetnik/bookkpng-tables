@@ -70,7 +70,7 @@ const initialState = {
             cost_price: 'Себестоимость (руб)',
             control: 'Управление',
         },
-        table_width: 1400,
+        table_width: 1600,
     },
 
     incomes: {

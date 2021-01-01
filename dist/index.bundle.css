@@ -13,6 +13,9 @@ html, body {
 .text_color-black {
   color: #303030; }
 
+.text_color-dark-green {
+  color: #17451a; }
+
 .text_size-11 {
   font-size: 11px; }
 
@@ -232,6 +235,9 @@ html, body {
 
 .text_color-black {
   color: #303030; }
+
+.text_color-dark-green {
+  color: #17451a; }
 
 .text_size-11 {
   font-size: 11px; }

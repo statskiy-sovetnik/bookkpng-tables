@@ -245,13 +245,33 @@ class TableArea extends React.Component {
                     )
                 }
                 else if(col_name === 'amount_data') {
+                    let amount_content = [];
                     let cur_value = +row_data[col_name].amount_total.toFixed(3);
+                    let cur_amount_used_total = +row_data[col_name].amount_used_total.toFixed(3);
+                    amount_content.push(cur_value);
+
+                    console.log(row_data[col_name]);
+                    amount_content.push(
+                        <span className={'text text_color-dark'} key={data + '-' + row_id + '_' + 'total_usde'}>
+                           &nbsp; | &nbsp; {cur_amount_used_total}
+                        </span>
+                    );
+                    amount_content.push(
+                        <a className="text text_color-dark body-cell__icon-wrapper_sum-of-raw"
+                           href={'#'}
+                           onClick={event => {event.preventDefault()}}
+                           key={data + '-' + row_id + '_' + 'plus-icon'}
+                        >
+                            <BtstrapIcon data={'bi-eye-fill'}
+                                         className={'bi-eye-fill btstrap-icon_size-12 btstrap-icon_color-dark '}/>
+                        </a>
+                    );
 
                     cur_row.push(
                         <td className={cell_class}
                             key={data + '-' + row_id + '-' + cur_value}
                         >
-                            {cur_value}
+                            {amount_content}
                         </td>
                     )
                 }
