@@ -28,6 +28,8 @@ import incomesApplyPeriodBtnClick from "./actionCreators/incomes/incomesApplyPer
 import incomesFromDateChange from "./actionCreators/incomes/incomesFromDateChange";
 import incomesToDateChange from "./actionCreators/incomes/incomesToDateChange";
 import entryLengthSwitchBtnClickIncomes from "./actionCreators/incomes/entryLengthSwitchBtnClickIncomes";
+import loadRawMatUsage from "./actionCreators/loadRawMatUsage";
+import loadRawMatUsageForJournal from "./actionCreators/loadRawMatUsageForJournal";
 
 export default function mapDispatchToProps(component) {
     switch (component) {
@@ -38,6 +40,8 @@ export default function mapDispatchToProps(component) {
                     loadDataBaseJournal: (rows) => dispatch(loadDataBaseJournal(rows)),
                     loadExpensesData: (expenses_obj) => dispatch(loadExpensesData(expenses_obj)),
                     loadDataBaseIncomes: (rows) => dispatch(loadDataBaseIncomes(rows)),
+                    loadRawMatUsage: (raw_mat_arr) => dispatch(loadRawMatUsage(raw_mat_arr)),
+                    loadRawMatUsageForJournal: (raw_mat_arr) => dispatch(loadRawMatUsageForJournal(raw_mat_arr)),
                 }
             }
 

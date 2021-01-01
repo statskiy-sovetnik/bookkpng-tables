@@ -34,7 +34,15 @@ const initialState = {
                 date: '',
                 name: '',
                 provider_name: '',
-                amount: 0,
+                amount_data: {
+                    amount_total: 0,
+                    amount_used: [
+                        {
+                            incomes_id: 0,
+                            used: 0,
+                        }
+                    ]
+                },
                 price: 0,
                 sum: 0,
                 expenses: [
@@ -48,13 +56,13 @@ const initialState = {
                 cost_price: 0,
             }*/
         },
-        columns_order: [ 'control', 'date', 'name', 'provider_name', 'amount', 'price',
+        columns_order: [ 'control', 'date', 'name', 'provider_name', 'amount_data', 'price',
         'sum', 'expenses', 'total', 'cost_price'],
         head_col_names: {
             date: 'Дата',
             name: 'Наименование',
             provider_name: 'Поставщик',
-            amount: 'Кол-во (кг)',
+            amount_data: 'Кол-во (кг)',
             price: 'Цена (руб)',
             sum: 'Сумма (руб)',
             expenses: 'Расходы (руб)',
@@ -62,7 +70,7 @@ const initialState = {
             cost_price: 'Себестоимость (руб)',
             control: 'Управление',
         },
-        table_width: 1370,
+        table_width: 1400,
     },
 
     incomes: {
@@ -97,6 +105,36 @@ const initialState = {
         },
         table_width: 2200,
     },
+
+    raw_mat_usage: [
+    /*{
+        incomes_id: 0,
+        raw_mat_used_total: 184.00,
+        raw_mat_used: [
+            {
+                journal_id: 0,
+                used: 74.00,
+            }
+        ],
+      }
+      */
+    ],
+
+    //Basically, the same data as above, but reformed for better usage in journal
+
+    raw_mat_usage_for_journal: [
+        /*{
+        journal_id: 0,
+        raw_mat_used_total: 184.00,
+        raw_mat_used_by: [
+            {
+                incomes_id: 0,
+                used: 34.00,
+            }
+        ],
+      }
+      */
+    ],
 
     expenses_data: {
         /*0: {

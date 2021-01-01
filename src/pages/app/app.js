@@ -22,6 +22,52 @@ class App extends React.Component {
         const user_name = getCookieValue('user');
         this.props.changeUserName(user_name);
 
+        //Берёшь из базы данных raw_mat_usage
+
+        let raw_mat_usage = [
+            {
+                incomes_id: 0,
+                raw_mat_used: [
+                    {
+                        journal_id: 0,
+                        used: 74.00,
+                    },
+                    {
+                        journal_id: 1,
+                        used: 34.50,
+                    }
+                ],
+            },
+            {
+                incomes_id: 1,
+                raw_mat_used: [
+                    {
+                        journal_id: 1,
+                        used: 88.00,
+                    }
+                ],
+            },
+            {
+                incomes_id: 2,
+                raw_mat_used: [
+                    {
+                        journal_id: 0,
+                        used: 22.00,
+                    },
+                    {
+                        journal_id: 1,
+                        used: 37.00,
+                    },
+                    {
+                        journal_id: 2,
+                        used: 114.30,
+                    }
+                ],
+            }
+        ];
+        raw_mat_usage = this.getUpdatedRawMatUsage(raw_mat_usage);
+        const raw_mat_usage_for_journal = this.reformRawMatUsageForJournal(raw_mat_usage);
+
         //Здесь инициализируешь journal.rows:
 
         const journal_rows_data = {
@@ -29,8 +75,11 @@ class App extends React.Component {
                 date: '27/04/2020',
                 name: 'Название сырья среднее',
                 provider_name: '\"ООО\" Мясо России',
-                amount: 180.00,
-                price: 457.50,
+                amount_data: {
+                    amount_total: 180.00,
+                    amount_used: [],
+                },
+                price: 38.50,
                 expenses: [
                     {
                         id: 0,
@@ -70,7 +119,10 @@ class App extends React.Component {
                 date: '27/04/2020',
                 name: 'Так я назвал сырьё',
                 provider_name: '\"ОАО\" Китай Голимый',
-                amount: 54.00,
+                amount_data: {
+                    amount_total: 54.00,
+                    amount_used: [],
+                },
                 price: 184.50,
                 expenses: [
                     {
@@ -93,10 +145,13 @@ class App extends React.Component {
             },
             2: {
                 date: '27/04/2020',
-                name: 'Название сырья среднее',
-                provider_name: '\"ООО\" Мясо России',
-                amount: 180.00,
-                price: 457.50,
+                name: 'Другое сырьё',
+                provider_name: 'Библиотеки Пермского Края',
+                amount_data: {
+                    amount_total: 245.00,
+                    amount_used: [],
+                },
+                price: 67.50,
                 expenses: [
                     {
                         id: 0,
@@ -132,99 +187,8 @@ class App extends React.Component {
                     }
                 ]
             },
-            3: {
-                date: '27/04/2020',
-                name: 'Название сырья среднее',
-                provider_name: '\"ООО\" Мясо России',
-                amount: 180.00,
-                price: 457.50,
-                expenses: [
-                    {
-                        id: 0,
-                        amount: 1680.50
-                    },
-                    {
-                        id: 1,
-                        amount: 440.33
-                    },
-                    {
-                        id: 2,
-                        amount: 480.00
-                    },
-                    {
-                        id: 3,
-                        amount: 5402.00
-                    },
-                    {
-                        id: 4,
-                        amount: 111.18
-                    },
-                    {
-                        id: 5,
-                        amount: 560.00
-                    },
-                    {
-                        id: 6,
-                        amount: 1340.00
-                    },
-                    {
-                        id: 7,
-                        amount: 1145.00
-                    }
-                ]
-            },
-            4: {
-                date: '27/04/2020',
-                name: 'Так я назвал сырьё',
-                provider_name: '\"ОАО\" Китай Голимый',
-                amount: 54.00,
-                price: 184.50,
-                expenses: [
-                    {
-                        id: 0,
-                        amount: 1680.50
-                    },
-                    {
-                        id: 2,
-                        amount: 480.00
-                    },
-                    {
-                        id: 4,
-                        amount: 111.18
-                    },
-                    {
-                        id: 5,
-                        amount: 560.00
-                    },
-                ]
-            },
-            5: {
-                date: '27/08/2004',
-                name: 'Совершенно другое сырьё',
-                provider_name: '\"ООО\" Lazorbeam',
-                amount: 2080.00,
-                price: 999.50,
-                expenses: [
-                    {
-                        id: 1,
-                        amount: 440.33
-                    },
-                    {
-                        id: 2,
-                        amount: 480.00
-                    },
-                    {
-                        id: 6,
-                        amount: 1340.00
-                    },
-                    {
-                        id: 7,
-                        amount: 1145.00
-                    }
-                ]
-            }
         }
-        const journal_rows_updated = this.getUpdatedJournalRows(journal_rows_data);
+        const journal_rows_updated = this.getUpdatedJournalRows(journal_rows_data, raw_mat_usage_for_journal);
 
         //Инициализируешь incomes.rows
 
@@ -234,43 +198,13 @@ class App extends React.Component {
                 name: 'Бампер дроблёный',
                 provider_name: 'ИП Бурунов Олег',
                 amount: 125.70,
-                amount_of_raw: 180.00,
                 price: 664.50,
                 expenses: [
-                    {
-                        id: 0,
-                        amount: 1680.50
-                    },
-                    {
-                        id: 1,
-                        amount: 440.33
-                    },
-                    {
-                        id: 2,
-                        amount: 480.00
-                    },
-                    {
-                        id: 3,
-                        amount: 5402.00
-                    },
-                    {
-                        id: 4,
-                        amount: 111.18
-                    },
-                    {
-                        id: 5,
-                        amount: 560.00
-                    },
-                    {
-                        id: 6,
-                        amount: 1340.00
-                    },
                     {
                         id: 7,
                         amount: 1145.00
                     }
                 ],
-                sum_of_raw: 43050.00,
             },
             1: {
                 date: '19/03/2019',
@@ -281,193 +215,29 @@ class App extends React.Component {
                 price: 83.50,
                 expenses: [
                     {
-                        id: 1,
-                        amount: 12340.33
-                    },
-                    {
-                        id: 4,
-                        amount: 8111.18
-                    },
-                    {
-                        id: 5,
-                        amount: 5460.00
-                    },
-                    {
-                        id: 6,
-                        amount: 1340.00
-                    },
+                        id: 7,
+                        amount: 1145.00
+                    }
                 ],
                 sum_of_raw: 43050.00,
             },
             2: {
-                date: '19/03/2018',
-                name: 'Недодроблёнка',
-                provider_name: 'Газпром Нефтьть',
-                amount: 865.70,
-                amount_of_raw: 1350.00,
-                price: 83.50,
+                date: '18/03/2019',
+                name: 'Стекло-угле-платик-резина волокно',
+                provider_name: 'Самсунг Ентерпрайзез',
+                amount: 458.70,
+                amount_of_raw: 677.00,
+                price: 84.50,
                 expenses: [
-                    {
-                        id: 1,
-                        amount: 12340.33
-                    },
-                    {
-                        id: 4,
-                        amount: 8111.18
-                    },
-                    {
-                        id: 5,
-                        amount: 5460.00
-                    },
-                    {
-                        id: 6,
-                        amount: 1340.00
-                    },
-                ],
-                sum_of_raw: 43050.00,
-            },
-            3: {
-                date: '18/05/2019',
-                name: 'Бампер дроблёный',
-                provider_name: 'ИП Бурунов Олег',
-                amount: 125.70,
-                amount_of_raw: 180.00,
-                price: 664.50,
-                expenses: [
-                    {
-                        id: 0,
-                        amount: 1680.50
-                    },
-                    {
-                        id: 1,
-                        amount: 440.33
-                    },
-                    {
-                        id: 2,
-                        amount: 480.00
-                    },
-                    {
-                        id: 3,
-                        amount: 5402.00
-                    },
-                    {
-                        id: 4,
-                        amount: 111.18
-                    },
-                    {
-                        id: 5,
-                        amount: 560.00
-                    },
-                    {
-                        id: 6,
-                        amount: 1340.00
-                    },
                     {
                         id: 7,
                         amount: 1145.00
                     }
-                ],
-                sum_of_raw: 43050.00,
-            },
-            4: {
-                date: '21/04/2019',
-                name: 'Недодроблёнка',
-                provider_name: 'Газпром Нефтьть',
-                amount: 865.70,
-                amount_of_raw: 1350.00,
-                price: 83.50,
-                expenses: [
-                    {
-                        id: 1,
-                        amount: 12340.33
-                    },
-                    {
-                        id: 4,
-                        amount: 8111.18
-                    },
-                    {
-                        id: 5,
-                        amount: 5460.00
-                    },
-                    {
-                        id: 6,
-                        amount: 1340.00
-                    },
-                ],
-                sum_of_raw: 43050.00,
-            },
-            5: {
-                date: '18/03/2007',
-                name: 'Бампер дроблёный',
-                provider_name: 'ИП Бурунов Олег',
-                amount: 125.70,
-                amount_of_raw: 180.00,
-                price: 664.50,
-                expenses: [
-                    {
-                        id: 0,
-                        amount: 1680.50
-                    },
-                    {
-                        id: 1,
-                        amount: 440.33
-                    },
-                    {
-                        id: 2,
-                        amount: 480.00
-                    },
-                    {
-                        id: 3,
-                        amount: 5402.00
-                    },
-                    {
-                        id: 4,
-                        amount: 111.18
-                    },
-                    {
-                        id: 5,
-                        amount: 560.00
-                    },
-                    {
-                        id: 6,
-                        amount: 1340.00
-                    },
-                    {
-                        id: 7,
-                        amount: 1145.00
-                    }
-                ],
-                sum_of_raw: 43050.00,
-            },
-            6: {
-                date: '09/02/2019',
-                name: 'Недодроблёнка',
-                provider_name: 'Газпром Нефтьть',
-                amount: 865.70,
-                amount_of_raw: 1350.00,
-                price: 83.50,
-                expenses: [
-                    {
-                        id: 1,
-                        amount: 12340.33
-                    },
-                    {
-                        id: 4,
-                        amount: 8111.18
-                    },
-                    {
-                        id: 5,
-                        amount: 5460.00
-                    },
-                    {
-                        id: 6,
-                        amount: 1340.00
-                    },
                 ],
                 sum_of_raw: 43050.00,
             },
         };
-        const incomes_rows_updated = this.getUpdatedIncomesRows(incomes_rows_data);
+        const incomes_rows_updated = this.getUpdatedIncomesRows(incomes_rows_data, raw_mat_usage);
 
         //Здесь собираешь данные о расходах
 
@@ -510,59 +280,142 @@ class App extends React.Component {
         this.props.loadDataBaseJournal(journal_rows_updated);
         this.props.loadDataBaseIncomes(incomes_rows_updated);
         this.props.loadExpensesData(expenses_data);
+        this.props.loadRawMatUsage(raw_mat_usage);
+        this.props.loadRawMatUsageForJournal(raw_mat_usage_for_journal);
     }
 
     componentDidMount() {
     }
 
-    getUpdatedJournalRows(rows_data) {
+    getUpdatedJournalRows(rows_data, raw_mat_usage_for_journal) {
         let rows_updated = {};
 
         for(let id in rows_data) {
-            let cur_sum = rows_data[id].amount * rows_data[id].price;
+            let cur_sum = rows_data[id].amount_data.amount_total * rows_data[id].price;
             let cur_expenses_total = 0;
+            let cur_raw_mat_used = [];
 
             rows_data[id].expenses.forEach((expense, i) => {
                 cur_expenses_total += expense.amount;
-            })
+            });
+
+            //Устанавливаем amount_used для текущей строки
+            raw_mat_usage_for_journal.forEach((raw_mat_obj) => {
+                const cur_journal_id = raw_mat_obj.incomes_id;
+                if(cur_journal_id !== id) {
+                    return;
+                }
+
+                cur_raw_mat_used = raw_mat_obj.raw_mat_used_by.slice()
+            });
 
             rows_updated[id] = {
                 ...rows_data[id],
                 sum: cur_sum,
                 total: cur_sum + cur_expenses_total,
-                cost_price: (cur_sum + cur_expenses_total) / rows_data[id].amount,
+                cost_price: (cur_sum + cur_expenses_total) / rows_data[id].amount_data.amount_total,
+                amount_data: {
+                    amount_total: rows_data[id].amount_data.amount_total,
+                    amount_used: cur_raw_mat_used,
+                }
             }
         }
+
+
 
         return rows_updated;
     }
 
-    getUpdatedIncomesRows(rows_data) {
+    getUpdatedIncomesRows(rows_data, raw_mat_usage) {
         let rows_updated = {};
 
         for(let id in rows_data) {
-            let cur_sum = rows_data[id].amount * rows_data[id].price;
+            const cur_amount = rows_data[id].amount;
+            let cur_sum = cur_amount * rows_data[id].price;
             let cur_expenses_total = 0;
-            const amount_of_raw = rows_data[id].amount_of_raw;
-            const blockage_perc = (amount_of_raw - rows_data[id].amount) / amount_of_raw * 100;
+            let cur_amount_of_raw = 0;
+            let cur_sum_of_raw = 0;
 
             //Считаем прочие расходы (всего)
             rows_data[id].expenses.forEach((expense, i) => {
                 cur_expenses_total += expense.amount;
             });
 
+            //Задать amount_of_raw, sum_of_raw
+            raw_mat_usage.forEach((raw_mat_obj) => {
+                if(raw_mat_obj.incomes_id != id) {
+                    return;
+                }
+
+                cur_amount_of_raw = raw_mat_obj.raw_mat_used_total;
+            });
+
+            const blockage_perc = (cur_amount_of_raw - cur_amount) / cur_amount_of_raw * 100;
             rows_updated[id] = {
                 ...rows_data[id],
                 sum: cur_sum,
-                cost_price: (cur_expenses_total + rows_data[id].sum_of_raw) / rows_data[id].amount,
+                amount_of_raw: cur_amount_of_raw,
+                sum_of_raw: cur_sum_of_raw,
+                cost_price: (cur_expenses_total + cur_sum_of_raw) / cur_amount,
                 blockage_perc: blockage_perc,
-                expenses_total: rows_data[id].sum_of_raw + cur_expenses_total,
-                revenue: cur_sum - cur_expenses_total - rows_data[id].sum_of_raw,
-                profitability: (cur_sum - cur_expenses_total - rows_data[id].sum_of_raw) / cur_sum * 100,
+                expenses_total: cur_sum_of_raw + cur_expenses_total,
+                revenue: cur_sum - cur_expenses_total - cur_sum_of_raw,
+                profitability: (cur_sum - cur_expenses_total - cur_sum_of_raw) / cur_sum * 100,
             }
         }
 
         return rows_updated;
+    }
+
+    getUpdatedRawMatUsage(raw_mat_usage) {
+        //здесь просто считает общее кол-во сырья и добавляет в каждый объект массива
+        let raw_mat_usage_upd = raw_mat_usage.slice();
+
+        raw_mat_usage_upd.forEach((raw_mat_usage_obj) => {
+            let cur_used_total = 0;
+
+            raw_mat_usage_obj.raw_mat_used.forEach((raw_obj) => {
+               cur_used_total += raw_obj.used;
+            });
+
+            raw_mat_usage_obj.raw_mat_used_total = cur_used_total;
+        });
+
+        return raw_mat_usage_upd;
+    }
+
+    reformRawMatUsageForJournal(raw_mat_usage) {
+        let raw_mat_usage_reformed = [];
+        let journal_ids_used = [];
+
+        raw_mat_usage.forEach((incomes_obj) => {
+            const incomes_id = incomes_obj.incomes_id;
+            const raw_mat_used = incomes_obj.raw_mat_used;
+
+            raw_mat_used.forEach((raw_mat_obj) => {
+                if(journal_ids_used.indexOf(raw_mat_obj.journal_id) === -1) {
+                    journal_ids_used.push(raw_mat_obj.journal_id);
+                    raw_mat_usage_reformed.push({
+                        journal_id: raw_mat_obj.journal_id,
+                        raw_mat_used_total: 0,
+                        raw_mat_used_by: [],
+                    })
+                }
+
+                //Добавим используемое сырьё
+
+                raw_mat_usage_reformed.forEach((obj) => {
+                    if(obj.journal_id === raw_mat_obj.journal_id) {
+                        obj.raw_mat_used_by.push({
+                            incomes_id: incomes_id,
+                            used: raw_mat_used.used,
+                        })
+                    }
+                });
+            });
+        });
+
+        return raw_mat_usage_reformed;
     }
 
     render() {

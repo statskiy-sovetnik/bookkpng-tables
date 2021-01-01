@@ -244,6 +244,17 @@ class TableArea extends React.Component {
                         </td>
                     )
                 }
+                else if(col_name === 'amount_data') {
+                    let cur_value = +row_data[col_name].amount_total.toFixed(3);
+
+                    cur_row.push(
+                        <td className={cell_class}
+                            key={data + '-' + row_id + '-' + cur_value}
+                        >
+                            {cur_value}
+                        </td>
+                    )
+                }
                 else if(col_name === 'expenses') {
                     let cur_expenses_arr = row_data[col_name];
                     let cur_expenses_total = 0;
@@ -314,7 +325,7 @@ class TableArea extends React.Component {
                                                 href="#"
                                                 onClick={event => {event.preventDefault()}}>
                                                 <BtstrapIcon data={'bi-eye-fill'}
-                                                         className={'bi-eye-fill btstrap-icon_size-12 btstrap-icon_color-dark ' +
+                                                         className={'bi-eye-fill btstrap-icon_size-13 btstrap-icon_color-dark ' +
                                                          'table-area__expenses-icons-block__btstrap-icon'}/>
                                             </a>
                                         </OverlayTrigger>
@@ -323,7 +334,7 @@ class TableArea extends React.Component {
                                            onClick={event => {event.preventDefault()}}
                                         >
                                             <BtstrapIcon data={'bi-plus-circle'}
-                                                     className={'bi-plus-circle btstrap-icon_size-10 btstrap-icon_color-dark ' +
+                                                     className={'bi-plus-circle btstrap-icon_size-11 btstrap-icon_color-dark ' +
                                                      'table-area__expenses-icons-block__btstrap-icon'}/>
                                         </a>
                                     </div>
@@ -332,6 +343,24 @@ class TableArea extends React.Component {
                         </td>
                     )
 
+                }
+                else if(col_name === 'sum_of_raw') {
+                    let cur_value = +row_data[col_name].toFixed(3);
+
+                    cur_row.push(
+                        <td className={cell_class}
+                            key={data + '-' + row_id + '-' + cur_value}
+                        >
+                            {cur_value}
+                            <a className="text text_color-dark body-cell__icon-wrapper_sum-of-raw"
+                               href={'#'}
+                               onClick={event => {event.preventDefault()}}
+                            >
+                                <BtstrapIcon data={'bi-plus-circle'}
+                                             className={'bi-plus-circle btstrap-icon_size-11 btstrap-icon_color-dark '}/>
+                            </a>
+                        </td>
+                    );
                 }
                 else {
                     let cur_value = row_data[col_name];
