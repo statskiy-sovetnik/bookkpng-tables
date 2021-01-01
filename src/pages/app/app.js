@@ -556,6 +556,7 @@ class App extends React.Component {
                 sum: cur_sum,
                 cost_price: (cur_expenses_total + rows_data[id].sum_of_raw) / rows_data[id].amount,
                 blockage_perc: blockage_perc,
+                expenses_total: rows_data[id].sum_of_raw + cur_expenses_total,
                 revenue: cur_sum - cur_expenses_total - rows_data[id].sum_of_raw,
                 profitability: (cur_sum - cur_expenses_total - rows_data[id].sum_of_raw) / cur_sum * 100,
             }

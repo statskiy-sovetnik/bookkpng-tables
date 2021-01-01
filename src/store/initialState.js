@@ -77,7 +77,7 @@ const initialState = {
         rowsOpened: new Array(ENTRIES_PACK).fill(0),
         rows: {},
         columns_order: ['control', 'date', 'name', 'provider_name', 'amount', 'amount_of_raw', 'blockage_perc',
-        'price', 'sum', 'cost_price', 'sum_of_raw', 'expenses', 'revenue', 'profitability'],
+        'price', 'sum', 'cost_price', 'sum_of_raw', 'expenses', 'expenses_total', 'revenue', 'profitability'],
         head_col_names: {
             date: 'Дата',
             name: 'Наименование',
@@ -90,11 +90,12 @@ const initialState = {
             cost_price: 'Себестоимость (руб)',
             sum_of_raw: 'Расходы на сырьё (руб)',
             expenses: 'Прочие расходы (руб)',
+            expenses_total: 'Расходов всего (руб)',
             revenue: 'Прибыль (руб)',
             profitability: 'Рентабельность (%)',
             control: 'Управление',
         },
-        table_width: 2100,
+        table_width: 2200,
     },
 
     expenses_data: {

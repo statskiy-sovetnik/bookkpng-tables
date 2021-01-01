@@ -125,14 +125,14 @@ export default function mapDispatchToProps(component) {
                     changeSortType: (value) => dispatch(incomesSortTypeChange(value))
                 }
             }
-        case 'SortDirectionIncomes':
+        case 'SortDirIncomes':
             return function (dispatch) {
                 return {
                     changeSortDirection: (from_least) => dispatch(incomesSortDirChange(from_least))
                 }
             }
 
-        //Journal Period Sort ___________
+        //Incomes Period Sort ___________
         case 'IncomesPeriodSort':
             return function (dispatch) {
                 return {
@@ -151,7 +151,7 @@ export default function mapDispatchToProps(component) {
                     changeLocalToDate: (value) => dispatch(incomesToDateChange(value))
                 }
             }
-        //______Journal Entry Length switch _________
+        //______ Incomes Entry Length switch _________
 
         case 'EntrySwitchLengthSectionIncomes':
             return function (dispatch) {

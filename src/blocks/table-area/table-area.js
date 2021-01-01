@@ -125,6 +125,23 @@ class TableArea extends React.Component {
                     }
                 })
                 break;
+            case 'Покупателю':
+                rows_keys_sorted.sort((row_id_1, row_id_2) => {
+                    const name_1 = rows[row_id_1].provider_name;
+                    const name_2 = rows[row_id_2].provider_name;
+                    let sort_from_least_coef = sort_from_least ? 1 : -1;
+
+                    if(name_1 < name_2) {
+                        return -1 * sort_from_least_coef;
+                    }
+                    else if(name_1 > name_2) {
+                        return sort_from_least_coef;
+                    }
+                    else {
+                        return 0;
+                    }
+                })
+                break;
             case 'Сумме':
                 rows_keys_sorted.sort((row_id_1, row_id_2) => {
                     const sum_1 = +rows[row_id_1].sum;
@@ -167,6 +184,24 @@ class TableArea extends React.Component {
                     })
 
                     return (total_1 - total_2) * sort_from_least_coef;
+                })
+                break;
+            case 'Расходам всего':
+                rows_keys_sorted.sort((row_id_1, row_id_2) => {
+                    const exp_arr_1 = rows[row_id_1].expenses;
+                    const exp_arr_2 = rows[row_id_2].expenses;
+                    let total_1 = 0, total_2 = 0;
+                    let sort_from_least_coef = sort_from_least ? 1 : -1;
+
+                    exp_arr_1.forEach((exp) => {
+                        total_1 += +exp.amount;
+                    });
+                    exp_arr_2.forEach((exp) => {
+                        total_2 += +exp.amount;
+                    });
+
+
+                    return (total_1 + rows[row_id_1].sum_of_raw - total_2 - rows[row_id_2].sum_of_raw) * sort_from_least_coef;
                 })
                 break;
             case 'Дате':
