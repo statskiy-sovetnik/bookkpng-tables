@@ -15,6 +15,9 @@ export default function mapStateToProps(component) {
             return function (state) {
                 return {
                     journalRows: state.journal.rows,
+                    incomesRows: state.incomes.rows,
+                    incomesColNames: state.incomes.head_col_names,
+                    rawMatUsageForJournal: state.raw_mat_usage_for_journal,
                     journalColOrder: state.journal.columns_order,
                     journalColNames: state.journal.head_col_names,
                     journalTableWidth: state.journal.table_width,

@@ -24,6 +24,7 @@ import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Popover from "react-bootstrap/Popover";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Table from "react-bootstrap/Table";
 
 class TableArea extends React.Component {
     constructor(props) {
@@ -52,7 +53,7 @@ class TableArea extends React.Component {
     }
 
     renderTableBody(data, rows, cols_order, expenses_data, body_classnames, show_how_many,
-                    fromDate, toDate, sort_type, sort_from_least) {
+                    fromDate, toDate, sort_type, sort_from_least, incomes_rows, incomes_head_cols, raw_mat_usage) {
         if(Object.keys(rows).length === 0) {return}
 
         let table_rows = [];
@@ -250,21 +251,30 @@ class TableArea extends React.Component {
                     let cur_amount_used_total = +row_data[col_name].amount_used_total.toFixed(3);
                     amount_content.push(cur_value);
 
-                    console.log(row_data[col_name]);
+                    //Добавляем использованный вес сырья
                     amount_content.push(
                         <span className={'text text_color-dark'} key={data + '-' + row_id + '_' + 'total_usde'}>
                            &nbsp; | &nbsp; {cur_amount_used_total}
                         </span>
                     );
+
+                    //Добавляем иконку глаза с поповером
+
+                    const incomes_cut_col_order = ['date', 'name', 'provider_name'];
+                    const raw_mat_popover = this.renderRawMatJournalRowPopover(row_id, incomes_rows, incomes_cut_col_order,
+                        incomes_head_cols, raw_mat_usage);
+
                     amount_content.push(
-                        <a className="text text_color-dark body-cell__icon-wrapper_sum-of-raw"
-                           href={'#'}
-                           onClick={event => {event.preventDefault()}}
-                           key={data + '-' + row_id + '_' + 'plus-icon'}
-                        >
-                            <BtstrapIcon data={'bi-eye-fill'}
-                                         className={'bi-eye-fill btstrap-icon_size-12 btstrap-icon_color-dark '}/>
-                        </a>
+                        <OverlayTrigger trigger={'focus'} overlay={raw_mat_popover} placement={'bottom'}>
+                            <a className="text text_color-dark body-cell__icon-wrapper_sum-of-raw"
+                               href={'#'}
+                               onClick={event => {event.preventDefault()}}
+                               key={data + '-' + row_id + '_' + 'plus-icon'}
+                            >
+                                <BtstrapIcon data={'bi-eye-fill'}
+                                             className={'bi-eye-fill btstrap-icon_size-12 btstrap-icon_color-dark '}/>
+                            </a>
+                        </OverlayTrigger>
                     );
 
                     cur_row.push(
@@ -412,6 +422,106 @@ class TableArea extends React.Component {
         )
     }
 
+    renderRawMatJournalRowPopover(journal_row_id, incomes_rows, incomes_cut_cols_order, incomes_head_cols,
+                                  raw_mat_usage_for_journal) {
+        let cur_raw_mat_data = {};
+        let raw_mat_table_head_cells = [];
+        let raw_mat_table_rows = [];
+        let cut_cols_counter = 0;
+
+        //Находим объект с данными, соответствующими этому ряду в журнале
+        raw_mat_usage_for_journal.forEach((obj) => {
+            if(obj.journal_id === +journal_row_id) {
+                Object.assign(cur_raw_mat_data, obj);
+            }
+        });
+
+        //Заполняем head таблицы
+
+        //Столбец с весом
+        raw_mat_table_head_cells.push(
+            <th key={'raw-data-popover-table_row-' + journal_row_id + '_head-cell-weight'}>
+                Кол-во сырья (кг)
+            </th>
+        );
+
+        incomes_cut_cols_order.forEach((col_name, i) => {
+            raw_mat_table_head_cells.push(
+                <th key={'raw-data-popover-table_row-' + journal_row_id + '_head-cell-' + i}>
+                    {incomes_head_cols[col_name]}
+                </th>
+            );
+
+
+            cut_cols_counter++;
+        });
+
+        //Заполняем body таблицы
+
+        cur_raw_mat_data.raw_mat_used_by.forEach((income_obj, i) => {
+            if(i >= cut_cols_counter) {
+                return
+            }
+
+            const cur_income_row = incomes_rows[income_obj.incomes_id];
+            let cur_table_row = [];
+
+            //добавим столбец с весом
+            cur_table_row.push(
+                <td  key={'raw-mat-journal_row-' + journal_row_id + '_roww-' + i + '_cell-weight'}>
+                    <b>
+                        {income_obj.used}
+                    </b>
+                </td>
+            );
+
+            incomes_cut_cols_order.forEach((col_name, j) => {
+                cur_table_row.push(
+                    <td  key={'raw-mat-journal_row-' + journal_row_id + '_roww-' + i + '_cell-' + j}>
+                        {cur_income_row[col_name]}
+                    </td>
+                )
+            });
+
+            raw_mat_table_rows.push(
+                <tr key={'raw-mat-journal_row-' + journal_row_id + '_roww-' + i}>
+                    {cur_table_row}
+                </tr>
+            )
+        });
+
+        return (
+            <Popover id={'raw-mat-popover_journal_row-' + journal_row_id}>
+                <Popover.Title as="h5">
+                    Распределено сырья:
+                    <b>
+                        &nbsp;{cur_raw_mat_data.raw_mat_used_total + " кг"}
+                    </b>
+                </Popover.Title>
+                <Popover.Content>
+                    <Table
+                        size={'sm'}
+                        bordered
+                        striped
+                        variant={'dark'}
+                        className={'text text_size-13'}
+                        responsive
+                        style={{'width': '500px'}}
+                    >
+                        <thead>
+                            <tr>
+                            {raw_mat_table_head_cells}
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {raw_mat_table_rows}
+                        </tbody>
+                    </Table>
+                </Popover.Content>
+            </Popover>
+        );
+    }
+
     renderTableBottomPanel(entries_left, entries_pack, entries_should_be_shown) {
         const content = (entries_left > 0 ? (
             <div className={'content-area'}>
@@ -523,6 +633,9 @@ class TableArea extends React.Component {
                                 journal_applied_to_date,
                                 journal_sort_name,
                                 journal_sort_from_least,
+                                this.props.incomesRows,
+                                this.props.incomesColNames,
+                                this.props.rawMatUsageForJournal,
                             ),
                         ]}
                     </TableJournal>
