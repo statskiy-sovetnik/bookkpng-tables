@@ -251,7 +251,8 @@ class App extends React.Component {
                 sum_of_raw: 43050.00,
             },
         };
-        const incomes_rows_updated = this.getUpdatedIncomesRows(incomes_rows_data, raw_mat_usage);
+        const incomes_rows_updated = this.getUpdatedIncomesRows(incomes_rows_data, journal_rows_updated, raw_mat_usage,
+            raw_mat_data);
 
         //Здесь собираешь данные о расходах
 
@@ -353,7 +354,7 @@ class App extends React.Component {
         return rows_updated;
     }
 
-    getUpdatedIncomesRows(rows_data, raw_mat_usage) {
+    getUpdatedIncomesRows(rows_data, journal_rows_data, raw_mat_usage, raw_mat_data) {
         let rows_updated = {};
 
         for(let id in rows_data) {
@@ -375,6 +376,15 @@ class App extends React.Component {
                 }
 
                 cur_amount_of_raw = raw_mat_obj.raw_mat_used_total;
+
+                //Считаем, сколько всего потрачено на сырьё (sum_of_raw)
+                raw_mat_obj.raw_mat_used.forEach((value_obj) => {
+                    //Находим id сырья, имея id ряда в Журнале
+                    const cur_raw_mat_id = journal_rows_data[value_obj.journal_id].raw_mat_id;
+                    const cur_raw_mat_price = raw_mat_data[cur_raw_mat_id].price;
+
+                    cur_sum_of_raw += cur_raw_mat_price * value_obj.used;
+                });
             });
 
             const blockage_perc = (cur_amount_of_raw - cur_amount) / cur_amount_of_raw * 100;
