@@ -68,18 +68,36 @@ class App extends React.Component {
         raw_mat_usage = this.getUpdatedRawMatUsage(raw_mat_usage);
         const raw_mat_usage_for_journal = this.reformRawMatUsageForJournal(raw_mat_usage);
 
+        //Здесь собираешь данные о сырье
+
+        const raw_mat_data = {
+            0: {
+                name: 'Название сырья среднее',
+                provider_name: '"ООО" Мясо России',
+                price: 38.5,
+            },
+            1: {
+                name: 'Так я назвал сырьё',
+                provider_name: '"ОАО" Китай Голимый',
+                price: 184.5
+            },
+            2: {
+                name: 'Другое сырьё',
+                provider_name: 'Библиотеки Пермского края',
+                price: 67.5,
+            }
+        }
+
         //Здесь инициализируешь journal.rows:
 
         const journal_rows_data = {
             0: {
                 date: '27/04/2020',
-                name: 'Название сырья среднее',
-                provider_name: '\"ООО\" Мясо России',
+                raw_mat_id: 0,
                 amount_data: {
                     amount_total: 180.00,
                     amount_used: [],
                 },
-                price: 38.50,
                 expenses: [
                     {
                         id: 0,
@@ -116,14 +134,12 @@ class App extends React.Component {
                 ]
             },
             1: {
-                date: '27/04/2020',
-                name: 'Так я назвал сырьё',
-                provider_name: '\"ОАО\" Китай Голимый',
+                date: '27/03/2020',
+                raw_mat_id: 2,
                 amount_data: {
                     amount_total: 54.00,
                     amount_used: [],
                 },
-                price: 184.50,
                 expenses: [
                     {
                         id: 0,
@@ -144,14 +160,12 @@ class App extends React.Component {
                 ]
             },
             2: {
-                date: '27/04/2020',
-                name: 'Другое сырьё',
-                provider_name: 'Библиотеки Пермского Края',
+                date: '24/04/2020',
+                raw_mat_id: 1,
                 amount_data: {
                     amount_total: 245.00,
                     amount_used: [],
                 },
-                price: 67.50,
                 expenses: [
                     {
                         id: 0,
@@ -188,7 +202,7 @@ class App extends React.Component {
                 ]
             },
         }
-        const journal_rows_updated = this.getUpdatedJournalRows(journal_rows_data, raw_mat_usage_for_journal);
+        const journal_rows_updated = this.getUpdatedJournalRows(journal_rows_data, raw_mat_usage_for_journal, raw_mat_data);
 
         //Инициализируешь incomes.rows
 
@@ -196,7 +210,7 @@ class App extends React.Component {
             0: {
                 date: '18/03/2019',
                 name: 'Бампер дроблёный',
-                provider_name: 'ИП Бурунов Олег',
+                customer_name: 'ИП Бурунов Олег',
                 amount: 125.70,
                 price: 664.50,
                 expenses: [
@@ -209,7 +223,7 @@ class App extends React.Component {
             1: {
                 date: '19/03/2019',
                 name: 'Недодроблёнка',
-                provider_name: 'Газпром Нефтьть',
+                customer_name: 'Газпром Нефтьть',
                 amount: 865.70,
                 amount_of_raw: 1350.00,
                 price: 83.50,
@@ -224,7 +238,7 @@ class App extends React.Component {
             2: {
                 date: '18/03/2019',
                 name: 'Стекло-угле-платик-резина волокно',
-                provider_name: 'Самсунг Ентерпрайзез',
+                customer_name: 'Самсунг Ентерпрайзез',
                 amount: 458.70,
                 amount_of_raw: 677.00,
                 price: 84.50,
@@ -287,11 +301,18 @@ class App extends React.Component {
     componentDidMount() {
     }
 
-    getUpdatedJournalRows(rows_data, raw_mat_usage_for_journal) {
+    getUpdatedJournalRows(rows_data, raw_mat_usage_for_journal, raw_mat_data) {
         let rows_updated = {};
 
         for(let id in rows_data) {
-            let cur_sum = rows_data[id].amount_data.amount_total * rows_data[id].price;
+            //Находим данные нужного сырья
+
+            const raw_mat_id = rows_data[id].raw_mat_id;
+            let cur_row_raw_mat_data = {};
+            Object.assign(cur_row_raw_mat_data, raw_mat_data[raw_mat_id]);
+            const raw_mat_price = cur_row_raw_mat_data.price;
+
+            let cur_sum = rows_data[id].amount_data.amount_total * raw_mat_price;
             let cur_expenses_total = 0;
             let cur_raw_mat_used = [];
             let cur_raw_mat_used_total = 0;
@@ -314,6 +335,9 @@ class App extends React.Component {
             rows_updated[id] = {
                 ...rows_data[id],
                 sum: cur_sum,
+                name: cur_row_raw_mat_data.name,
+                provider_name: cur_row_raw_mat_data.provider_name,
+                price: raw_mat_price,
                 total: cur_sum + cur_expenses_total,
                 cost_price: (cur_sum + cur_expenses_total) / rows_data[id].amount_data.amount_total,
                 amount_data: {

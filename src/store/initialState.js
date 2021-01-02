@@ -84,12 +84,12 @@ const initialState = {
         entriesShouldBeShown: ENTRIES_PACK,
         rowsOpened: new Array(ENTRIES_PACK).fill(0),
         rows: {},
-        columns_order: ['control', 'date', 'name', 'provider_name', 'amount', 'amount_of_raw', 'blockage_perc',
+        columns_order: ['control', 'date', 'name', 'customer_name', 'amount', 'amount_of_raw', 'blockage_perc',
         'price', 'sum', 'cost_price', 'sum_of_raw', 'expenses', 'expenses_total', 'revenue', 'profitability'],
         head_col_names: {
             date: 'Дата',
             name: 'Наименование',
-            provider_name: 'Покупатель',
+            customer_name: 'Покупатель',
             amount: 'Кол-во (кг)',
             amount_of_raw: 'Кол-во сырья (кг)',
             blockage_perc: 'Засор (%)',
@@ -141,6 +141,16 @@ const initialState = {
             color: '#e06c5d',
             name: 'Транспорт'
         }*/
+    },
+
+    raw_mat_data: {
+        /*
+        0: {
+            name: 'Название сырья',
+            provider_name: 'Имя поставщика',
+            price: 74.00,
+        }
+        * */
     }
 }
 

@@ -392,6 +392,7 @@ class TableArea extends React.Component {
                         </td>
                     );
                 }
+                else if(col_name === 'raw_mat_id') {/*ничего не добавляем*/}
                 else {
                     let cur_value = row_data[col_name];
                     if(typeof cur_value === 'number') {
