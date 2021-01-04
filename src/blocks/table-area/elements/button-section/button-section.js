@@ -22,7 +22,11 @@ class ButtonSection extends React.Component{
 
     renderJournalNewEntryModal(modal_is_open, toggleModal) {
         return (
-            <Modal show={modal_is_open}>
+            <Modal
+                show={modal_is_open}
+                size={'lg'}
+                onHide={(event) => {this.handleJournalNewEntryModalClose(toggleModal)}}
+            >
                 <Modal.Header closeButton>
                     <Modal.Title>Новая запись</Modal.Title>
                 </Modal.Header>
