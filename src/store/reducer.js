@@ -141,6 +141,14 @@ export default function reducer(state, action) {
                     rows: action.value,
                 }
             }
+        case actionTypes.JOURNAL_TOGGLE_NEW_ENTRY_MODAL:
+            return {
+                ...state,
+                journal: {
+                    ...state.journal,
+                    newEntryModalIsOpen: action.value,
+                }
+            }
 
         //_______ Journal Sort _________
 

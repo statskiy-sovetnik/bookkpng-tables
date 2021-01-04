@@ -20,6 +20,7 @@ const initialState = {
     },
 
     journal: {
+        newEntryModalIsOpen: false,
         sortName: 'Наименованию',
         sortFromLeast: true,
         localFromDate: '',

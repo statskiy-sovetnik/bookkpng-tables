@@ -18,6 +18,7 @@ export default function mapStateToProps(component) {
                     incomesRows: state.incomes.rows,
                     incomesColNames: state.incomes.head_col_names,
                     rawMatUsageForJournal: state.raw_mat_usage_for_journal,
+                    rawMatUsage: state.raw_mat_usage,
                     journalColOrder: state.journal.columns_order,
                     journalColNames: state.journal.head_col_names,
                     journalTableWidth: state.journal.table_width,
@@ -30,6 +31,15 @@ export default function mapStateToProps(component) {
                     journalSortFromLeast: state.journal.sortFromLeast,
                 }
             }
+
+        //____ Journal Button Section _______
+        case 'JournalButtonSection':
+            return function (state) {
+                return {
+                    journalNewEntryModalIsOpen: state.journal.newEntryModalIsOpen,
+                }
+            }
+
         //______ Journal Sort ________________
 
         case 'SortJournal':
@@ -102,6 +112,10 @@ export default function mapStateToProps(component) {
                     incomesRows: state.incomes.rows,
                     incomesColOrder: state.incomes.columns_order,
                     incomesColNames: state.incomes.head_col_names,
+                    journalColNames: state.journal.head_col_names,
+                    journalRows: state.journal.rows,
+                    rawMatUsageForJournal: state.raw_mat_usage_for_journal,
+                    rawMatUsage: state.raw_mat_usage,
                     incomesTableWidth: state.incomes.table_width,
                     expensesData: state.expenses_data,
                     incomesEntriesPack: state.incomes.entriesPack,

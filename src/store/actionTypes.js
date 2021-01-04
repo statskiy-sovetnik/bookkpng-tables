@@ -5,7 +5,7 @@ export default {
     LOAD_RAW_MAT_USAGE_FOR_JOURNAL: 'loadRawMatUsageForJournal',
 
     //JOURNAL
-    JOURNAL_ADD_ENTRY_BTN_CLICK: 'journalAddEntryBtnClick',
+    JOURNAL_TOGGLE_NEW_ENTRY_MODAL: 'journalToggleNewEntryModal',
 
     //Journal Sorts Section
     JOURNAL_SORT_TYPE_CHANGE: 'journalSortTypeChange',

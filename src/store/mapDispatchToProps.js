@@ -1,5 +1,4 @@
 //Actions _______
-import journalAddEntryBtnClick from "./actionCreators/journalAddEntryBtnClick";
 import journalFromDateChange from "./actionCreators/journalFromDateChange";
 import journalToDateChange from "./actionCreators/journalToDateChange";
 import journalApplyPeriodBtnClick from "./actionCreators/journalApplyPeriodBtnClick";
@@ -30,6 +29,7 @@ import incomesToDateChange from "./actionCreators/incomes/incomesToDateChange";
 import entryLengthSwitchBtnClickIncomes from "./actionCreators/incomes/entryLengthSwitchBtnClickIncomes";
 import loadRawMatUsage from "./actionCreators/loadRawMatUsage";
 import loadRawMatUsageForJournal from "./actionCreators/loadRawMatUsageForJournal";
+import journalToggleNewEntryModal from "./actionCreators/journalToggleNewEntryModal";
 
 export default function mapDispatchToProps(component) {
     switch (component) {
@@ -66,7 +66,15 @@ export default function mapDispatchToProps(component) {
         case 'JournalArea':
             return function (dispatch) {
                 return {
-                    changeEntriesShouldBeShown: (value) => dispatch(entriesShouldBeShownChangeJournal(value))
+                    changeEntriesShouldBeShown: (value) => dispatch(entriesShouldBeShownChangeJournal(value)),
+                }
+            }
+
+        //________ Journal Button Section _______
+        case 'JournalButtonSection':
+            return function (dispatch) {
+                return {
+                    toggleNewEntryModal: (bool) => dispatch(journalToggleNewEntryModal(bool)),
                 }
             }
 

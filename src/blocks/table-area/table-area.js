@@ -8,7 +8,10 @@ import parse from 'date-fns/parse'
 
 //______ Blocks ________________
 import Heading from "../heading/heading";
-import ButtonSection from "./elements/button-section/button-section";
+import {
+    JOURNAL_BUTTON_SECTION_W as JournalButtonSection,
+    INCOMES_BUTTON_SECTION_W as IncomesButtonSection,
+} from "./elements/button-section/button-section";
 import BtstrapIcon from "../btstrap-icon/btstrap-icon";
 import {
     JOURNAL_CONTROL_SECTION_W as JournalControlSection,
@@ -25,6 +28,7 @@ import Container from "react-bootstrap/Container";
 import Popover from "react-bootstrap/Popover";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Table from "react-bootstrap/Table";
+import Modal from "react-bootstrap/Modal";
 
 class TableArea extends React.Component {
     constructor(props) {
@@ -53,7 +57,8 @@ class TableArea extends React.Component {
     }
 
     renderTableBody(data, rows, cols_order, expenses_data, body_classnames, show_how_many,
-                    fromDate, toDate, sort_type, sort_from_least, incomes_rows, incomes_head_cols, raw_mat_usage) {
+                    fromDate, toDate, sort_type, sort_from_least, another_table_rows, raw_mat_usage_for_journal, raw_mat_usage,
+                    incomes_head_cols, journal_head_cols) {
         if(Object.keys(rows).length === 0) {return}
 
         let table_rows = [];
@@ -154,8 +159,8 @@ class TableArea extends React.Component {
                 break;
             case 'Кол-ву':
                 rows_keys_sorted.sort((row_id_1, row_id_2) => {
-                    const sum_1 = +rows[row_id_1].amount;
-                    const sum_2 = +rows[row_id_2].amount;
+                    const sum_1 = +rows[row_id_1].amount_data.amount_total;
+                    const sum_2 = +rows[row_id_2].amount_data.amount_total;
                     let sort_from_least_coef = sort_from_least ? 1 : -1;
 
                     return (sum_1 - sum_2) * sort_from_least_coef;
@@ -260,9 +265,9 @@ class TableArea extends React.Component {
 
                     //Добавляем иконку глаза с поповером
 
-                    const incomes_cut_col_order = ['date', 'name', 'provider_name'];
-                    const raw_mat_popover = this.renderRawMatJournalRowPopover(row_id, incomes_rows, incomes_cut_col_order,
-                        incomes_head_cols, raw_mat_usage);
+                    const incomes_cut_col_order = ['date', 'name', 'customer_name'];
+                    const raw_mat_popover = this.renderRawMatJournalRowPopover(row_id, another_table_rows, incomes_cut_col_order,
+                        incomes_head_cols, raw_mat_usage_for_journal);
 
                     amount_content.push(
                         <OverlayTrigger trigger={'focus'} overlay={raw_mat_popover} placement={'bottom'}>
@@ -377,12 +382,29 @@ class TableArea extends React.Component {
                 else if(col_name === 'sum_of_raw') {
                     let cur_value = +row_data[col_name].toFixed(3);
 
+                    //Добавляем иконку глаза с поповером
+
+                    const journal_cut_col_order = ['date', 'name', 'provider_name', 'total'];
+                    const raw_mat_popover = this.renderRawMatIncomesPopover(row_id, another_table_rows, journal_cut_col_order,
+                        journal_head_cols, raw_mat_usage);
+
                     cur_row.push(
                         <td className={cell_class}
                             key={data + '-' + row_id + '-' + cur_value}
                         >
                             {cur_value}
-                            <a className="text text_color-dark body-cell__icon-wrapper_sum-of-raw"
+                            <OverlayTrigger overlay={raw_mat_popover} placement={'bottom'} trigger={'focus'}>
+                                <a href={'#'}
+                                   onClick={event => event.preventDefault()}
+                                   className={'text text_color-dark body-cell__icon-wrapper_sum-of-raw'}
+                                >
+                                    <BtstrapIcon
+                                        data={'bi-eye-fill'}
+                                        className={'bi-eye-fill btstrap-icon_size-13 btstrap-icon_color-dark'}
+                                    />
+                                </a>
+                            </OverlayTrigger>
+                            <a className="text text_color-dark body-cell__icon-wrapper_right-icon"
                                href={'#'}
                                onClick={event => {event.preventDefault()}}
                             >
@@ -523,6 +545,95 @@ class TableArea extends React.Component {
         );
     }
 
+    renderRawMatIncomesPopover(incomes_row_id, journal_rows, journal_cut_cols_order, journal_head_cols, raw_mat_usage) {
+        let cur_raw_mat_data = {};
+        let raw_mat_table_head_cells = [];
+        let raw_mat_table_rows = [];
+        let cut_cols_counter = 0;
+
+        //Находим объект с данными, соответствующими этому ряду в Доходах
+        raw_mat_usage.forEach((obj) => {
+            if(obj.incomes_id === +incomes_row_id) {
+                Object.assign(cur_raw_mat_data, obj);
+            }
+        });
+
+        //Заполняем head таблицы
+
+        journal_cut_cols_order.forEach((col_name, i) => {
+            let head_cell_text = journal_head_cols[col_name];
+            if(col_name === 'total') {
+                head_cell_text = 'Затраты';
+            }
+
+            raw_mat_table_head_cells.push(
+                <th key={'raw-data-popover-incomes-table_row-' + incomes_row_id + '_head-cell-' + i}>
+                    {head_cell_text}
+                </th>
+            );
+
+            cut_cols_counter++;
+        });
+
+        //Заполняем body таблицы
+
+        cur_raw_mat_data.raw_mat_used.forEach((journal_obj, i) => {
+            if(i >= cut_cols_counter) {
+                return
+            }
+
+            const cur_journal_row = journal_rows[journal_obj.journal_id];
+            let cur_table_row = [];
+
+            journal_cut_cols_order.forEach((col_name, j) => {
+                let cell_data = cur_journal_row[col_name];
+                if(typeof cell_data === 'number') {
+                    cell_data = +cell_data.toFixed(3);
+                }
+
+                cur_table_row.push(
+                    <td  key={'raw-mat-incomes_row-' + incomes_row_id + '_roww-' + i + '_cell-' + j}>
+                        {cell_data}
+                    </td>
+                )
+            });
+
+            raw_mat_table_rows.push(
+                <tr key={'raw-mat-incomes_row-' + incomes_row_id + '_roww-' + i}>
+                    {cur_table_row}
+                </tr>
+            )
+        });
+
+        return (
+            <Popover id={'raw-mat-popover_incomes_row-' + incomes_row_id}>
+                <Popover.Title as="h5">
+                    Потрачено на сырьё
+                </Popover.Title>
+                <Popover.Content>
+                    <Table
+                        size={'sm'}
+                        bordered
+                        striped
+                        variant={'dark'}
+                        className={'text text_size-13'}
+                        responsive
+                        style={{'width': '570px'}}
+                    >
+                        <thead>
+                        <tr>
+                            {raw_mat_table_head_cells}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {raw_mat_table_rows}
+                        </tbody>
+                    </Table>
+                </Popover.Content>
+            </Popover>
+        );
+    }
+
     renderTableBottomPanel(entries_left, entries_pack, entries_should_be_shown) {
         const content = (entries_left > 0 ? (
             <div className={'content-area'}>
@@ -571,9 +682,10 @@ class TableArea extends React.Component {
         )
     }
 
+
     render() {
         let area_name,
-            add_entry_button_icon,
+            new_entry_modal,
             table_area_content = [];
 
         const expenses_data = this.props.expensesData;
@@ -601,15 +713,15 @@ class TableArea extends React.Component {
         switch(this.props.data) {
             case 'journal':
                 area_name = 'Журнал';
-                add_entry_button_icon = (
-                    <BtstrapIcon data={'bi-bookmark-plus'}
-                                 className={'bi-bookmark-plus button__btstrap-icon btstrap-icon_size-14 btstrap-icon_color-white'}/>
+                table_area_content.push(
+                    <JournalButtonSection data={'journal'}/>
                 );
+
                 table_area_content.push(
                     <JournalControlSection
                         key={'journal-ctrl-section'}
                         data={'journal'} sort_names={this.props.sort_names}/>
-                )
+                );
                 table_area_content.push(
                     <TableJournal
                         responsive={true}
@@ -623,34 +735,25 @@ class TableArea extends React.Component {
                                 journal_col_order,
                                 head_classnames,
                             ),
-                            this.renderTableBody(
-                                'journal',
-                                journal_rows_data,
-                                journal_col_order,
-                                expenses_data,
-                                tbody_classnames,
-                                journal_entries_should_be_shown,
-                                journal_applied_from_date,
-                                journal_applied_to_date,
-                                journal_sort_name,
-                                journal_sort_from_least,
-                                this.props.incomesRows,
-                                this.props.incomesColNames,
-                                this.props.rawMatUsageForJournal,
-                            ),
+                            this.renderTableBody('journal', journal_rows_data, journal_col_order, expenses_data,
+                                tbody_classnames, journal_entries_should_be_shown, journal_applied_from_date,
+                                journal_applied_to_date, journal_sort_name, journal_sort_from_least,
+                                this.props.incomesRows, this.props.rawMatUsageForJournal, this.props.rawMatUsage,
+                                this.props.incomesColNames, this.props.journalColNames),
                         ]}
                     </TableJournal>
                 );
                 table_area_content.push(
                     this.renderTableBottomPanel(journal_entries_left, journal_entries_pack, journal_entries_should_be_shown)
                 );
+
                 break;
             case 'incomes':
                 area_name = 'Доходы';
-                add_entry_button_icon = (
-                    <BtstrapIcon data={'bi-bookmark-plus'}
-                                 className={'bi-bookmark-plus button__btstrap-icon btstrap-icon_size-14 btstrap-icon_color-white'}/>
+                table_area_content.push(
+                    <IncomesButtonSection data={'incomes'}/>
                 );
+
                 table_area_content.push(
                     <IncomesControlSection
                         key={'incomes-ctrl-section'}
@@ -669,18 +772,12 @@ class TableArea extends React.Component {
                                 this.props.incomesColOrder,
                                 head_classnames,
                             ),
-                            this.renderTableBody(
-                                'incomes',
-                                this.props.incomesRows,
-                                this.props.incomesColOrder,
-                                expenses_data,
-                                tbody_classnames,
-                                this.props.incomesEntriesShown,
-                                this.props.incomesAppliedFromDate,
-                                this.props.incomesAppliedToDate,
-                                this.props.incomesSortType,
-                                this.props.incomesSortFromLeast,
-                            ),
+                            this.renderTableBody('incomes', this.props.incomesRows, this.props.incomesColOrder,
+                                expenses_data, tbody_classnames, this.props.incomesEntriesShown,
+                                this.props.incomesAppliedFromDate, this.props.incomesAppliedToDate,
+                                this.props.incomesSortType, this.props.incomesSortFromLeast, journal_rows_data,
+                                this.props.rawMatUsageForJournal, this.props.rawMatUsage, this.props.incomesColNames,
+                                this.props.journalColNames),
                         ]}
                     </TableIncomes>
                 );
@@ -697,17 +794,8 @@ class TableArea extends React.Component {
 
         return (
             <Container xl='true' className={'table-area'}>
+                {new_entry_modal}
                 <Heading className={'text_color-dark'}>{area_name}</Heading>
-                <ButtonSection>
-                    <Button id={'journal-add-entry-btn'}
-                            variant={'success'}
-                            className={'button button_size-small'}
-                            onClick={() => alert('Не сейчас..')}
-                    >
-                        {add_entry_button_icon}
-                        Добавить запись
-                    </Button>
-                </ButtonSection>
                 {
                     //Control section and the table itself:
                     //____________________________

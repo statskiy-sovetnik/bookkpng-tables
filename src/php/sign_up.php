@@ -69,11 +69,9 @@
     try {
         $createJournalTable = "CREATE TABLE journal(
                 id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-                date DATE,
-                name VARCHAR(40) NOT NULL,
-                provider_name VARCHAR(40),
-                amount FLOAT NOT NULL,
-                price FLOAT NOT NULL
+                raw_mat_id INT NOT NULL,
+                date DATE NOT NULL,
+                amount FLOAT NOT NULL
             )";
         $keyConn->exec($createJournalTable);
     }
@@ -82,6 +80,54 @@
         die();
     }
 
+    //Создаем таблицу доходов
+
+    try {
+        $createIncomesTable = "CREATE TABLE incomes(
+                    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+                    date DATE NOT NULL,
+                    name VARCHAR(40) NOT NULL,
+                    customer_name VARCHAR(50),
+                    amount FLOAT NOT NULL,
+                    price FLOAT NOT NULL
+                )";
+        $keyConn->exec($createIncomesTable);
+    }
+    catch(PDOException $ex) {
+        header('HTTP/1.1 500 Mysql error', true, 500);
+        die();
+    }
+
+    //Создаём таблицу данных с типами расходов expenses_data
+
+    try {
+        $createExpensesDataTable = "CREATE TABLE expenses_data(
+                    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+                    name VARCHAR(40) NOT NULL,
+                    color VARCHAR(30) NOT NULL
+                )";
+        $keyConn->exec($createExpensesDataTable);
+    }
+    catch(PDOException $ex) {
+        header('HTTP/1.1 500 Mysql error', true, 500);
+        die();
+    }
+
+    //Создаём таблицу данных с сырьём raw_mat_data
+
+    try {
+        $createRawMatDataTable = "CREATE TABLE raw_mat_data(
+                        id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+                        name VARCHAR(50) NOT NULL,
+                        provider_name VARCHAR(50) NOT NULL,
+                        price FLOAT NOT NULL
+                    )";
+        $keyConn->exec($createRawMatDataTable);
+    }
+    catch(PDOException $ex) {
+        header('HTTP/1.1 500 Mysql error', true, 500);
+        die();
+    }
 
     $initConn = null;
     $keyConn = null;
