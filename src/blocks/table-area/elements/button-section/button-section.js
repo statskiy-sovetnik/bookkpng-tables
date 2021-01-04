@@ -28,7 +28,7 @@ class ButtonSection extends React.Component{
     }
 
     renderJournalNewEntryModal(modal_is_open, toggleModal, raw_mat_data, setRawMatName, setProviderName,
-                               toggleNewRawMatInputsShow, raw_mat_name, provider_name) {
+                               toggleNewRawMatInputsShow, raw_mat_name, provider_name, raw_mat_inputs_show) {
         let raw_mat_dropdown_links = [];
 
         //Добавляем ссылки с сырьём в выпадающий список
@@ -49,6 +49,24 @@ class ButtonSection extends React.Component{
                 </Dropdown.Item>
             );
         }
+
+        //Добавляем поля для создания нового типа сырья
+        const new_raw_mat_group = raw_mat_inputs_show ? (
+            <Form.Group as={Row}>
+                <Col xs={3}>
+                    <Form.Label>Наименование</Form.Label>
+                    <Form.Control type={'text'} size={'sm'}/>
+                </Col>
+                <Col xs={3}>
+                    <Form.Label>Поставщик</Form.Label>
+                    <Form.Control type={'text'} size={'sm'}/>
+                </Col>
+                <Col xs={3}>
+                    <Form.Label>Цена</Form.Label>
+                    <Form.Control type={'number'} size={'sm'}/>
+                </Col>
+            </Form.Group>
+        ) : null;
 
         return (
             <Modal
@@ -80,7 +98,7 @@ class ButtonSection extends React.Component{
                                 <Col xs={4}>
                                     <div className={'flex-row-wrapper'}>
                                         <Dropdown>
-                                            <Dropdown.Toggle variant={'dark'} className={'button button_size-small ' +
+                                            <Dropdown.Toggle size={'sm'} variant={'dark'} className={'button ' +
                                             'modal__input-group__side-margin-button'}>
                                                 Выбрать
                                             </Dropdown.Toggle>
@@ -88,12 +106,18 @@ class ButtonSection extends React.Component{
                                                 {raw_mat_dropdown_links}
                                             </Dropdown.Menu>
                                         </Dropdown>
-                                        <Button variant={'dark'} className={'button button_size-small'}>
+                                        <Button size={'sm'} variant={'dark'} className={'button'}
+                                                onClick={event => {
+                                                    event.preventDefault();
+                                                    toggleNewRawMatInputsShow(true);
+                                                }}
+                                        >
                                             + Новый
                                         </Button>
                                     </div>
                                 </Col>
                             </Form.Group>
+                            {new_raw_mat_group}
                         </Form>
                     </Container>
                 </Modal.Body>
@@ -131,7 +155,7 @@ class ButtonSection extends React.Component{
                 new_entry_modal = this.renderJournalNewEntryModal(this.props.journalNewEntryModalIsOpen,
                     this.props.toggleNewEntryModal, this.props.rawMatData, this.props.setModalRawMatName,
                     this.props.setModalRawMatProviderName, this.props.toggleModalNewRawMatInputsShow,
-                    this.props.rawMatName, this.props.rawMatProviderName);
+                    this.props.rawMatName, this.props.rawMatProviderName, this.props.newRawMatInputsShow);
                 break;
             case 'incomes':
                 add_entry_button_icon = (
