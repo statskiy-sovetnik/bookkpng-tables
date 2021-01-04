@@ -3,6 +3,7 @@ export default {
     LOAD_EXPENSES_DATA: 'loadExpensesData',
     LOAD_RAW_MAT_USAGE: 'loadRawMatUsage',
     LOAD_RAW_MAT_USAGE_FOR_JOURNAL: 'loadRawMatUsageForJournal',
+    LOAD_RAW_MAT_DATA: 'loadRawMatData',
 
     //JOURNAL
     JOURNAL_TOGGLE_NEW_ENTRY_MODAL: 'journalToggleNewEntryModal',

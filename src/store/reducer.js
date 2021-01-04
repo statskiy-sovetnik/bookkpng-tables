@@ -131,6 +131,11 @@ export default function reducer(state, action) {
                 ...state,
                 raw_mat_usage_for_journal: action.value,
             }
+        case actionTypes.LOAD_RAW_MAT_DATA:
+            return {
+                ...state,
+                raw_mat_data: action.value,
+            }
 
         //____ JOURNAL _______________
         case actionTypes.LOAD_DATA_BASE_JOURNAL:

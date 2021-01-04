@@ -37,6 +37,7 @@ export default function mapStateToProps(component) {
             return function (state) {
                 return {
                     journalNewEntryModalIsOpen: state.journal.newEntryModalIsOpen,
+                    rawMatData: state.raw_mat_data,
                 }
             }
 

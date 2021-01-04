@@ -297,6 +297,7 @@ class App extends React.Component {
         this.props.loadExpensesData(expenses_data);
         this.props.loadRawMatUsage(raw_mat_usage);
         this.props.loadRawMatUsageForJournal(raw_mat_usage_for_journal);
+        this.props.loadRawMatData(raw_mat_data);
     }
 
     componentDidMount() {

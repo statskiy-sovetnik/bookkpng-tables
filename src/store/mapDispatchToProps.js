@@ -30,6 +30,7 @@ import entryLengthSwitchBtnClickIncomes from "./actionCreators/incomes/entryLeng
 import loadRawMatUsage from "./actionCreators/loadRawMatUsage";
 import loadRawMatUsageForJournal from "./actionCreators/loadRawMatUsageForJournal";
 import journalToggleNewEntryModal from "./actionCreators/journalToggleNewEntryModal";
+import loadRawMatData from "./actionCreators/loadRawMatData";
 
 export default function mapDispatchToProps(component) {
     switch (component) {
@@ -42,6 +43,7 @@ export default function mapDispatchToProps(component) {
                     loadDataBaseIncomes: (rows) => dispatch(loadDataBaseIncomes(rows)),
                     loadRawMatUsage: (raw_mat_arr) => dispatch(loadRawMatUsage(raw_mat_arr)),
                     loadRawMatUsageForJournal: (raw_mat_arr) => dispatch(loadRawMatUsageForJournal(raw_mat_arr)),
+                    loadRawMatData: (raw_mat) => dispatch(loadRawMatData(raw_mat)),
                 }
             }
 
