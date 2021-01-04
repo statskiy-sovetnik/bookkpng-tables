@@ -267,7 +267,7 @@ class TableArea extends React.Component {
 
                     const incomes_cut_col_order = ['date', 'name', 'customer_name'];
                     const raw_mat_popover = this.renderRawMatJournalRowPopover(row_id, another_table_rows, incomes_cut_col_order,
-                        incomes_head_cols, raw_mat_usage_for_journal);
+                        incomes_head_cols, raw_mat_usage_for_journal, cur_value);
 
                     amount_content.push(
                         <OverlayTrigger trigger={'focus'} overlay={raw_mat_popover} placement={'bottom'}>
@@ -446,7 +446,7 @@ class TableArea extends React.Component {
     }
 
     renderRawMatJournalRowPopover(journal_row_id, incomes_rows, incomes_cut_cols_order, incomes_head_cols,
-                                  raw_mat_usage_for_journal) {
+                                  raw_mat_usage_for_journal, row_amount_of_raw) {
         let cur_raw_mat_data = {};
         let raw_mat_table_head_cells = [];
         let raw_mat_table_rows = [];
@@ -515,11 +515,20 @@ class TableArea extends React.Component {
 
         return (
             <Popover id={'raw-mat-popover_journal_row-' + journal_row_id}>
-                <Popover.Title as="h5">
+                <Popover.Title as="h6">
+                    Всего сырья:
+                    <b>
+                        &nbsp;{row_amount_of_raw + " кг"}
+                    </b> &nbsp;
                     Распределено сырья:
                     <b>
                         &nbsp;{cur_raw_mat_data.raw_mat_used_total + " кг"}
-                    </b>
+                    </b> &nbsp;
+                    Осталось:
+                    <b>
+                        &nbsp;{(row_amount_of_raw - cur_raw_mat_data.raw_mat_used_total) + " кг"}
+                    </b> &nbsp;
+
                 </Popover.Title>
                 <Popover.Content>
                     <Table
