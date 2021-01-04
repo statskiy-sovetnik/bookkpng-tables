@@ -27,7 +27,8 @@ class ButtonSection extends React.Component{
         toggleModal(false);
     }
 
-    renderJournalNewEntryModal(modal_is_open, toggleModal, raw_mat_data) {
+    renderJournalNewEntryModal(modal_is_open, toggleModal, raw_mat_data, setRawMatName, setProviderName,
+                               toggleNewRawMatInputsShow, raw_mat_name, provider_name) {
         let raw_mat_dropdown_links = [];
 
         //Добавляем ссылки с сырьём в выпадающий список
@@ -35,7 +36,11 @@ class ButtonSection extends React.Component{
             raw_mat_dropdown_links.push(
                 <Dropdown.Item key={'journal-raw-mat-dropdown-item_' + raw_mat_id}
                                href={'#'} className={'text text_size-13 modal__raw-mat-dropdown-item'}
-
+                               onClick={event => {
+                                   event.preventDefault();
+                                   setRawMatName(raw_mat_data[raw_mat_id].name);
+                                   setProviderName(raw_mat_data[raw_mat_id].provider_name);
+                               }}
                 >
                     <span className={'dropdown-raw-mat-name'}>{raw_mat_data[raw_mat_id].name}</span>
                     &nbsp;(
@@ -64,8 +69,12 @@ class ButtonSection extends React.Component{
                                 <Col xs={6}>
                                     <div className={'flex-row-wrapper'}>
                                         <Form.Control size={'sm'} type={'text'} readOnly required
-                                                      className={'modal__input-group__side-margin-input'}/>
-                                        <Form.Control size={'sm'} type={'text'} readOnly required/>
+                                                      className={'modal__input-group__side-margin-input'}
+                                                      value={raw_mat_name}
+                                        />
+                                        <Form.Control size={'sm'} type={'text'} readOnly required
+                                                      value={provider_name}
+                                        />
                                     </div>
                                 </Col>
                                 <Col xs={4}>
@@ -120,7 +129,9 @@ class ButtonSection extends React.Component{
                     />
                 );
                 new_entry_modal = this.renderJournalNewEntryModal(this.props.journalNewEntryModalIsOpen,
-                    this.props.toggleNewEntryModal, this.props.rawMatData);
+                    this.props.toggleNewEntryModal, this.props.rawMatData, this.props.setModalRawMatName,
+                    this.props.setModalRawMatProviderName, this.props.toggleModalNewRawMatInputsShow,
+                    this.props.rawMatName, this.props.rawMatProviderName);
                 break;
             case 'incomes':
                 add_entry_button_icon = (

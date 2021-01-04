@@ -31,6 +31,11 @@ import loadRawMatUsage from "./actionCreators/loadRawMatUsage";
 import loadRawMatUsageForJournal from "./actionCreators/loadRawMatUsageForJournal";
 import journalToggleNewEntryModal from "./actionCreators/journalToggleNewEntryModal";
 import loadRawMatData from "./actionCreators/loadRawMatData";
+import journalModalSetRawMatName from "./actionCreators/journal_new_entry_modal/journalModalSetRawMatName";
+import journalModalSetRawMatProviderName
+    from "./actionCreators/journal_new_entry_modal/journalModalSetRawMatProviderName";
+import journalModalToggleNewRawMatInputsShow
+    from "./actionCreators/journal_new_entry_modal/journalModalToggleNewRawMatInputsShow";
 
 export default function mapDispatchToProps(component) {
     switch (component) {
@@ -69,6 +74,7 @@ export default function mapDispatchToProps(component) {
             return function (dispatch) {
                 return {
                     changeEntriesShouldBeShown: (value) => dispatch(entriesShouldBeShownChangeJournal(value)),
+
                 }
             }
 
@@ -77,6 +83,9 @@ export default function mapDispatchToProps(component) {
             return function (dispatch) {
                 return {
                     toggleNewEntryModal: (bool) => dispatch(journalToggleNewEntryModal(bool)),
+                    setModalRawMatName: (value) => dispatch(journalModalSetRawMatName(value)),
+                    setModalRawMatProviderName: (value) => dispatch(journalModalSetRawMatProviderName(value)),
+                    toggleModalNewRawMatInputsShow: (bool) => dispatch(journalModalToggleNewRawMatInputsShow(bool)),
                 }
             }
 

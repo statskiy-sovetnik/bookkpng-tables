@@ -74,6 +74,14 @@ const initialState = {
         table_width: 1600,
     },
 
+    journal_new_entry_modal: {
+        form_state: {
+            raw_mat_name: '',
+            raw_mat_provider_name: '',
+            new_raw_mat_inputs_show: false,
+        }
+    },
+
     incomes: {
         sortName: 'Наименованию',
         sortFromLeast: true,

@@ -146,12 +146,47 @@ export default function reducer(state, action) {
                     rows: action.value,
                 }
             }
+
+        //_______ Journal Add Entry Modal
         case actionTypes.JOURNAL_TOGGLE_NEW_ENTRY_MODAL:
             return {
                 ...state,
                 journal: {
                     ...state.journal,
                     newEntryModalIsOpen: action.value,
+                }
+            }
+        case actionTypes.JOURNAL_MODAL_SET_RAW_MAT_NAME:
+            return {
+                ...state,
+                journal_new_entry_modal: {
+                    ...state.journal_new_entry_modal,
+                    form_state: {
+                        ...state.journal_new_entry_modal.form_state,
+                        raw_mat_name: action.value,
+                    }
+                }
+            }
+        case actionTypes.JOURNAL_MODAL_SET_RAW_MAT_PROVIDER_NAME:
+            return {
+                ...state,
+                journal_new_entry_modal: {
+                    ...state.journal_new_entry_modal,
+                    form_state: {
+                        ...state.journal_new_entry_modal.form_state,
+                        raw_mat_provider_name: action.value,
+                    }
+                }
+            }
+        case actionTypes.JOURNAL_MODAL_TOGGLE_NEW_RAW_MAT_INPUTS_SHOW:
+            return {
+                ...state,
+                journal_new_entry_modal: {
+                    ...state.journal_new_entry_modal,
+                    form_state: {
+                        ...state.journal_new_entry_modal.form_state,
+                        new_raw_mat_inputs_show: action.value,
+                    }
                 }
             }
 

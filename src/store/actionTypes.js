@@ -8,6 +8,11 @@ export default {
     //JOURNAL
     JOURNAL_TOGGLE_NEW_ENTRY_MODAL: 'journalToggleNewEntryModal',
 
+    //Journal new entry Modal
+    JOURNAL_MODAL_SET_RAW_MAT_NAME: 'journalModalSetRawMatName',
+    JOURNAL_MODAL_SET_RAW_MAT_PROVIDER_NAME: 'journalModalSetRawMatProviderName',
+    JOURNAL_MODAL_TOGGLE_NEW_RAW_MAT_INPUTS_SHOW: 'journalModalToggleNewRawMatInputsShow',
+
     //Journal Sorts Section
     JOURNAL_SORT_TYPE_CHANGE: 'journalSortTypeChange',
     JOURNAL_SORT_DIR_CHANGE: 'journalSortDirChange',
