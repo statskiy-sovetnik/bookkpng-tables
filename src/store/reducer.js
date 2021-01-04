@@ -189,6 +189,17 @@ export default function reducer(state, action) {
                     }
                 }
             }
+        case actionTypes.JOURNAL_MODAL_SET_NEW_RAW_MAT_PRICE:
+            return {
+                ...state,
+                journal_new_entry_modal: {
+                    ...state.journal_new_entry_modal,
+                    form_state: {
+                        ...state.journal_new_entry_modal.form_state,
+                        new_raw_mat_price: action.value,
+                    }
+                }
+            }
 
         //_______ Journal Sort _________
 
