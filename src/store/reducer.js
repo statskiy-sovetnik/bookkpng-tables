@@ -200,6 +200,28 @@ export default function reducer(state, action) {
                     }
                 }
             }
+        case actionTypes.JOURNAL_MODAL_SET_RAW_MAT_DATE:
+            return {
+                ...state,
+                journal_new_entry_modal: {
+                    ...state.journal_new_entry_modal,
+                    form_state: {
+                        ...state.journal_new_entry_modal.form_state,
+                        raw_mat_date: action.value,
+                    }
+                }
+            }
+        case actionTypes.JOURNAL_MODAL_SET_RAW_MAT_AMOUNT:
+            return {
+                ...state,
+                journal_new_entry_modal: {
+                    ...state.journal_new_entry_modal,
+                    form_state: {
+                        ...state.journal_new_entry_modal.form_state,
+                        raw_mat_amount: action.value,
+                    }
+                }
+            }
 
         //_______ Journal Sort _________
 

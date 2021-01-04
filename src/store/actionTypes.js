@@ -13,6 +13,8 @@ export default {
     JOURNAL_MODAL_SET_RAW_MAT_PROVIDER_NAME: 'journalModalSetRawMatProviderName',
     JOURNAL_MODAL_TOGGLE_NEW_RAW_MAT_INPUTS_SHOW: 'journalModalToggleNewRawMatInputsShow',
     JOURNAL_MODAL_SET_NEW_RAW_MAT_PRICE: 'journalModalSetNewRawMatPrice',
+    JOURNAL_MODAL_SET_RAW_MAT_DATE: 'journalModalSetRawMatDate',
+    JOURNAL_MODAL_SET_RAW_MAT_AMOUNT: 'journalModalSetRawMatAmount',
 
     //Journal Sorts Section
     JOURNAL_SORT_TYPE_CHANGE: 'journalSortTypeChange',

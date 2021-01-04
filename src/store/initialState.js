@@ -79,7 +79,9 @@ const initialState = {
             raw_mat_name: '',
             raw_mat_provider_name: '',
             new_raw_mat_inputs_show: false,
-            new_raw_mat_price: 0,
+            new_raw_mat_price: null,
+            raw_mat_date: +new Date(),
+            raw_mat_amount: null,
         }
     },
 

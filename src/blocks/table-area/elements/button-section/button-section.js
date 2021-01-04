@@ -4,6 +4,10 @@ import {connect} from "react-redux";
 import mapStateToProps from "../../../../store/mapStateToProps";
 import mapDispatchToProps from "../../../../store/mapDispatchToProps";
 
+import DatePicker, {registerLocale} from 'react-datepicker';
+import ru from 'date-fns/locale/ru';
+registerLocale('ru', ru);
+
 //Bootstrap
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
@@ -29,7 +33,8 @@ class ButtonSection extends React.Component{
 
     renderJournalNewEntryModal(modal_is_open, toggleModal, raw_mat_data, setRawMatName, setProviderName,
                                toggleNewRawMatInputsShow, raw_mat_name, provider_name, raw_mat_inputs_show,
-                               new_raw_mat_price, setNewRawMatPrice) {
+                               new_raw_mat_price, setNewRawMatPrice, raw_mat_date, setRawMatDate, raw_mat_amount,
+                               setRawMatAmount) {
         let raw_mat_dropdown_links = [];
 
         //Добавляем ссылки с сырьём в выпадающий список
@@ -55,9 +60,11 @@ class ButtonSection extends React.Component{
         const new_raw_mat_group = raw_mat_inputs_show ? (
             <Form.Group as={Row}>
                 <Col xs={3}>
-                    <Form.Label>Наименование</Form.Label>
+                    <Form.Label className={'text text_size-14'}>
+                        Наименование
+                    </Form.Label>
                     <Form.Control type={'text'} size={'sm'}
-                                  maxlength={40}
+                                  maxLength={40}
                                   onInput={event => {
                                       const value = event.currentTarget.value;
                                       setRawMatName(value);
@@ -65,10 +72,10 @@ class ButtonSection extends React.Component{
                     />
                 </Col>
                 <Col xs={3}>
-                    <Form.Label>Поставщик</Form.Label>
+                    <Form.Label className={'text text_size-14'}>Поставщик</Form.Label>
                     <Form.Control
                         type={'text'} size={'sm'}
-                        maxlength={50}
+                        maxLength={50}
                         onInput={event => {
                             const value = event.currentTarget.value;
                             setProviderName(value);
@@ -76,8 +83,8 @@ class ButtonSection extends React.Component{
                     />
                 </Col>
                 <Col xs={3}>
-                    <Form.Label>Цена</Form.Label>
-                    <Form.Control maxlength={9} type={'number'} size={'sm'}
+                    <Form.Label className={'text text_size-14'}>Цена</Form.Label>
+                    <Form.Control maxLength={9} type={'number'} size={'sm'}
                                   onInput={event => {
                                       const value = +event.currentTarget.value;
                                       setNewRawMatPrice(value);
@@ -137,6 +144,42 @@ class ButtonSection extends React.Component{
                                 </Col>
                             </Form.Group>
                             {new_raw_mat_group}
+                            <Form.Group as={Row}>
+                                <Col xs={3}>
+                                    <Form.Group>
+                                        <Form.Label className={'text text_size-14'}>
+                                            Дата
+                                        </Form.Label>
+                                        <DatePicker
+                                            selected={raw_mat_date}
+                                            onChange={date => {
+                                                setRawMatDate(date.setHours(0, 0, 0, 0));
+                                            }}
+                                            className={'form-control form-control-sm'}
+                                            name={'raw_mat_date'}
+                                            locale={'ru'}
+                                            dateFormat={'dd/MM/yyyy'}
+                                            required
+                                        />
+                                    </Form.Group>
+                                </Col>
+                                <Col xs={3}>
+                                    <Form.Group>
+                                        <Form.Label className={'text text_size-14'}>
+                                            Кол-во сырья
+                                        </Form.Label>
+                                        <Form.Control size={'sm'} type={'number'}
+                                                      maxLength={9}
+                                                      name={'amount'}
+                                                      required
+                                                      onInput={event => {
+                                                          const value = +event.currentTarget.value;
+                                                          setRawMatAmount(value);
+                                                      }}
+                                        />
+                                    </Form.Group>
+                                </Col>
+                            </Form.Group>
                         </Form>
                     </Container>
                 </Modal.Body>
@@ -175,7 +218,8 @@ class ButtonSection extends React.Component{
                     this.props.toggleNewEntryModal, this.props.rawMatData, this.props.setModalRawMatName,
                     this.props.setModalRawMatProviderName, this.props.toggleModalNewRawMatInputsShow,
                     this.props.rawMatName, this.props.rawMatProviderName, this.props.newRawMatInputsShow,
-                    this.props.newRawMatPrice, this.props.setModalNewRawMatPrice);
+                    this.props.newRawMatPrice, this.props.setModalNewRawMatPrice, this.props.rawMatDate,
+                    this.props.setModalRawMatDate, this.props.rawMatAmount, this.props.setModalRawMatAmount);
                 break;
             case 'incomes':
                 add_entry_button_icon = (
