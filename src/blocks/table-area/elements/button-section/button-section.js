@@ -59,12 +59,32 @@ class ButtonSection extends React.Component{
                                     expenses_valid) {
         event.preventDefault();
 
-        if(this.isJournalNewEntryFormValid(raw_mat_name_valid, provider_name_valid, price_valid, amount_valid, expenses_valid)) {
-            console.log('Seems valid')
+        if(!this.isJournalNewEntryFormValid(raw_mat_name_valid, provider_name_valid, price_valid, amount_valid, expenses_valid)) {
+            return;
         }
-        else {
-            console.log('Invalidddd')
-        }
+
+        //Посылаем запрос
+        const formObj = new FormData(form);
+
+        fetch('/src/php/add_journal_entry.php', {
+            method: 'POST',
+            body: formObj,
+        }).then(
+            response => {
+                if(response.status !== 200) {
+                    console.log('Неизвестная ошибка при обработке запроса');
+                    return;
+                }
+
+                console.log('Я прошел проверку');
+            },
+            error => {
+                alert('Неизвестная ошибка при отправке запроса');
+                console.log('Fetch error: ', error);
+            }
+        );
+
+        this.props.toggleNewEntryModal(false);
     }
 
     renderJournalNewEntryModal(modal_is_open, toggleModal, raw_mat_data, expenses_data, setRawMatName, setProviderName,
@@ -133,6 +153,7 @@ class ButtonSection extends React.Component{
                     </span>
                     <Form.Control type={'number'} maxLength={9}
                                   required
+                                  name={'expense-' + expense_id}
                                   //value={+addedExpenses[expense_id]}
                                   placeholder={'Сумма'}
                                   size={'sm'}
@@ -171,6 +192,7 @@ class ButtonSection extends React.Component{
                         Наименование
                     </Form.Label>
                     <Form.Control type={'text'} size={'sm'}
+                                  name={'new-raw-mat-name'}
                                   maxLength={40}
                                   minLength={1}
                                   required
@@ -185,6 +207,7 @@ class ButtonSection extends React.Component{
                     <Form.Label className={'text text_size-14'}>Поставщик</Form.Label>
                     <Form.Control
                         type={'text'} size={'sm'}
+                        name={'new-provider-name'}
                         minLength={1}
                         maxLength={50}
                         required
@@ -200,6 +223,7 @@ class ButtonSection extends React.Component{
                     <Form.Control
                         min={0}
                         max={2147483646}
+                        name={'new-raw-mat-price'}
                         required
                         maxLength={9}
                         type={'number'} size={'sm'}
@@ -242,11 +266,16 @@ class ButtonSection extends React.Component{
                                 </Col>
                                 <Col xs={6}>
                                     <div className={'flex-row-wrapper'}>
-                                        <Form.Control size={'sm'} type={'text'} readOnly required
+                                        <Form.Control size={'sm'} type={'text'}
+                                                      readOnly
+                                                      required
+                                                      name={'raw-mat-name'}
                                                       className={'modal__input-group__side-margin-input'}
                                                       value={raw_mat_name}
                                         />
-                                        <Form.Control size={'sm'} type={'text'} readOnly required
+                                        <Form.Control size={'sm'} type={'text'}
+                                                      readOnly required
+                                                      name={'provider-name'}
                                                       value={provider_name}
                                         />
                                     </div>
@@ -305,7 +334,7 @@ class ButtonSection extends React.Component{
                                                       min={0}
                                                       max={2147483646}
                                                       required
-                                                      name={'amount'}
+                                                      name={'raw-mat-amount'}
                                                       onInput={event => {
                                                           const value = +event.currentTarget.value;
                                                           setRawMatAmount(value);
