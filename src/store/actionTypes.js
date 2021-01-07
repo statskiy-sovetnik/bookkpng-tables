@@ -16,6 +16,12 @@ export default {
     JOURNAL_MODAL_SET_RAW_MAT_DATE: 'journalModalSetRawMatDate',
     JOURNAL_MODAL_SET_RAW_MAT_AMOUNT: 'journalModalSetRawMatAmount',
     JOURNAL_MODAL_SET_EXPENSES_DATA: 'journalModalSetExpensesData',
+    JOURNAL_MODAL_SET_SHOW_VALIDATION: 'journalModalSetShowValidation',
+    JOURNAL_MODAL_SET_RAW_MAT_NAME_VALID: 'journalModalSetRawMatNameValid',
+    JOURNAL_MODAL_SET_PROVIDER_NAME_VALID: 'journalModalSetProviderNameValid',
+    JOURNAL_MODAL_SET_PRICE_VALID: 'journalModalSetPriceValid',
+    JOURNAL_MODAL_SET_AMOUNT_VALID: 'journalModalSetAmountValid',
+    JOURNAL_MODAL_SET_EXPENSES_VALID: 'journalModalSetExpensesValid',
 
     //Journal Sorts Section
     JOURNAL_SORT_TYPE_CHANGE: 'journalSortTypeChange',

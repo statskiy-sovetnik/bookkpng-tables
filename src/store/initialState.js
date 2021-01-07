@@ -85,6 +85,14 @@ const initialState = {
             expenses: {
                 //0: 1270.00,
             }
+        },
+        validation: {
+            show_validation: false,
+            raw_mat_name: false,
+            provider_name: false,
+            price: false,
+            amount: false,
+            expenses: true,
         }
     },
 

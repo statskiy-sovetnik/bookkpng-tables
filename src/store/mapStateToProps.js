@@ -46,6 +46,13 @@ export default function mapStateToProps(component) {
                     rawMatAmount: state.journal_new_entry_modal.form_state.raw_mat_date,
                     expensesData: state.expenses_data,
                     addedExpensesData: state.journal_new_entry_modal.form_state.expenses,
+                    //validation
+                    showValidation: state.journal_new_entry_modal.validation.show_validation,
+                    rawMatNameValid: state.journal_new_entry_modal.validation.raw_mat_name,
+                    providerNameValid: state.journal_new_entry_modal.validation.provider_name,
+                    priceValid: state.journal_new_entry_modal.validation.price,
+                    amountValid: state.journal_new_entry_modal.validation.amount,
+                    expensesValid: state.journal_new_entry_modal.validation.expenses,
                 }
             }
 

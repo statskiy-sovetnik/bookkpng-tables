@@ -16,6 +16,9 @@ import Dropdown from "react-bootstrap/Dropdown";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
+import {isProviderNameValid, isRawMatNameValid} from "../../../../common";
+import journalModalSetShowValidation
+    from "../../../../store/actionCreators/journal_new_entry_modal/journalModalSetShowValidation";
 
 class ButtonSection extends React.Component{
 
@@ -35,7 +38,33 @@ class ButtonSection extends React.Component{
         const new_added_expenses = {};
         Object.assign(new_added_expenses, addedExpenses);
         new_added_expenses[expense_id] = +value;
+        this.props.setExpensesValid(this.isJournalNewEntryExpensesValid(new_added_expenses));
         setAddedExpenses(new_added_expenses);
+    }
+
+    isJournalNewEntryFormValid(raw_mat_name_valid, provider_name_valid, price_valid, amount_valid, expenses_valid) {
+        return raw_mat_name_valid && provider_name_valid && price_valid && amount_valid && expenses_valid;
+    }
+
+    isJournalNewEntryExpensesValid(addedExpenses) {
+        for(let exp_id in addedExpenses) {
+            if(addedExpenses[exp_id] === '') {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    handleJournalNewEntryFormSubmit(event, form, raw_mat_name_valid, provider_name_valid, price_valid, amount_valid,
+                                    expenses_valid) {
+        event.preventDefault();
+
+        if(this.isJournalNewEntryFormValid(raw_mat_name_valid, provider_name_valid, price_valid, amount_valid, expenses_valid)) {
+            console.log('Seems valid')
+        }
+        else {
+            console.log('Invalidddd')
+        }
     }
 
     renderJournalNewEntryModal(modal_is_open, toggleModal, raw_mat_data, expenses_data, setRawMatName, setProviderName,
@@ -55,6 +84,10 @@ class ButtonSection extends React.Component{
                                    event.preventDefault();
                                    setRawMatName(raw_mat_data[raw_mat_id].name);
                                    setProviderName(raw_mat_data[raw_mat_id].provider_name);
+                                   this.props.setRawMatValid(true);
+                                   this.props.setProviderNameValid(true);
+                                   this.props.setPriceValid(true);
+                                   toggleNewRawMatInputsShow(false);
                                }}
                 >
                     <span className={'dropdown-raw-mat-name'}>{raw_mat_data[raw_mat_id].name}</span>
@@ -75,8 +108,9 @@ class ButtonSection extends React.Component{
                                    event.preventDefault();
                                    let new_added_expenses = {};
                                    Object.assign(new_added_expenses, addedExpenses);
-                                   new_added_expenses[expense_id] = addedExpenses[expense_id] || 0;
+                                   new_added_expenses[expense_id] = addedExpenses[expense_id] || '';
                                    setAddedExpenses(new_added_expenses);
+                                   this.props.setExpensesValid(false);
                                }}
                 >
                     {expenses_data[expense_id].name}
@@ -138,9 +172,12 @@ class ButtonSection extends React.Component{
                     </Form.Label>
                     <Form.Control type={'text'} size={'sm'}
                                   maxLength={40}
+                                  minLength={1}
+                                  required
                                   onInput={event => {
                                       const value = event.currentTarget.value;
                                       setRawMatName(value);
+                                      this.props.setRawMatValid(isRawMatNameValid(value));
                                   }}
                     />
                 </Col>
@@ -148,20 +185,29 @@ class ButtonSection extends React.Component{
                     <Form.Label className={'text text_size-14'}>Поставщик</Form.Label>
                     <Form.Control
                         type={'text'} size={'sm'}
+                        minLength={1}
                         maxLength={50}
+                        required
                         onInput={event => {
                             const value = event.currentTarget.value;
                             setProviderName(value);
+                            this.props.setProviderNameValid(isProviderNameValid(value));
                         }}
                     />
                 </Col>
                 <Col xs={3}>
                     <Form.Label className={'text text_size-14'}>Цена</Form.Label>
-                    <Form.Control maxLength={9} type={'number'} size={'sm'}
-                                  onInput={event => {
-                                      const value = +event.currentTarget.value;
-                                      setNewRawMatPrice(value);
-                                  }}
+                    <Form.Control
+                        min={0}
+                        max={2147483646}
+                        required
+                        maxLength={9}
+                        type={'number'} size={'sm'}
+                        onInput={event => {
+                           const value = +event.currentTarget.value;
+                           setNewRawMatPrice(value);
+                           this.props.setPriceValid(event.currentTarget.checkValidity());
+                        }}
                     />
                 </Col>
             </Form.Group>
@@ -178,7 +224,18 @@ class ButtonSection extends React.Component{
                 </Modal.Header>
                 <Modal.Body>
                     <Container className={'modal-body-container'}>
-                        <Form>
+                        <Form
+                            id={'journal-new-entry-form'}
+                            name={'add-entry-form'}
+                            validated={true}
+                            onSubmit={event => {
+                                event.preventDefault();
+                                this.handleJournalNewEntryFormSubmit(event, event.currentTarget, this.props.rawMatNameValid,
+                                    this.props.providerNameValid, this.props.priceValid, this.props.amountValid,
+                                    this.props.expensesValid);
+                                return false;
+                            }}
+                        >
                             <Form.Group as={Row}>
                                 <Col xs={2}>
                                     <Form.Label className={'text text_size-14'}>Тип сырья</Form.Label>
@@ -209,6 +266,9 @@ class ButtonSection extends React.Component{
                                                 onClick={event => {
                                                     event.preventDefault();
                                                     toggleNewRawMatInputsShow(true);
+                                                    this.props.setRawMatValid(false);
+                                                    this.props.setProviderNameValid(false);
+                                                    this.props.setPriceValid(false);
                                                 }}
                                         >
                                             + Новый
@@ -242,12 +302,14 @@ class ButtonSection extends React.Component{
                                             Кол-во сырья (кг)
                                         </Form.Label>
                                         <Form.Control size={'sm'} type={'number'}
-                                                      maxLength={9}
-                                                      name={'amount'}
+                                                      min={0}
+                                                      max={2147483646}
                                                       required
+                                                      name={'amount'}
                                                       onInput={event => {
                                                           const value = +event.currentTarget.value;
                                                           setRawMatAmount(value);
+                                                          this.props.setAmountValid(event.currentTarget.checkValidity());
                                                       }}
                                         />
                                     </Form.Group>
@@ -255,7 +317,7 @@ class ButtonSection extends React.Component{
                             </Form.Group>
                             <Form.Group>
                                 <Form.Label className={'text text_size-14'}>
-                                    Дополнительные расходы
+                                    Дополнительные расходы (необязательно)
                                 </Form.Label>
                                 <ul className={'ulist modal__added-expenses-list'}>
                                     {added_expenses_list_items}
@@ -279,10 +341,15 @@ class ButtonSection extends React.Component{
                     <Button variant="dark" onClick={(event) => {this.handleJournalNewEntryModalClose(toggleModal)}}>
                         Отмена
                     </Button>
-                    <Button variant="success" onClick={event => {
-                        event.preventDefault();
-                        alert('Пока рано добавлять');
-                    }}>
+                    <Button
+                        type={'submit'}
+                        form={'journal-new-entry-form'}
+                        variant="success"
+                        disabled={!this.isJournalNewEntryFormValid(this.props.rawMatNameValid, this.props.providerNameValid,
+                            this.props.priceValid, this.props.amountValid, this.props.expensesValid)}
+                        onClick={event => {
+                        }}
+                    >
                         Добавить
                     </Button>
                 </Modal.Footer>

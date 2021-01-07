@@ -40,6 +40,13 @@ import journalModalSetNewRawMatPrice from "./actionCreators/journal_new_entry_mo
 import journalModalSetRawMatDate from "./actionCreators/journal_new_entry_modal/journalModalSetRawMatDate";
 import journalModalSetRawMatAmount from "./actionCreators/journal_new_entry_modal/journalModalSetRawMatAmount";
 import journalModalSetExpensesData from "./actionCreators/journal_new_entry_modal/journalModalSetExpensesData";
+import journalModalSetRawMatNameValid from "./actionCreators/journal_new_entry_modal/journalModalSetRawMatNameValid";
+import journalModalSetShowValidation from "./actionCreators/journal_new_entry_modal/journalModalSetShowValidation";
+import journalModalSetProviderNameValid
+    from "./actionCreators/journal_new_entry_modal/journalModalSetProviderNameValid";
+import journalModalSetPriceValid from "./actionCreators/journal_new_entry_modal/journalModalSetPriceValid";
+import journalModalSetAmountValid from "./actionCreators/journal_new_entry_modal/journalModalSetAmountValid";
+import journalModalSetExpensesValid from "./actionCreators/journal_new_entry_modal/journalModalSetExpensesValid";
 
 export default function mapDispatchToProps(component) {
     switch (component) {
@@ -94,6 +101,13 @@ export default function mapDispatchToProps(component) {
                     setModalRawMatDate: (value) => dispatch(journalModalSetRawMatDate(value)),
                     setModalRawMatAmount: (value) => dispatch(journalModalSetRawMatAmount(value)),
                     setModalAddedExpenses: (data) => dispatch(journalModalSetExpensesData(data)),
+                    //validation:
+                    setShowValidation: (bool) => dispatch(journalModalSetShowValidation(bool)),
+                    setRawMatValid: (bool) => dispatch(journalModalSetRawMatNameValid(bool)),
+                    setProviderNameValid: (bool) => dispatch(journalModalSetProviderNameValid(bool)),
+                    setPriceValid: (bool) => dispatch(journalModalSetPriceValid(bool)),
+                    setAmountValid: (bool) => dispatch(journalModalSetAmountValid(bool)),
+                    setExpensesValid: (bool) => dispatch(journalModalSetExpensesValid(bool)),
                 }
             }
 

@@ -22,4 +22,18 @@ function removeCookie(name) {
     }
 }
 
-export {getCookieValue, removeCookie};
+//Validation _________________
+
+function isRawMatNameValid(value) {
+    return /^[\w\d\s]+$/.test("" + value) &&
+            (value + '').length >= 1 &&
+            (value + '').length <= 40;
+}
+
+function isProviderNameValid(value) {
+    return /^[\w\d\s]+$/.test("" + value) &&
+        (value + '').length >= 1 &&
+        (value + '').length <= 50;
+}
+
+export {getCookieValue, removeCookie, isRawMatNameValid, isProviderNameValid};

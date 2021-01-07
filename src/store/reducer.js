@@ -233,6 +233,72 @@ export default function reducer(state, action) {
                     }
                 }
             }
+        case actionTypes.JOURNAL_MODAL_SET_SHOW_VALIDATION:
+            return {
+                ...state,
+                journal_new_entry_modal: {
+                    ...state.journal_new_entry_modal,
+                    validation: {
+                        ...state.journal_new_entry_modal.validation,
+                        show_validation: action.value,
+                    }
+                }
+            }
+        case actionTypes.JOURNAL_MODAL_SET_RAW_MAT_NAME_VALID:
+            return {
+                ...state,
+                journal_new_entry_modal: {
+                    ...state.journal_new_entry_modal,
+                    validation: {
+                        ...state.journal_new_entry_modal.validation,
+                        raw_mat_name: action.value,
+                    }
+                }
+            }
+        case actionTypes.JOURNAL_MODAL_SET_PROVIDER_NAME_VALID:
+            return {
+                ...state,
+                journal_new_entry_modal: {
+                    ...state.journal_new_entry_modal,
+                    validation: {
+                        ...state.journal_new_entry_modal.validation,
+                        provider_name: action.value,
+                    }
+                }
+            }
+        case actionTypes.JOURNAL_MODAL_SET_PRICE_VALID:
+            return {
+                ...state,
+                journal_new_entry_modal: {
+                    ...state.journal_new_entry_modal,
+                    validation: {
+                        ...state.journal_new_entry_modal.validation,
+                        price: action.value,
+                    }
+                }
+            }
+        case actionTypes.JOURNAL_MODAL_SET_AMOUNT_VALID:
+            return {
+                ...state,
+                journal_new_entry_modal: {
+                    ...state.journal_new_entry_modal,
+                    validation: {
+                        ...state.journal_new_entry_modal.validation,
+                        amount: action.value,
+                    }
+                }
+            }
+        case actionTypes.JOURNAL_MODAL_SET_EXPENSES_VALID:
+            return {
+                ...state,
+                journal_new_entry_modal: {
+                    ...state.journal_new_entry_modal,
+                    validation: {
+                        ...state.journal_new_entry_modal.validation,
+                        expenses: action.value,
+                    }
+                }
+            }
 
         //_______ Journal Sort _________
 
