@@ -31,6 +31,13 @@ class ButtonSection extends React.Component{
         toggleModal(false);
     }
 
+    handleExpenseInput(expense_id, value, addedExpenses, setAddedExpenses) {
+        const new_added_expenses = {};
+        Object.assign(new_added_expenses, addedExpenses);
+        new_added_expenses[expense_id] = +value;
+        setAddedExpenses(new_added_expenses);
+    }
+
     renderJournalNewEntryModal(modal_is_open, toggleModal, raw_mat_data, expenses_data, setRawMatName, setProviderName,
                                toggleNewRawMatInputsShow, raw_mat_name, provider_name, raw_mat_inputs_show,
                                new_raw_mat_price, setNewRawMatPrice, raw_mat_date, setRawMatDate, raw_mat_amount,
@@ -68,7 +75,7 @@ class ButtonSection extends React.Component{
                                    event.preventDefault();
                                    let new_added_expenses = {};
                                    Object.assign(new_added_expenses, addedExpenses);
-                                   new_added_expenses[expense_id] = 0;
+                                   new_added_expenses[expense_id] = addedExpenses[expense_id] || 0;
                                    setAddedExpenses(new_added_expenses);
                                }}
                 >
@@ -92,9 +99,15 @@ class ButtonSection extends React.Component{
                     </span>
                     <Form.Control type={'number'} maxLength={9}
                                   required
+                                  //value={+addedExpenses[expense_id]}
                                   placeholder={'Сумма'}
                                   size={'sm'}
                                   className={'modal__added-expense-input'}
+                                  onInput={event => {
+                                      event.preventDefault();
+                                      this.handleExpenseInput(expense_id, event.currentTarget.value, addedExpenses,
+                                          setAddedExpenses);
+                                  }}
                     />
                     <Button
                         variant={'secondary'}

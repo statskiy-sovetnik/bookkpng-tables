@@ -114,7 +114,8 @@ html, body {
 
 .modal-content ul.modal__added-expenses-list {
   margin-bottom: 15px;
-  margin-top: 5px; }
+  margin-top: 5px;
+  padding-left: 15px; }
 
 .modal-content .modal__added-expense-list-item {
   display: flex;
