@@ -15,6 +15,7 @@ export default {
     JOURNAL_MODAL_SET_NEW_RAW_MAT_PRICE: 'journalModalSetNewRawMatPrice',
     JOURNAL_MODAL_SET_RAW_MAT_DATE: 'journalModalSetRawMatDate',
     JOURNAL_MODAL_SET_RAW_MAT_AMOUNT: 'journalModalSetRawMatAmount',
+    JOURNAL_MODAL_SET_EXPENSES_DATA: 'journalModalSetExpensesData',
 
     //Journal Sorts Section
     JOURNAL_SORT_TYPE_CHANGE: 'journalSortTypeChange',

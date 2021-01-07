@@ -222,6 +222,17 @@ export default function reducer(state, action) {
                     }
                 }
             }
+        case actionTypes.JOURNAL_MODAL_SET_EXPENSES_DATA:
+            return {
+                ...state,
+                journal_new_entry_modal: {
+                    ...state.journal_new_entry_modal,
+                    form_state: {
+                        ...state.journal_new_entry_modal.form_state,
+                        expenses: action.value,
+                    }
+                }
+            }
 
         //_______ Journal Sort _________
 

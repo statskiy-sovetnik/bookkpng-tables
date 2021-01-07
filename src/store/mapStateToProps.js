@@ -44,6 +44,8 @@ export default function mapStateToProps(component) {
                     newRawMatPrice: state.journal_new_entry_modal.form_state.new_raw_mat_price,
                     rawMatDate: state.journal_new_entry_modal.form_state.raw_mat_date,
                     rawMatAmount: state.journal_new_entry_modal.form_state.raw_mat_date,
+                    expensesData: state.expenses_data,
+                    addedExpensesData: state.journal_new_entry_modal.form_state.expenses,
                 }
             }
 

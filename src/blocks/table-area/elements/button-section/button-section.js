@@ -31,17 +31,19 @@ class ButtonSection extends React.Component{
         toggleModal(false);
     }
 
-    renderJournalNewEntryModal(modal_is_open, toggleModal, raw_mat_data, setRawMatName, setProviderName,
+    renderJournalNewEntryModal(modal_is_open, toggleModal, raw_mat_data, expenses_data, setRawMatName, setProviderName,
                                toggleNewRawMatInputsShow, raw_mat_name, provider_name, raw_mat_inputs_show,
                                new_raw_mat_price, setNewRawMatPrice, raw_mat_date, setRawMatDate, raw_mat_amount,
-                               setRawMatAmount) {
+                               setRawMatAmount, addedExpenses, setAddedExpenses) {
         let raw_mat_dropdown_links = [];
+        let expenses_links = [];
+        let added_expenses_list_items = [];
 
         //Добавляем ссылки с сырьём в выпадающий список
         for(let raw_mat_id in raw_mat_data) {
             raw_mat_dropdown_links.push(
                 <Dropdown.Item key={'journal-raw-mat-dropdown-item_' + raw_mat_id}
-                               href={'#'} className={'text text_size-13 modal__raw-mat-dropdown-item'}
+                               href={'#'} className={'text text_size-13 modal__dropdown-item'}
                                onClick={event => {
                                    event.preventDefault();
                                    setRawMatName(raw_mat_data[raw_mat_id].name);
@@ -53,6 +55,64 @@ class ButtonSection extends React.Component{
                     <span className={'dropdown-raw-mat-provider-name'}>{raw_mat_data[raw_mat_id].provider_name}</span>
                     )
                 </Dropdown.Item>
+            );
+        }
+
+        //Добавляем ссылки с расходами в выпадающий список
+        for(let expense_id in expenses_data) {
+            expenses_links.push(
+                <Dropdown.Item href={'#'}
+                               key={'journal-modal_expense-dropdown-link-' + expense_id}
+                               className={'text text_size-13 modal__dropdown-item'}
+                               onClick={event => {
+                                   event.preventDefault();
+                                   let new_added_expenses = {};
+                                   Object.assign(new_added_expenses, addedExpenses);
+                                   new_added_expenses[expense_id] = 0;
+                                   setAddedExpenses(new_added_expenses);
+                               }}
+                >
+                    {expenses_data[expense_id].name}
+                </Dropdown.Item>
+            );
+        }
+
+        //Добавляем блок со списком добавленных расходов
+        for(let expense_id in addedExpenses) {
+            added_expenses_list_items.push(
+                <li key={'journal-modal-added-expense-list-item-' + expense_id}
+                    className={'modal__added-expense-list-item'}
+                >
+                    <a href={'#'} onClick={event => event.preventDefault()}
+                        className={'modal__added-expense-square'}
+                        style={{'backgroundColor': expenses_data[expense_id].color}}
+                    />
+                    <span className={'text text_size-13 text_color-dark modal__added-expense-text'}>
+                        {expenses_data[expense_id].name}
+                    </span>
+                    <Form.Control type={'number'} maxLength={9}
+                                  required
+                                  placeholder={'Сумма'}
+                                  size={'sm'}
+                                  className={'modal__added-expense-input'}
+                    />
+                    <Button
+                        variant={'secondary'}
+                        data-target={expense_id}
+                        className={'button button_size-small'}
+                        onClick={event => {
+                            event.preventDefault();
+                            const cur_expense_id = event.currentTarget.getAttribute('data-target');
+                            let new_added_expenses = {};
+                            Object.assign(new_added_expenses, addedExpenses);
+                            //Удаляем свойство, тем самым убирается поле из списка
+                            delete new_added_expenses[cur_expense_id];
+                            setAddedExpenses(new_added_expenses);
+                        }}
+                    >
+                        Удалить
+                    </Button>
+                </li>
             );
         }
 
@@ -166,7 +226,7 @@ class ButtonSection extends React.Component{
                                 <Col xs={3}>
                                     <Form.Group>
                                         <Form.Label className={'text text_size-14'}>
-                                            Кол-во сырья
+                                            Кол-во сырья (кг)
                                         </Form.Label>
                                         <Form.Control size={'sm'} type={'number'}
                                                       maxLength={9}
@@ -179,6 +239,25 @@ class ButtonSection extends React.Component{
                                         />
                                     </Form.Group>
                                 </Col>
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Label className={'text text_size-14'}>
+                                    Дополнительные расходы
+                                </Form.Label>
+                                <ul className={'ulist modal__added-expenses-list'}>
+                                    {added_expenses_list_items}
+                                </ul>
+                                <Dropdown>
+                                    <Dropdown.Toggle variant={'dark'} size={'sm'} className={'button'}>
+                                        Добавить
+                                    </Dropdown.Toggle>
+                                    <Dropdown.Menu>
+                                        {expenses_links}
+                                    </Dropdown.Menu>
+                                </Dropdown>
+                                <Form.Text className={'text text_color-grey'}>
+                                    Вы сможете добавить их в свою таблицу в любое время
+                                </Form.Text>
                             </Form.Group>
                         </Form>
                     </Container>
@@ -215,11 +294,13 @@ class ButtonSection extends React.Component{
                     />
                 );
                 new_entry_modal = this.renderJournalNewEntryModal(this.props.journalNewEntryModalIsOpen,
-                    this.props.toggleNewEntryModal, this.props.rawMatData, this.props.setModalRawMatName,
-                    this.props.setModalRawMatProviderName, this.props.toggleModalNewRawMatInputsShow,
-                    this.props.rawMatName, this.props.rawMatProviderName, this.props.newRawMatInputsShow,
+                    this.props.toggleNewEntryModal, this.props.rawMatData, this.props.expensesData,
+                    this.props.setModalRawMatName, this.props.setModalRawMatProviderName,
+                    this.props.toggleModalNewRawMatInputsShow, this.props.rawMatName, this.props.rawMatProviderName,
+                    this.props.newRawMatInputsShow,
                     this.props.newRawMatPrice, this.props.setModalNewRawMatPrice, this.props.rawMatDate,
-                    this.props.setModalRawMatDate, this.props.rawMatAmount, this.props.setModalRawMatAmount);
+                    this.props.setModalRawMatDate, this.props.rawMatAmount, this.props.setModalRawMatAmount,
+                    this.props.addedExpensesData, this.props.setModalAddedExpenses);
                 break;
             case 'incomes':
                 add_entry_button_icon = (

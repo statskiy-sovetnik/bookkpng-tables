@@ -39,6 +39,7 @@ import journalModalToggleNewRawMatInputsShow
 import journalModalSetNewRawMatPrice from "./actionCreators/journal_new_entry_modal/journalModalSetNewRawMatPrice";
 import journalModalSetRawMatDate from "./actionCreators/journal_new_entry_modal/journalModalSetRawMatDate";
 import journalModalSetRawMatAmount from "./actionCreators/journal_new_entry_modal/journalModalSetRawMatAmount";
+import journalModalSetExpensesData from "./actionCreators/journal_new_entry_modal/journalModalSetExpensesData";
 
 export default function mapDispatchToProps(component) {
     switch (component) {
@@ -92,6 +93,7 @@ export default function mapDispatchToProps(component) {
                     setModalNewRawMatPrice: (value) => dispatch(journalModalSetNewRawMatPrice(value)),
                     setModalRawMatDate: (value) => dispatch(journalModalSetRawMatDate(value)),
                     setModalRawMatAmount: (value) => dispatch(journalModalSetRawMatAmount(value)),
+                    setModalAddedExpenses: (data) => dispatch(journalModalSetExpensesData(data)),
                 }
             }
 

@@ -82,6 +82,9 @@ const initialState = {
             new_raw_mat_price: null,
             raw_mat_date: +new Date(),
             raw_mat_amount: null,
+            expenses: {
+                //0: 1270.00,
+            }
         }
     },
 
