@@ -25,15 +25,30 @@ function removeCookie(name) {
 //Validation _________________
 
 function isRawMatNameValid(value) {
-    return /^[\w\d\s]+$/.test("" + value) &&
+    return /^[\w\d\sа-яё]+$/i.test("" + value) &&
             (value + '').length >= 1 &&
             (value + '').length <= 40;
 }
 
 function isProviderNameValid(value) {
-    return /^[\w\d\s]+$/.test("" + value) &&
+    return /^[\w\d\sа-яё]+$/i.test("" + value) &&
         (value + '').length >= 1 &&
         (value + '').length <= 50;
 }
 
-export {getCookieValue, removeCookie, isRawMatNameValid, isProviderNameValid};
+function convertDateToMysqlDate(date) {
+    date = new Date(date);
+    return date.getFullYear() + '-' + formatMonth(date.getMonth()) + "-" + formatDay(date.getDate());  //date to yyyy/MM/dd
+}
+
+function formatMonth(month) {
+    const new_month = (month + 1) + '';
+    return (new_month.length === 1) ? '0' + new_month : new_month;
+}
+
+function formatDay(day) {
+    let new_day = '' + day;
+    return (new_day.length === 1) ? '0' + new_day : new_day;
+}
+
+export {getCookieValue, removeCookie, isRawMatNameValid, isProviderNameValid, convertDateToMysqlDate};

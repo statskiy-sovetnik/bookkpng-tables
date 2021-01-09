@@ -20,7 +20,9 @@ class App extends React.Component {
         //Берешь имя пользователя из куки:
 
         const user_name = getCookieValue('user');
+        const user_key = getCookieValue('key');
         this.props.changeUserName(user_name);
+        this.props.changeUserKey(user_key);
 
         //Берёшь из базы данных raw_mat_usage
 

@@ -3,6 +3,7 @@ const ENTRIES_PACK = 5;
 const initialState = {
     auth: {
         userName: 'Имя Пользователя',
+        userKey: null,
         type: 'signin',
         signInPasswordEntered: '',
         signUpPasswordEntered: '',
@@ -76,6 +77,7 @@ const initialState = {
 
     journal_new_entry_modal: {
         form_state: {
+            raw_mat_id: null,
             raw_mat_name: '',
             raw_mat_provider_name: '',
             new_raw_mat_inputs_show: false,

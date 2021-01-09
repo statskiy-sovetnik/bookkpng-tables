@@ -47,6 +47,8 @@ import journalModalSetProviderNameValid
 import journalModalSetPriceValid from "./actionCreators/journal_new_entry_modal/journalModalSetPriceValid";
 import journalModalSetAmountValid from "./actionCreators/journal_new_entry_modal/journalModalSetAmountValid";
 import journalModalSetExpensesValid from "./actionCreators/journal_new_entry_modal/journalModalSetExpensesValid";
+import journalModalSetRawMatId from "./actionCreators/journal_new_entry_modal/journalModalSetRawMatId";
+import changeUserKey from "./actionCreators/auth/changeUserKey";
 
 export default function mapDispatchToProps(component) {
     switch (component) {
@@ -54,6 +56,7 @@ export default function mapDispatchToProps(component) {
             return function (dispatch) {
                 return {
                     changeUserName: (value) => dispatch(changeUserName(value)),
+                    changeUserKey: (value) => dispatch(changeUserKey(value)),
                     loadDataBaseJournal: (rows) => dispatch(loadDataBaseJournal(rows)),
                     loadExpensesData: (expenses_obj) => dispatch(loadExpensesData(expenses_obj)),
                     loadDataBaseIncomes: (rows) => dispatch(loadDataBaseIncomes(rows)),
@@ -95,6 +98,7 @@ export default function mapDispatchToProps(component) {
                 return {
                     toggleNewEntryModal: (bool) => dispatch(journalToggleNewEntryModal(bool)),
                     setModalRawMatName: (value) => dispatch(journalModalSetRawMatName(value)),
+                    setModalRawMatId: (value) => dispatch(journalModalSetRawMatId(value)),
                     setModalRawMatProviderName: (value) => dispatch(journalModalSetRawMatProviderName(value)),
                     toggleModalNewRawMatInputsShow: (bool) => dispatch(journalModalToggleNewRawMatInputsShow(bool)),
                     setModalNewRawMatPrice: (value) => dispatch(journalModalSetNewRawMatPrice(value)),

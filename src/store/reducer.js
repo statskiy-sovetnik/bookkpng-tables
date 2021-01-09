@@ -13,6 +13,11 @@ export default function reducer(state, action) {
                     userName: action.value,
                 }
             }
+        case actionTypes.CHANGE_USER_KEY:
+            return {
+                ...state,
+                userKey: action.value,
+            }
         case actionTypes.CHANGE_AUTH_TYPE:
             return {
                 ...state,
@@ -164,6 +169,17 @@ export default function reducer(state, action) {
                     form_state: {
                         ...state.journal_new_entry_modal.form_state,
                         raw_mat_name: action.value,
+                    }
+                }
+            }
+        case actionTypes.JOURNAL_MODAL_SET_RAW_MAT_ID:
+            return {
+                ...state,
+                journal_new_entry_modal: {
+                    ...state.journal_new_entry_modal,
+                    form_state: {
+                        ...state.journal_new_entry_modal.form_state,
+                        raw_mat_id: action.value,
                     }
                 }
             }

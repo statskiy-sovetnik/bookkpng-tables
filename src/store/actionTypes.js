@@ -10,6 +10,7 @@ export default {
 
     //Journal new entry Modal
     JOURNAL_MODAL_SET_RAW_MAT_NAME: 'journalModalSetRawMatName',
+    JOURNAL_MODAL_SET_RAW_MAT_ID: 'journalModalSetRawMatId',
     JOURNAL_MODAL_SET_RAW_MAT_PROVIDER_NAME: 'journalModalSetRawMatProviderName',
     JOURNAL_MODAL_TOGGLE_NEW_RAW_MAT_INPUTS_SHOW: 'journalModalToggleNewRawMatInputsShow',
     JOURNAL_MODAL_SET_NEW_RAW_MAT_PRICE: 'journalModalSetNewRawMatPrice',
@@ -42,6 +43,7 @@ export default {
     // AUTH_______________
 
     CHANGE_USER_NAME: 'changeUserName',
+    CHANGE_USER_KEY: 'changeUserKey',
     CHANGE_AUTH_TYPE: 'changeAuthType',
     CHANGE_SIGN_IN_KEY_CORRECT: 'changeSignInKeyCorrect',
     CHANGE_SIGN_UP_KEY_CORRECT: 'changeSignUpKeyCorrect',

@@ -15,6 +15,7 @@ class Auth extends React.Component {
     handleSignInSubmit(form) {
         const check_value = document.getElementById('sign-in-remember-ckeck').value;
         const user_email = document.getElementById('sign-in-email-input').value;
+        const user_key = document.getElementById('sign-in-key-input').value;
         const do_remember_user = check_value === 'on';
         const data = new FormData(form);
 
@@ -55,6 +56,7 @@ class Auth extends React.Component {
                     document.cookie = 'max-age=' + (24 * 3600 * 3); //3 дня
                 }
                 document.cookie = 'user=' + user_email;
+                document.cookie = 'key=' + user_key;
                 location.reload();
                 //return response.text();
             },
@@ -68,6 +70,7 @@ class Auth extends React.Component {
     handleSignUpSubmit(form) {
         const check_value = document.getElementById('signUpRememberCheck').value;
         const user_email = document.getElementById('signUpEmailInput').value;
+        const user_key = document.getElementById('signUpKeyInput').value;
         const do_remember_user = check_value === 'on';
         const data = new FormData(form);
 
@@ -104,6 +107,7 @@ class Auth extends React.Component {
                     document.cookie = 'max-age=' + (24 * 3600 * 3); //3 дня
                 }
                 document.cookie = 'user=' + user_email;
+                document.cookie = 'key=' + user_key;
                 location.reload();
             },
             (err) => {
@@ -217,6 +221,7 @@ class Auth extends React.Component {
                             <Form.Label>Ключ</Form.Label>
                             <Form.Control
                                 type={'text'}
+                                id={'sign-in-key-input'}
                                 name={'key'}
                                 required
                                 className={this.props.signInKeyCorrect ? 'is-valid' : 'is-invalid'}

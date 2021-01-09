@@ -16,7 +16,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
-import {isProviderNameValid, isRawMatNameValid} from "../../../../common";
+import {convertDateToMysqlDate, isProviderNameValid, isRawMatNameValid} from "../../../../common";
 import journalModalSetShowValidation
     from "../../../../store/actionCreators/journal_new_entry_modal/journalModalSetShowValidation";
 
@@ -65,6 +65,10 @@ class ButtonSection extends React.Component{
 
         //Посылаем запрос
         const formObj = new FormData(form);
+        formObj.set('raw-mat-id', this.props.rawMatId);
+        formObj.set('raw_mat_date', convertDateToMysqlDate(this.props.rawMatDate));
+        formObj.set('user-key', this.props.userKey);
+        formObj.set('expenses', JSON.stringify(this.props.addedExpensesData));
 
         fetch('/src/php/add_journal_entry.php', {
             method: 'POST',
@@ -77,11 +81,17 @@ class ButtonSection extends React.Component{
                 }
 
                 console.log('Я прошел проверку');
+                return response.text();
             },
             error => {
                 alert('Неизвестная ошибка при отправке запроса');
                 console.log('Fetch error: ', error);
             }
+        ).then(
+            body => {
+                console.log(body);
+            }
+
         );
 
         this.props.toggleNewEntryModal(false);
@@ -107,6 +117,7 @@ class ButtonSection extends React.Component{
                                    this.props.setRawMatValid(true);
                                    this.props.setProviderNameValid(true);
                                    this.props.setPriceValid(true);
+                                   this.props.setModalRawMatId(raw_mat_id);
                                    toggleNewRawMatInputsShow(false);
                                }}
                 >
@@ -317,6 +328,7 @@ class ButtonSection extends React.Component{
                                             onChange={date => {
                                                 setRawMatDate(date.setHours(0, 0, 0, 0));
                                             }}
+                                            id={'journal-new-entry-modal-form-date'}
                                             className={'form-control form-control-sm'}
                                             name={'raw_mat_date'}
                                             locale={'ru'}

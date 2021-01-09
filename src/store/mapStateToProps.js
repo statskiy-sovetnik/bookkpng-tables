@@ -36,8 +36,10 @@ export default function mapStateToProps(component) {
         case 'JournalButtonSection':
             return function (state) {
                 return {
+                    userKey: state.userKey,
                     journalNewEntryModalIsOpen: state.journal.newEntryModalIsOpen,
                     rawMatData: state.raw_mat_data,
+                    rawMatId: state.journal_new_entry_modal.form_state.raw_mat_id,
                     rawMatName: state.journal_new_entry_modal.form_state.raw_mat_name,
                     rawMatProviderName: state.journal_new_entry_modal.form_state.raw_mat_provider_name,
                     newRawMatInputsShow: state.journal_new_entry_modal.form_state.new_raw_mat_inputs_show,
