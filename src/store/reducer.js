@@ -1,4 +1,5 @@
 import actionTypes from './actionTypes'
+import initialState from "./initialState";
 
 export default function reducer(state, action) {
     switch(action.type) {
@@ -313,6 +314,17 @@ export default function reducer(state, action) {
                         ...state.journal_new_entry_modal.validation,
                         expenses: action.value,
                     }
+                }
+            }
+        case actionTypes.JOURNAL_MODAL_CLEAR_FORM:
+            const init_validation = {};
+            const init_form_state = {};
+            return {
+                ...state,
+                journal_new_entry_modal: {
+                    ...state.journal_new_entry_modal,
+                    form_state: Object.assign(init_form_state, initialState.journal_new_entry_modal.form_state),
+                    validation: Object.assign(init_validation, initialState.journal_new_entry_modal.validation),
                 }
             }
 

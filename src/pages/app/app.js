@@ -302,7 +302,25 @@ class App extends React.Component {
         this.props.loadRawMatData(raw_mat_data);
     }
 
-    componentDidMount() {
+    updateRawMatDateFromDb(source) {
+        fetch(source, {
+            method: 'POST',
+            body: JSON.stringify({
+                key: this.props.userKey
+            })
+        }).then(
+            response => {
+                if(response.status !== 200) {
+                    alert('Неизвестная серверная ошибка');
+                    return;
+                }
+                console.log('Я в системе');
+            },
+            error => {
+                alert('Неизвестная ошибка');
+                console.log('Fetch error: ', error);
+            }
+        );
     }
 
     getUpdatedJournalRows(rows_data, raw_mat_usage_for_journal, raw_mat_data) {

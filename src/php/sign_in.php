@@ -1,8 +1,12 @@
 <?php
-$serverName = '127.0.0.1:3310';
+
+include './globals.php';
+use globals\Globals;
+
+$serverName = Globals::$serverName;
 $initialDb = 'origindb';
-$adminName = 'mmmNice';
-$adminPassword = '123098Phpadmin';
+$adminName = Globals::$adminName;
+$adminPassword = Globals::$pass;
 $passwordAlgo = 'sha256';
 
 $userKey = $_POST['key'];

@@ -49,6 +49,7 @@ import journalModalSetAmountValid from "./actionCreators/journal_new_entry_modal
 import journalModalSetExpensesValid from "./actionCreators/journal_new_entry_modal/journalModalSetExpensesValid";
 import journalModalSetRawMatId from "./actionCreators/journal_new_entry_modal/journalModalSetRawMatId";
 import changeUserKey from "./actionCreators/auth/changeUserKey";
+import journalModalClearForm from "./actionCreators/journal_new_entry_modal/journalModalClearForm";
 
 export default function mapDispatchToProps(component) {
     switch (component) {
@@ -96,6 +97,7 @@ export default function mapDispatchToProps(component) {
         case 'JournalButtonSection':
             return function (dispatch) {
                 return {
+                    clearForm: () => dispatch(journalModalClearForm()),
                     toggleNewEntryModal: (bool) => dispatch(journalToggleNewEntryModal(bool)),
                     setModalRawMatName: (value) => dispatch(journalModalSetRawMatName(value)),
                     setModalRawMatId: (value) => dispatch(journalModalSetRawMatId(value)),

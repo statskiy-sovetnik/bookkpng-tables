@@ -75,12 +75,19 @@ class ButtonSection extends React.Component{
             body: formObj,
         }).then(
             response => {
+                if(response.status === 520) {
+                    alert('Ошибка при подключении к базе данных mysql');
+                    return;
+                }
+                if(response.status === 500) {
+                    alert('Ошибка запроса mysql');
+                    return;
+                }
                 if(response.status !== 200) {
-                    console.log('Неизвестная ошибка при обработке запроса');
+                    alert('Неизвестная ошибка при обработке запроса');
                     return;
                 }
 
-                console.log('Я прошел проверку');
                 return response.text();
             },
             error => {
@@ -91,9 +98,9 @@ class ButtonSection extends React.Component{
             body => {
                 console.log(body);
             }
-
         );
 
+        this.props.clearForm();
         this.props.toggleNewEntryModal(false);
     }
 

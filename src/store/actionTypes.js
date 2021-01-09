@@ -23,6 +23,7 @@ export default {
     JOURNAL_MODAL_SET_PRICE_VALID: 'journalModalSetPriceValid',
     JOURNAL_MODAL_SET_AMOUNT_VALID: 'journalModalSetAmountValid',
     JOURNAL_MODAL_SET_EXPENSES_VALID: 'journalModalSetExpensesValid',
+    JOURNAL_MODAL_CLEAR_FORM: 'journalModalClearForm',
 
     //Journal Sorts Section
     JOURNAL_SORT_TYPE_CHANGE: 'journalSortTypeChange',

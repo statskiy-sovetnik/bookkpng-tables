@@ -1,8 +1,12 @@
 <?php
+
+include './globals.php';
+use globals\Globals;
+
 $initDatabase = 'origindb';
-$serverName = '127.0.0.1:3310';
-$adminName = 'mmmNice';
-$adminPassword = '123098Phpadmin';
+$serverName = Globals::$serverName;
+$adminName = Globals::$adminName;
+$adminPassword = Globals::$pass;
 
 $newRawMatName = $_POST['new-raw-mat-name'];
 $newProviderName = $_POST['new-provider-name'];
