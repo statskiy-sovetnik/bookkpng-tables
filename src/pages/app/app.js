@@ -11,7 +11,8 @@ import {JOURNAL_AREA_W as JournalArea,
 import {getCookieValue, isEmptyObj} from "../../common";
 
 /*___ Libs _________________*/
-
+import parse from 'date-fns/parse';
+import format from 'date-fns/format';
 
 class App extends React.Component {
     constructor(props) {
@@ -31,11 +32,11 @@ class App extends React.Component {
                 incomes_id: 0,
                 raw_mat_used: [
                     {
-                        journal_id: 0,
+                        journal_id: 13,
                         used: 74.00,
                     },
                     {
-                        journal_id: 1,
+                        journal_id: 16,
                         used: 34.50,
                     }
                 ],
@@ -44,7 +45,7 @@ class App extends React.Component {
                 incomes_id: 1,
                 raw_mat_used: [
                     {
-                        journal_id: 1,
+                        journal_id: 13,
                         used: 88.00,
                     }
                 ],
@@ -53,17 +54,13 @@ class App extends React.Component {
                 incomes_id: 2,
                 raw_mat_used: [
                     {
-                        journal_id: 0,
+                        journal_id: 13,
                         used: 22.00,
                     },
                     {
-                        journal_id: 1,
+                        journal_id: 16,
                         used: 37.00,
                     },
-                    {
-                        journal_id: 2,
-                        used: 114.30,
-                    }
                 ],
             }
         ];
@@ -90,7 +87,8 @@ class App extends React.Component {
             }
         }*/
         let raw_mat_data = {};
-        const journal_rows_data = {
+        let journal_rows_data = {};
+        /*const journal_rows_data = {
             0: {
                 date: '27/04/2020',
                 raw_mat_id: 1,
@@ -201,7 +199,7 @@ class App extends React.Component {
                     }
                 ]
             },
-        }
+        }*/
         const incomes_rows_data = {
             0: {
                 date: '18/03/2019',
@@ -286,19 +284,23 @@ class App extends React.Component {
             rawMatData => {
                 Object.assign(raw_mat_data, rawMatData);
 
-                this.updateJournalRowsFromDb('/src/php/get_journal_rows.php', user_key);
+                this.updateJournalRowsFromDb('/src/php/get_journal_rows.php', user_key, raw_mat_usage_for_journal,
+                    raw_mat_data).then(
 
-                const journal_rows_updated = this.getUpdatedJournalRows(journal_rows_data, raw_mat_usage_for_journal,
-                    raw_mat_data);
-                const incomes_rows_updated = this.getUpdatedIncomesRows(incomes_rows_data, journal_rows_updated, raw_mat_usage,
-                    raw_mat_data);
+                    journal_rows_upd => {
+                        journal_rows_data = journal_rows_upd;
 
-                //Загрузка в хранилище:
-                this.props.loadDataBaseJournal(journal_rows_updated);
-                this.props.loadDataBaseIncomes(incomes_rows_updated);
-                this.props.loadExpensesData(expenses_data);
-                this.props.loadRawMatUsage(raw_mat_usage);
-                this.props.loadRawMatUsageForJournal(raw_mat_usage_for_journal);
+                        const incomes_rows_updated = this.getUpdatedIncomesRows(incomes_rows_data, journal_rows_data, raw_mat_usage,
+                            raw_mat_data);
+
+                        //Загрузка в хранилище:
+                        this.props.loadDataBaseJournal(journal_rows_data);
+                        this.props.loadDataBaseIncomes(incomes_rows_updated);
+                        this.props.loadExpensesData(expenses_data);
+                        this.props.loadRawMatUsage(raw_mat_usage);
+                        this.props.loadRawMatUsageForJournal(raw_mat_usage_for_journal);
+                    }
+                )
             }
         );
 
@@ -352,11 +354,11 @@ class App extends React.Component {
         }
     }
 
-    updateJournalRowsFromDb(source, user_key) {
+    updateJournalRowsFromDb(source, user_key, raw_mat_usage_for_journal, raw_mat_data) {
         let fetchBody = new FormData();
         fetchBody.append('key', user_key);
 
-        fetch(source, {
+        return fetch(source, {
             method: 'POST',
             body: fetchBody,
         }).then(
@@ -379,17 +381,20 @@ class App extends React.Component {
             }
         ).then(
             body => {
-                console.log('Rows: ', body);
+                console.log('Ready to update');
+                return this.getUpdatedJournalRows(body, raw_mat_usage_for_journal, raw_mat_data);
             }
         );
     }
 
     getUpdatedJournalRows(rows_data, raw_mat_usage_for_journal, raw_mat_data) {
         let rows_updated = {};
+
         if(isEmptyObj(raw_mat_data) || isEmptyObj(rows_data) || isEmptyObj(raw_mat_usage_for_journal)) {
             return {};
         }
 
+        console.log(rows_data);
         for(let id in rows_data) {
             //Находим данные нужного сырья
 
@@ -397,6 +402,14 @@ class App extends React.Component {
             let cur_row_raw_mat_data = {};
             Object.assign(cur_row_raw_mat_data, raw_mat_data[raw_mat_id]);
             const raw_mat_price = cur_row_raw_mat_data.price;
+            const row_total_amount = rows_data[id].amount;
+
+            //Устанавливаем amount_data (имеем только amount)
+            rows_data[id].amount_data = {
+                amount_total: +row_total_amount,
+                amount_used: [],
+            }
+            delete rows_data[id].amount;
 
             let cur_sum = rows_data[id].amount_data.amount_total * raw_mat_price;
             let cur_expenses_total = 0;
@@ -404,6 +417,7 @@ class App extends React.Component {
             let cur_raw_mat_used_total = 0;
 
             rows_data[id].expenses.forEach((expense, i) => {
+                expense.amount = +expense.amount;  //преобразуем в число (из бд приходит строка)
                 cur_expenses_total += expense.amount;
             });
 
@@ -418,9 +432,14 @@ class App extends React.Component {
                 cur_raw_mat_used = raw_mat_obj.raw_mat_used_by.slice()
             });
 
+            const db_date_str = rows_data[id].date;
+            const db_date = parse(db_date_str, 'yyyy-MM-dd', +new Date());
+            const date_formated_str = format(db_date, 'dd/MM/yyyy');
+
             rows_updated[id] = {
                 ...rows_data[id],
                 sum: cur_sum,
+                date: date_formated_str,
                 name: cur_row_raw_mat_data.name,
                 provider_name: cur_row_raw_mat_data.provider_name,
                 price: raw_mat_price,
@@ -433,9 +452,6 @@ class App extends React.Component {
                 }
             }
         }
-
-
-
         return rows_updated;
     }
 
@@ -445,7 +461,8 @@ class App extends React.Component {
         if(isEmptyObj(rows_data) || isEmptyObj(journal_rows_data) || isEmptyObj(raw_mat_usage) || isEmptyObj(raw_mat_data)) {
             return {};
         }
-        console.log('In incomes: ', raw_mat_data);
+        console.log('In incomes: ', raw_mat_usage);
+        console.log(isEmptyObj(raw_mat_usage));
 
         for(let id in rows_data) {
             const cur_amount = rows_data[id].amount;

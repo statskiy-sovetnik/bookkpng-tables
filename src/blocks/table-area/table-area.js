@@ -239,7 +239,7 @@ class TableArea extends React.Component {
                 if(col_name === 'control') {
                     cur_row.push(
                         <td className={cell_class}
-                            key={data + '-' + row_id + '-' + row_data[col_name]}
+                            key={data + '-' + row_id + '-' + col_name}
                         >
                             <Button className={'button button_size-small button_inline-flex'}
                                variant={'dark'}
@@ -285,7 +285,7 @@ class TableArea extends React.Component {
 
                     cur_row.push(
                         <td className={cell_class}
-                            key={data + '-' + row_id + '-' + cur_value}
+                            key={data + '-' + row_id + '-amount_data'}
                         >
                             {amount_content}
                         </td>
@@ -393,7 +393,7 @@ class TableArea extends React.Component {
 
                     cur_row.push(
                         <td className={cell_class}
-                            key={data + '-' + row_id + '-' + cur_value}
+                            key={data + '-' + row_id + '-sum_of_raw'}
                         >
                             {cur_value}
                             <OverlayTrigger overlay={raw_mat_popover} placement={'bottom'} trigger={'focus'}>
@@ -426,7 +426,7 @@ class TableArea extends React.Component {
 
                     cur_row.push(
                         <td className={cell_class}
-                            key={data + '-' + row_id + '-' + cur_value}
+                            key={data + '-' + row_id + '-' + col_name}
                         >
                             {cur_value}
                         </td>

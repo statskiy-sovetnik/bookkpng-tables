@@ -1,6 +1,8 @@
 <?php
 
+include './globals.php';
 use globals\Globals;
+
 $adminName = Globals::$adminName;
 $pass = Globals::$pass;
 $serverName = Globals::$serverName;
@@ -17,19 +19,21 @@ catch(PDOException $ex) {
 //Получаем строки журнала
 
 try {
-    $getJournalRows = "SELECT * FROM journal";
+    $getJournalRows = "SELECT * FROM journal ORDER BY id";
     $rowsRes = $keyConn->query($getJournalRows);
-    //Возвращаем пустой json объект
+
+    //Возвращаем пустой json объект, если таблица пустая
     if(!$rowsRes || $rowsRes->rowCount() == 0) {
         header('Content-Type: application/json', true);
-        echo json_encode([]);
+        echo '';
         die();
     }
+    $rowsNum = $rowsRes->rowCount();
 
-    //Загружаем строки в ассоциативный массив
+    //Загружаем строки в ассоциативный массив ____________
+
     $journalRows = [];
     $rowCounter = 0;
-    $rowsNum = $rowsRes->rowCount();
 
     while($rowCounter < $rowsNum) {
         $rowCounter++;
@@ -37,6 +41,7 @@ try {
         $curResRow = $rowsRes->fetch();
         $curRowId = $curResRow['id'];
 
+        //Загружам в строку данные
         foreach ($curResRow as $key => $value) {
             if($key === 'id' || gettype($key) === 'integer') {
                 continue;
@@ -45,7 +50,32 @@ try {
         }
         unset($key, $value);
 
-        $curRow[$curRowId] = $curRow;
+        //Получаем данные о расходах
+        $getRowExpenses = "SELECT * FROM expenses_journal_$curRowId";
+        $rowExpensesRes = $keyConn->query($getRowExpenses);
+
+        //Загружаем в строку данные о расходах
+
+        $curRow['expenses'] = [];
+        if($rowExpensesRes && $rowExpensesRes->rowCount() > 0) {
+
+            $curRowExpensesCount = $rowExpensesRes->rowCount();
+            $c = 0;
+
+            while($c < $curRowExpensesCount) {
+                $curExpenseResRow = $rowExpensesRes->fetch();
+                $curExpensesRow = [];
+                $curExpensesRow['id'] = $curExpenseResRow['expense_id'];
+                $curExpensesRow['amount'] = $curExpenseResRow['sum'];
+
+                //загружаем в строку
+                $curRow['expenses'][$c] = $curExpensesRow;
+                $c++;
+            }
+        }
+
+        //загружаем строку
+        $journalRows[$curRowId] = $curRow;
     }
 
     header('Content-Type: application/json; charset=UTF-8', true);
