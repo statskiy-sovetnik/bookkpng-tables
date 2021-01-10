@@ -1,7 +1,12 @@
 export default function mapStateToProps(component) {
     switch (component) {
 
-        //_____ APP ____________
+        //_____ APP ___________
+        case 'App':
+            return function (state) {
+                return {
+                }
+            }
 
         case 'UserName':
             return function (state) {
@@ -36,7 +41,7 @@ export default function mapStateToProps(component) {
         case 'JournalButtonSection':
             return function (state) {
                 return {
-                    userKey: state.userKey,
+                    userKey: state.auth.userKey,
                     journalNewEntryModalIsOpen: state.journal.newEntryModalIsOpen,
                     rawMatData: state.raw_mat_data,
                     rawMatId: state.journal_new_entry_modal.form_state.raw_mat_id,

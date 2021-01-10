@@ -17,7 +17,10 @@ export default function reducer(state, action) {
         case actionTypes.CHANGE_USER_KEY:
             return {
                 ...state,
-                userKey: action.value,
+                auth: {
+                    ...state.auth,
+                    userKey: action.value,
+                }
             }
         case actionTypes.CHANGE_AUTH_TYPE:
             return {

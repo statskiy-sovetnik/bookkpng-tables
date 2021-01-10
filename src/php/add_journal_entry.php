@@ -45,7 +45,7 @@ try {
     else {
         $getLastRawMatId = "SELECT id from raw_mat_data ORDER BY id DESC LIMIT 1";
         $res = $keyConn->query($getLastRawMatId);
-        if($res->rowCount() == 0) {
+        if(!$res || $res->rowCount() == 0) {
             $newRawMatId = 1;
         }
         else {
@@ -88,6 +88,7 @@ catch (PDOException $ex) {
     die();
 }
 
+header('Content-Type: text/html; charset=UTF-8', true);
 echo "Новое имя: $newRawMatName 
 Новая цена: $newRawMatPrice 
 Новый поставщик: $newProviderName
@@ -95,8 +96,7 @@ Id: $rawMatId
 Дата: $entryDate 
 Кол-во: $rawMatAmount
 Ключ: $userKey
-Последний id: $lastId
-Расход: $expisnull";
+Последний id: $lastId";
 
 
 $initConn = null;

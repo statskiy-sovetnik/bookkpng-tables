@@ -8,7 +8,7 @@ import Menu from '../../blocks/menu/menu'
 import {JOURNAL_AREA_W as JournalArea,
         INCOMES_AREA_W as IncomesArea,
 } from '../../blocks/table-area/table-area'
-import {getCookieValue} from "../../common";
+import {getCookieValue, isEmptyObj} from "../../common";
 
 /*___ Libs _________________*/
 
@@ -72,7 +72,7 @@ class App extends React.Component {
 
         //Здесь собираешь данные о сырье
 
-        const raw_mat_data = {
+        /*const raw_mat_data = {
             0: {
                 name: 'Название сырья среднее',
                 provider_name: '"ООО" Мясо России',
@@ -88,14 +88,12 @@ class App extends React.Component {
                 provider_name: 'Библиотеки Пермского края',
                 price: 67.5,
             }
-        }
-
-        //Здесь инициализируешь journal.rows:
-
+        }*/
+        let raw_mat_data = {};
         const journal_rows_data = {
             0: {
                 date: '27/04/2020',
-                raw_mat_id: 0,
+                raw_mat_id: 1,
                 amount_data: {
                     amount_total: 180.00,
                     amount_used: [],
@@ -204,10 +202,6 @@ class App extends React.Component {
                 ]
             },
         }
-        const journal_rows_updated = this.getUpdatedJournalRows(journal_rows_data, raw_mat_usage_for_journal, raw_mat_data);
-
-        //Инициализируешь incomes.rows
-
         const incomes_rows_data = {
             0: {
                 date: '18/03/2019',
@@ -253,11 +247,6 @@ class App extends React.Component {
                 sum_of_raw: 43050.00,
             },
         };
-        const incomes_rows_updated = this.getUpdatedIncomesRows(incomes_rows_data, journal_rows_updated, raw_mat_usage,
-            raw_mat_data);
-
-        //Здесь собираешь данные о расходах
-
         const expenses_data = {
             0: {
                 color: '#e06c5d',
@@ -293,38 +282,113 @@ class App extends React.Component {
             },
         }
 
-        //Загрузка:
-        this.props.loadDataBaseJournal(journal_rows_updated);
-        this.props.loadDataBaseIncomes(incomes_rows_updated);
-        this.props.loadExpensesData(expenses_data);
-        this.props.loadRawMatUsage(raw_mat_usage);
-        this.props.loadRawMatUsageForJournal(raw_mat_usage_for_journal);
-        this.props.loadRawMatData(raw_mat_data);
+        this.updateRawMatDataFromDb('/src/php/get_raw_mat_data.php', user_key).then(
+            rawMatData => {
+                Object.assign(raw_mat_data, rawMatData);
+
+                this.updateJournalRowsFromDb('/src/php/get_journal_rows.php', user_key);
+
+                const journal_rows_updated = this.getUpdatedJournalRows(journal_rows_data, raw_mat_usage_for_journal,
+                    raw_mat_data);
+                const incomes_rows_updated = this.getUpdatedIncomesRows(incomes_rows_data, journal_rows_updated, raw_mat_usage,
+                    raw_mat_data);
+
+                //Загрузка в хранилище:
+                this.props.loadDataBaseJournal(journal_rows_updated);
+                this.props.loadDataBaseIncomes(incomes_rows_updated);
+                this.props.loadExpensesData(expenses_data);
+                this.props.loadRawMatUsage(raw_mat_usage);
+                this.props.loadRawMatUsageForJournal(raw_mat_usage_for_journal);
+            }
+        );
+
     }
 
-    updateRawMatDateFromDb(source) {
-        fetch(source, {
+    updateRawMatDataFromDb(source, user_key) {
+        let fetch_body = new FormData();
+        let raw_mat_data = {};
+
+        fetch_body.set('key', user_key);
+
+        return fetch(source, {
             method: 'POST',
-            body: JSON.stringify({
-                key: this.props.userKey
-            })
+            body: fetch_body,
         }).then(
             response => {
+                if(response.status === 520) {
+                    alert('Ошибка при подключении к серверу');
+                    return;
+                }
+                if(response.status === 500) {
+                    alert('Ошибка запроса mysql');
+                    return;
+                }
                 if(response.status !== 200) {
                     alert('Неизвестная серверная ошибка');
                     return;
                 }
-                console.log('Я в системе');
+
+                //return response.text();
+                return response.json();
             },
             error => {
                 alert('Неизвестная ошибка');
                 console.log('Fetch error: ', error);
+            }
+        ).then(
+            body => {
+                this.filterRawMatDataFromDb(body);
+                raw_mat_data = body;
+
+                this.props.loadRawMatData(raw_mat_data);
+                return raw_mat_data;
+            }
+        );
+    }
+
+    filterRawMatDataFromDb(raw_mat_data) { //Изменяет некоторые строковые значения на числовые,
+        for(let id in raw_mat_data) {
+            raw_mat_data[id].price = +raw_mat_data[id].price;
+        }
+    }
+
+    updateJournalRowsFromDb(source, user_key) {
+        let fetchBody = new FormData();
+        fetchBody.append('key', user_key);
+
+        fetch(source, {
+            method: 'POST',
+            body: fetchBody,
+        }).then(
+            response => {
+                if(response.status === 520) {
+                    alert('Ошибка при подключении к серверу');
+                    return;
+                }
+                if(response.status !== 200) {
+                    alert('Неизвестная серверная ошибка');
+                    return;
+                }
+
+                console.log('Приняли строки');
+                return response.json();
+            },
+            error => {
+                alert('Неизвестная ошибка при обработке запроса');
+                console.log('Fetch error: ', error);
+            }
+        ).then(
+            body => {
+                console.log('Rows: ', body);
             }
         );
     }
 
     getUpdatedJournalRows(rows_data, raw_mat_usage_for_journal, raw_mat_data) {
         let rows_updated = {};
+        if(isEmptyObj(raw_mat_data) || isEmptyObj(rows_data) || isEmptyObj(raw_mat_usage_for_journal)) {
+            return {};
+        }
 
         for(let id in rows_data) {
             //Находим данные нужного сырья
@@ -378,6 +442,11 @@ class App extends React.Component {
     getUpdatedIncomesRows(rows_data, journal_rows_data, raw_mat_usage, raw_mat_data) {
         let rows_updated = {};
 
+        if(isEmptyObj(rows_data) || isEmptyObj(journal_rows_data) || isEmptyObj(raw_mat_usage) || isEmptyObj(raw_mat_data)) {
+            return {};
+        }
+        console.log('In incomes: ', raw_mat_data);
+
         for(let id in rows_data) {
             const cur_amount = rows_data[id].amount;
             let cur_sum = cur_amount * rows_data[id].price;
@@ -429,6 +498,10 @@ class App extends React.Component {
         //здесь просто считает общее кол-во сырья и добавляет в каждый объект массива
         let raw_mat_usage_upd = raw_mat_usage.slice();
 
+        if(isEmptyObj(raw_mat_usage)) {
+            return {};
+        }
+
         raw_mat_usage_upd.forEach((raw_mat_usage_obj) => {
             let cur_used_total = 0;
 
@@ -445,6 +518,10 @@ class App extends React.Component {
     reformRawMatUsageForJournal(raw_mat_usage) {
         let raw_mat_usage_reformed = [];
         let journal_ids_used = [];
+
+        if(isEmptyObj(raw_mat_usage)) {
+            return {};
+        }
 
         raw_mat_usage.forEach((incomes_obj) => {
             const incomes_id = incomes_obj.incomes_id;

@@ -29,6 +29,7 @@ import Popover from "react-bootstrap/Popover";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Table from "react-bootstrap/Table";
 import Modal from "react-bootstrap/Modal";
+import {isEmptyObj} from "../../common";
 
 class TableArea extends React.Component {
     constructor(props) {
@@ -296,37 +297,39 @@ class TableArea extends React.Component {
                     let expenses_color_cells = [];
                     let popover_list = [];
 
-                    cur_expenses_arr.forEach((expense) => {
-                        cur_expenses_total += expense.amount;
+                    if(!isEmptyObj(expenses_data)) {
+                        cur_expenses_arr.forEach((expense) => {
+                            cur_expenses_total += expense.amount;
 
-                        expenses_color_cells.push(
-                            <li
-                                key={'color-cell_row-' + row_id + '_id-' + expense.id}
-                            >
-                                <a onClick={event => {event.preventDefault()}} href={'#'}
-                                   className={'expense-color-square'}
-                                   style={{backgroundColor: expenses_data[expense.id].color}}
-                                   title={expenses_data[expense.id].name}
-                                />
-                            </li>
-                        )
+                            expenses_color_cells.push(
+                                <li
+                                    key={'color-cell_row-' + row_id + '_id-' + expense.id}
+                                >
+                                    <a onClick={event => {event.preventDefault()}} href={'#'}
+                                       className={'expense-color-square'}
+                                       style={{backgroundColor: expenses_data[expense.id].color}}
+                                       title={expenses_data[expense.id].name}
+                                    />
+                                </li>
+                            )
 
-                        popover_list.push(
-                            <li
-                                key={'popover_color-cell_row-' + row_id + '_id-' + expense.id}
-                            >
-                                <a className={'expense-color-square'}
-                                    onClick={event => {event.preventDefault()}}
-                                    style={{backgroundColor: expenses_data[expense.id].color}}
-                                    href="#"
-                                />
-                                <span className={'expenses-name text text_color-black text_size-13'}>
+                            popover_list.push(
+                                <li
+                                    key={'popover_color-cell_row-' + row_id + '_id-' + expense.id}
+                                >
+                                    <a className={'expense-color-square'}
+                                       onClick={event => {event.preventDefault()}}
+                                       style={{backgroundColor: expenses_data[expense.id].color}}
+                                       href="#"
+                                    />
+                                    <span className={'expenses-name text text_color-black text_size-13'}>
                                     {expenses_data[expense.id].name + ': '}
-                                    <strong>{expense.amount}</strong>
+                                        <strong>{expense.amount}</strong>
                                 </span>
-                            </li>
-                        )
-                    });
+                                </li>
+                            )
+                        });
+                    }
 
                     cur_expenses_total = +cur_expenses_total.toFixed(2);
 
@@ -453,11 +456,13 @@ class TableArea extends React.Component {
         let cut_cols_counter = 0;
 
         //Находим объект с данными, соответствующими этому ряду в журнале
-        raw_mat_usage_for_journal.forEach((obj) => {
-            if(obj.journal_id === +journal_row_id) {
-                Object.assign(cur_raw_mat_data, obj);
-            }
-        });
+        if(!isEmptyObj(raw_mat_usage_for_journal)) {
+            raw_mat_usage_for_journal.forEach((obj) => {
+                if(obj.journal_id === +journal_row_id) {
+                    Object.assign(cur_raw_mat_data, obj);
+                }
+            });
+        }
 
         //Заполняем head таблицы
 
@@ -468,50 +473,54 @@ class TableArea extends React.Component {
             </th>
         );
 
-        incomes_cut_cols_order.forEach((col_name, i) => {
-            raw_mat_table_head_cells.push(
-                <th key={'raw-data-popover-table_row-' + journal_row_id + '_head-cell-' + i}>
-                    {incomes_head_cols[col_name]}
-                </th>
-            );
+        if(!isEmptyObj(incomes_cut_cols_order)) {
+            incomes_cut_cols_order.forEach((col_name, i) => {
+                raw_mat_table_head_cells.push(
+                    <th key={'raw-data-popover-table_row-' + journal_row_id + '_head-cell-' + i}>
+                        {incomes_head_cols[col_name]}
+                    </th>
+                );
 
 
-            cut_cols_counter++;
-        });
+                cut_cols_counter++;
+            });
+        }
 
         //Заполняем body таблицы
 
-        cur_raw_mat_data.raw_mat_used_by.forEach((income_obj, i) => {
-            if(i >= cut_cols_counter) {
-                return
-            }
+        if(!isEmptyObj(cur_raw_mat_data)) {
+            cur_raw_mat_data.raw_mat_used_by.forEach((income_obj, i) => {
+                if(i >= cut_cols_counter) {
+                    return
+                }
 
-            const cur_income_row = incomes_rows[income_obj.incomes_id];
-            let cur_table_row = [];
+                const cur_income_row = incomes_rows[income_obj.incomes_id];
+                let cur_table_row = [];
 
-            //добавим столбец с весом
-            cur_table_row.push(
-                <td  key={'raw-mat-journal_row-' + journal_row_id + '_roww-' + i + '_cell-weight'}>
-                    <b>
-                        {income_obj.used}
-                    </b>
-                </td>
-            );
-
-            incomes_cut_cols_order.forEach((col_name, j) => {
+                //добавим столбец с весом
                 cur_table_row.push(
-                    <td  key={'raw-mat-journal_row-' + journal_row_id + '_roww-' + i + '_cell-' + j}>
-                        {cur_income_row[col_name]}
+                    <td  key={'raw-mat-journal_row-' + journal_row_id + '_roww-' + i + '_cell-weight'}>
+                        <b>
+                            {income_obj.used}
+                        </b>
                     </td>
+                );
+
+                incomes_cut_cols_order.forEach((col_name, j) => {
+                    cur_table_row.push(
+                        <td  key={'raw-mat-journal_row-' + journal_row_id + '_roww-' + i + '_cell-' + j}>
+                            {cur_income_row[col_name]}
+                        </td>
+                    )
+                });
+
+                raw_mat_table_rows.push(
+                    <tr key={'raw-mat-journal_row-' + journal_row_id + '_roww-' + i}>
+                        {cur_table_row}
+                    </tr>
                 )
             });
-
-            raw_mat_table_rows.push(
-                <tr key={'raw-mat-journal_row-' + journal_row_id + '_roww-' + i}>
-                    {cur_table_row}
-                </tr>
-            )
-        });
+        }
 
         return (
             <Popover id={'raw-mat-popover_journal_row-' + journal_row_id}>
@@ -522,11 +531,11 @@ class TableArea extends React.Component {
                     </b> &nbsp;
                     Распределено сырья:
                     <b>
-                        &nbsp;{cur_raw_mat_data.raw_mat_used_total + " кг"}
+                        &nbsp;{cur_raw_mat_data.raw_mat_used_total || 0 + " кг"}
                     </b> &nbsp;
                     Осталось:
                     <b>
-                        &nbsp;{(row_amount_of_raw - cur_raw_mat_data.raw_mat_used_total) + " кг"}
+                        &nbsp;{(row_amount_of_raw - (cur_raw_mat_data.raw_mat_used_total || 0)) + " кг"}
                     </b> &nbsp;
 
                 </Popover.Title>
@@ -586,33 +595,35 @@ class TableArea extends React.Component {
 
         //Заполняем body таблицы
 
-        cur_raw_mat_data.raw_mat_used.forEach((journal_obj, i) => {
-            if(i >= cut_cols_counter) {
-                return
-            }
-
-            const cur_journal_row = journal_rows[journal_obj.journal_id];
-            let cur_table_row = [];
-
-            journal_cut_cols_order.forEach((col_name, j) => {
-                let cell_data = cur_journal_row[col_name];
-                if(typeof cell_data === 'number') {
-                    cell_data = +cell_data.toFixed(3);
+        if(!isEmptyObj(cur_raw_mat_data)) {
+            cur_raw_mat_data.raw_mat_used.forEach((journal_obj, i) => {
+                if(i >= cut_cols_counter) {
+                    return
                 }
 
-                cur_table_row.push(
-                    <td  key={'raw-mat-incomes_row-' + incomes_row_id + '_roww-' + i + '_cell-' + j}>
-                        {cell_data}
-                    </td>
+                const cur_journal_row = journal_rows[journal_obj.journal_id];
+                let cur_table_row = [];
+
+                journal_cut_cols_order.forEach((col_name, j) => {
+                    let cell_data = cur_journal_row[col_name];
+                    if(typeof cell_data === 'number') {
+                        cell_data = +cell_data.toFixed(3);
+                    }
+
+                    cur_table_row.push(
+                        <td  key={'raw-mat-incomes_row-' + incomes_row_id + '_roww-' + i + '_cell-' + j}>
+                            {cell_data}
+                        </td>
+                    )
+                });
+
+                raw_mat_table_rows.push(
+                    <tr key={'raw-mat-incomes_row-' + incomes_row_id + '_roww-' + i}>
+                        {cur_table_row}
+                    </tr>
                 )
             });
-
-            raw_mat_table_rows.push(
-                <tr key={'raw-mat-incomes_row-' + incomes_row_id + '_roww-' + i}>
-                    {cur_table_row}
-                </tr>
-            )
-        });
+        }
 
         return (
             <Popover id={'raw-mat-popover_incomes_row-' + incomes_row_id}>
@@ -690,7 +701,6 @@ class TableArea extends React.Component {
             </Container>
         )
     }
-
 
     render() {
         let area_name,

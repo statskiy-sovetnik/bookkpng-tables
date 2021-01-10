@@ -22,6 +22,10 @@ function removeCookie(name) {
     }
 }
 
+function isEmptyObj(obj) {
+    return Object.keys(obj).length === 0;
+}
+
 //Validation _________________
 
 function isRawMatNameValid(value) {
@@ -51,4 +55,4 @@ function formatDay(day) {
     return (new_day.length === 1) ? '0' + new_day : new_day;
 }
 
-export {getCookieValue, removeCookie, isRawMatNameValid, isProviderNameValid, convertDateToMysqlDate};
+export {getCookieValue, removeCookie, isRawMatNameValid, isProviderNameValid, convertDateToMysqlDate, isEmptyObj};
