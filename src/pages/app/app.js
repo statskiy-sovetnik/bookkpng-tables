@@ -278,7 +278,7 @@ class App extends React.Component {
                 color: '#90e049',
                 name: 'Mercedes AMG GT S 4-door Coupe',
             },
-        }
+        };
 
         this.updateRawMatDataFromDb('/src/php/get_raw_mat_data.php', user_key).then(
             rawMatData => {
@@ -339,18 +339,18 @@ class App extends React.Component {
             }
         ).then(
             body => {
-                this.filterRawMatDataFromDb(body);
+                filterRawMatDataFromDb(body);
                 raw_mat_data = body;
 
                 this.props.loadRawMatData(raw_mat_data);
                 return raw_mat_data;
             }
         );
-    }
 
-    filterRawMatDataFromDb(raw_mat_data) { //Изменяет некоторые строковые значения на числовые,
-        for(let id in raw_mat_data) {
-            raw_mat_data[id].price = +raw_mat_data[id].price;
+        function filterRawMatDataFromDb(raw_mat_data) { //Изменяет некоторые строковые значения на числовые,
+            for(let id in raw_mat_data) {
+                raw_mat_data[id].price = +raw_mat_data[id].price;
+            }
         }
     }
 
@@ -381,78 +381,76 @@ class App extends React.Component {
             }
         ).then(
             body => {
-                console.log('Ready to update');
-                return this.getUpdatedJournalRows(body, raw_mat_usage_for_journal, raw_mat_data);
+                return getUpdatedJournalRows(body, raw_mat_usage_for_journal, raw_mat_data);
             }
         );
-    }
 
-    getUpdatedJournalRows(rows_data, raw_mat_usage_for_journal, raw_mat_data) {
-        let rows_updated = {};
+        function getUpdatedJournalRows(rows_data, raw_mat_usage_for_journal, raw_mat_data) {
+            let rows_updated = {};
 
-        if(isEmptyObj(raw_mat_data) || isEmptyObj(rows_data) || isEmptyObj(raw_mat_usage_for_journal)) {
-            return {};
-        }
-
-        console.log(rows_data);
-        for(let id in rows_data) {
-            //Находим данные нужного сырья
-
-            const raw_mat_id = rows_data[id].raw_mat_id;
-            let cur_row_raw_mat_data = {};
-            Object.assign(cur_row_raw_mat_data, raw_mat_data[raw_mat_id]);
-            const raw_mat_price = cur_row_raw_mat_data.price;
-            const row_total_amount = rows_data[id].amount;
-
-            //Устанавливаем amount_data (имеем только amount)
-            rows_data[id].amount_data = {
-                amount_total: +row_total_amount,
-                amount_used: [],
+            if(isEmptyObj(raw_mat_data) || isEmptyObj(rows_data) || isEmptyObj(raw_mat_usage_for_journal)) {
+                return {};
             }
-            delete rows_data[id].amount;
 
-            let cur_sum = rows_data[id].amount_data.amount_total * raw_mat_price;
-            let cur_expenses_total = 0;
-            let cur_raw_mat_used = [];
-            let cur_raw_mat_used_total = 0;
+            for(let id in rows_data) {
+                //Находим данные нужного сырья
 
-            rows_data[id].expenses.forEach((expense, i) => {
-                expense.amount = +expense.amount;  //преобразуем в число (из бд приходит строка)
-                cur_expenses_total += expense.amount;
-            });
+                const raw_mat_id = rows_data[id].raw_mat_id;
+                let cur_row_raw_mat_data = {};
+                Object.assign(cur_row_raw_mat_data, raw_mat_data[raw_mat_id]);
+                const raw_mat_price = cur_row_raw_mat_data.price;
+                const row_total_amount = rows_data[id].amount;
 
-            //Устанавливаем amount_used для текущей строки
-            raw_mat_usage_for_journal.forEach((raw_mat_obj) => {
-                const cur_journal_id = raw_mat_obj.journal_id;
-                if(cur_journal_id !== +id) {
-                    return;
+                //Устанавливаем amount_data (имеем только amount)
+                rows_data[id].amount_data = {
+                    amount_total: +row_total_amount,
+                    amount_used: [],
                 }
+                delete rows_data[id].amount;
 
-                cur_raw_mat_used_total = raw_mat_obj.raw_mat_used_total;
-                cur_raw_mat_used = raw_mat_obj.raw_mat_used_by.slice()
-            });
+                let cur_sum = rows_data[id].amount_data.amount_total * raw_mat_price;
+                let cur_expenses_total = 0;
+                let cur_raw_mat_used = [];
+                let cur_raw_mat_used_total = 0;
 
-            const db_date_str = rows_data[id].date;
-            const db_date = parse(db_date_str, 'yyyy-MM-dd', +new Date());
-            const date_formated_str = format(db_date, 'dd/MM/yyyy');
+                rows_data[id].expenses.forEach((expense, i) => {
+                    expense.amount = +expense.amount;  //преобразуем в число (из бд приходит строка)
+                    cur_expenses_total += expense.amount;
+                });
 
-            rows_updated[id] = {
-                ...rows_data[id],
-                sum: cur_sum,
-                date: date_formated_str,
-                name: cur_row_raw_mat_data.name,
-                provider_name: cur_row_raw_mat_data.provider_name,
-                price: raw_mat_price,
-                total: cur_sum + cur_expenses_total,
-                cost_price: (cur_sum + cur_expenses_total) / rows_data[id].amount_data.amount_total,
-                amount_data: {
-                    amount_total: rows_data[id].amount_data.amount_total,
-                    amount_used_total: cur_raw_mat_used_total,
-                    amount_used: cur_raw_mat_used,
+                //Устанавливаем amount_used для текущей строки
+                raw_mat_usage_for_journal.forEach((raw_mat_obj) => {
+                    const cur_journal_id = raw_mat_obj.journal_id;
+                    if(cur_journal_id !== +id) {
+                        return;
+                    }
+
+                    cur_raw_mat_used_total = raw_mat_obj.raw_mat_used_total;
+                    cur_raw_mat_used = raw_mat_obj.raw_mat_used_by.slice()
+                });
+
+                const db_date_str = rows_data[id].date;
+                const db_date = parse(db_date_str, 'yyyy-MM-dd', +new Date());
+                const date_formated_str = format(db_date, 'dd/MM/yyyy');
+
+                rows_updated[id] = {
+                    ...rows_data[id],
+                    sum: cur_sum,
+                    date: date_formated_str,
+                    name: cur_row_raw_mat_data.name,
+                    provider_name: cur_row_raw_mat_data.provider_name,
+                    price: raw_mat_price,
+                    total: cur_sum + cur_expenses_total,
+                    cost_price: (cur_sum + cur_expenses_total) / rows_data[id].amount_data.amount_total,
+                    amount_data: {
+                        amount_total: rows_data[id].amount_data.amount_total,
+                        amount_used_total: cur_raw_mat_used_total,
+                        amount_used: cur_raw_mat_used,
+                    }
                 }
             }
+            return rows_updated;
         }
-        return rows_updated;
     }
 
     getUpdatedIncomesRows(rows_data, journal_rows_data, raw_mat_usage, raw_mat_data) {
