@@ -314,9 +314,10 @@ class App extends React.Component {
                     raw_mat_obj.raw_mat_used.forEach((value_obj) => {
                         //Находим id сырья, имея id ряда в Журнале
                         const cur_raw_mat_id = journal_rows_data[value_obj.journal_id].raw_mat_id;
-                        const cur_raw_mat_price = raw_mat_data[cur_raw_mat_id].price;
+                        //const cur_raw_mat_price = raw_mat_data[cur_raw_mat_id].price;
+                        const journal_row_cost_price = +journal_rows_data[value_obj.journal_id].cost_price;
 
-                        cur_sum_of_raw += cur_raw_mat_price * value_obj.used;
+                        cur_sum_of_raw += journal_row_cost_price * +value_obj.used;
                     });
                 });
 
