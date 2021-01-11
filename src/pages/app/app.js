@@ -30,51 +30,6 @@ class App extends React.Component {
         let raw_mat_usage = [];
         let raw_mat_usage_for_journal = [];
         let journal_rows_data = {};
-        const incomes_rows_data = {
-            1: {
-                date: '18/03/2019',
-                name: 'Бампер дроблёный',
-                customer_name: 'ИП Бурунов Олег',
-                amount: 125.70,
-                price: 664.50,
-                expenses: [
-                    {
-                        id: 7,
-                        amount: 1145.00
-                    }
-                ],
-            },
-            2: {
-                date: '19/03/2019',
-                name: 'Недодроблёнка',
-                customer_name: 'Газпром Нефтьть',
-                amount: 865.70,
-                amount_of_raw: 1350.00,
-                price: 83.50,
-                expenses: [
-                    {
-                        id: 7,
-                        amount: 1145.00
-                    }
-                ],
-                sum_of_raw: 43050.00,
-            },
-            3: {
-                date: '18/03/2019',
-                name: 'Стекло-угле-платик-резина волокно',
-                customer_name: 'Самсунг Ентерпрайзез',
-                amount: 458.70,
-                amount_of_raw: 677.00,
-                price: 84.50,
-                expenses: [
-                    {
-                        id: 7,
-                        amount: 1145.00
-                    }
-                ],
-                sum_of_raw: 43050.00,
-            },
-        };
         const expenses_data = {
             0: {
                 color: '#e06c5d',
@@ -128,15 +83,15 @@ class App extends React.Component {
                     raw_mat_usage_for_journal, raw_mat_data);
             }
         ).then(
+            //Обновляем incomes _______________
+
             journal_rows_upd => {
                 Object.assign(journal_rows_data, journal_rows_upd);
-
-                console.log('Сейчас я обновлю и загружу incomes');
-                const incomes_rows_updated = this.getUpdatedIncomesRows(incomes_rows_data, journal_rows_data, raw_mat_usage,
-                    raw_mat_data);
-
-                //Загрузка в хранилище:
-                this.props.loadDataBaseIncomes(incomes_rows_updated);
+                return this.updateIncomesRowsFromDb('/src/php/get_incomes_rows.php', user_key, raw_mat_usage,
+                    raw_mat_data, journal_rows_data);
+            }
+        ).then(
+            incomes_rows_upd => {
                 this.props.loadExpensesData(expenses_data);
             }
         );
@@ -209,7 +164,6 @@ class App extends React.Component {
                     return;
                 }
 
-                console.log('Приняли строки');
                 return response.json();
             },
             error => {
@@ -289,6 +243,102 @@ class App extends React.Component {
                     }
                 }
             }
+            return rows_updated;
+        }
+    }
+
+    updateIncomesRowsFromDb(source, user_key, raw_mat_usage, raw_mat_data, journal_rows) {
+        let fetchBody = new FormData();
+        fetchBody.append('key', user_key);
+
+        return fetch(source, {
+            method: 'POST',
+            body: fetchBody,
+        }).then(
+            response => {
+                if(response.status === 520) {
+                    alert('Ошибка при подключении к серверу');
+                    return;
+                }
+                if(response.status !== 200) {
+                    alert('Неизвестная серверная ошибка');
+                    return;
+                }
+
+                console.log('Приняли строки доходов');
+                return response.json();
+            },
+            error => {
+                alert('Неизвестная ошибка при обработке запроса');
+                console.log('Fetch error: ', error);
+            }
+        ).then(
+            body => {
+                const incomes_rows_upd = getUpdatedIncomesRows(body, journal_rows, raw_mat_usage, raw_mat_data);
+                this.props.loadDataBaseIncomes(incomes_rows_upd);
+                return incomes_rows_upd;
+            }
+        );
+
+        function getUpdatedIncomesRows(rows_data, journal_rows_data, raw_mat_usage, raw_mat_data) {
+            let rows_updated = {};
+
+            if(isEmptyObj(rows_data) || isEmptyObj(journal_rows_data) || isEmptyObj(raw_mat_usage) || isEmptyObj(raw_mat_data)) {
+                return {};
+            }
+
+            for(let id in rows_data) {
+                const cur_amount = rows_data[id].amount || 0;
+                let cur_sum = cur_amount * rows_data[id].price || 0;
+                let cur_expenses_total = 0;
+                let cur_amount_of_raw = 0;
+                let cur_sum_of_raw = 0;
+
+                //Считаем прочие расходы (всего)
+                if(rows_data[id].expenses) {
+                    rows_data[id].expenses.forEach((expense, i) => {
+                        expense.amount = +expense.amount;
+                        cur_expenses_total += expense.amount;
+                    });
+                }
+
+                //Задать amount_of_raw, sum_of_raw
+                raw_mat_usage.forEach((raw_mat_obj) => {
+                    if(raw_mat_obj.incomes_id != id) {
+                        return;
+                    }
+
+                    cur_amount_of_raw = raw_mat_obj.raw_mat_used_total || 0;
+
+                    //Считаем, сколько всего потрачено на сырьё (sum_of_raw)
+                    raw_mat_obj.raw_mat_used.forEach((value_obj) => {
+                        //Находим id сырья, имея id ряда в Журнале
+                        const cur_raw_mat_id = journal_rows_data[value_obj.journal_id].raw_mat_id;
+                        const cur_raw_mat_price = raw_mat_data[cur_raw_mat_id].price;
+
+                        cur_sum_of_raw += cur_raw_mat_price * value_obj.used;
+                    });
+                });
+
+                const blockage_perc = (cur_amount_of_raw - cur_amount) / cur_amount_of_raw * 100;
+                const date_db_str = rows_data[id].date || "";
+                const date_db = parse(date_db_str, 'yyyy-MM-dd', new Date());
+                const formated_date_str = format(date_db, 'dd/MM/yyyy');
+
+                rows_updated[id] = {
+                    ...rows_data[id],
+                    sum: cur_sum,
+                    date: formated_date_str,
+                    amount_of_raw: cur_amount_of_raw,
+                    sum_of_raw: cur_sum_of_raw,
+                    cost_price: (cur_expenses_total + cur_sum_of_raw) / cur_amount,
+                    blockage_perc: blockage_perc,
+                    expenses_total: cur_sum_of_raw + cur_expenses_total,
+                    revenue: cur_sum - cur_expenses_total - cur_sum_of_raw,
+                    profitability: (cur_sum - cur_expenses_total - cur_sum_of_raw) / cur_sum * 100,
+                }
+            }
+
             return rows_updated;
         }
     }
@@ -401,61 +451,7 @@ class App extends React.Component {
         }
     }
 
-    getUpdatedIncomesRows(rows_data, journal_rows_data, raw_mat_usage, raw_mat_data) {
-        let rows_updated = {};
 
-        if(isEmptyObj(rows_data) || isEmptyObj(journal_rows_data) || isEmptyObj(raw_mat_usage) || isEmptyObj(raw_mat_data)) {
-            return {};
-        }
-        console.log('In incomes: ', raw_mat_usage);
-        console.log(isEmptyObj(raw_mat_usage));
-
-        for(let id in rows_data) {
-            const cur_amount = rows_data[id].amount;
-            let cur_sum = cur_amount * rows_data[id].price;
-            let cur_expenses_total = 0;
-            let cur_amount_of_raw = 0;
-            let cur_sum_of_raw = 0;
-
-            //Считаем прочие расходы (всего)
-            rows_data[id].expenses.forEach((expense, i) => {
-                cur_expenses_total += expense.amount;
-            });
-
-            //Задать amount_of_raw, sum_of_raw
-            raw_mat_usage.forEach((raw_mat_obj) => {
-                if(raw_mat_obj.incomes_id != id) {
-                    return;
-                }
-
-                cur_amount_of_raw = raw_mat_obj.raw_mat_used_total;
-
-                //Считаем, сколько всего потрачено на сырьё (sum_of_raw)
-                raw_mat_obj.raw_mat_used.forEach((value_obj) => {
-                    //Находим id сырья, имея id ряда в Журнале
-                    const cur_raw_mat_id = journal_rows_data[value_obj.journal_id].raw_mat_id;
-                    const cur_raw_mat_price = raw_mat_data[cur_raw_mat_id].price;
-
-                    cur_sum_of_raw += cur_raw_mat_price * value_obj.used;
-                });
-            });
-
-            const blockage_perc = (cur_amount_of_raw - cur_amount) / cur_amount_of_raw * 100;
-            rows_updated[id] = {
-                ...rows_data[id],
-                sum: cur_sum,
-                amount_of_raw: cur_amount_of_raw,
-                sum_of_raw: cur_sum_of_raw,
-                cost_price: (cur_expenses_total + cur_sum_of_raw) / cur_amount,
-                blockage_perc: blockage_perc,
-                expenses_total: cur_sum_of_raw + cur_expenses_total,
-                revenue: cur_sum - cur_expenses_total - cur_sum_of_raw,
-                profitability: (cur_sum - cur_expenses_total - cur_sum_of_raw) / cur_sum * 100,
-            }
-        }
-
-        return rows_updated;
-    }
 
     render() {
         const journal_sort_names = ['Наименованию', 'Дате', 'Поставщику', 'Кол-ву', 'Цене', 'Сумме', 'Расходам'];
