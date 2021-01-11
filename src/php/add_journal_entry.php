@@ -21,7 +21,7 @@ try {
     $initConn = new PDO("mysql:host=$serverName;dbname=$initDatabase", $adminName, $adminPassword);
 }
 catch (PDOException $ex) {
-    header('HTTP/1.1 520 Server Connection Error', 520);
+    header('HTTP/1.1 520 Server Connection Error', true,520);
     die();
 }
 
@@ -29,7 +29,7 @@ try {
     $keyConn = new PDO("mysql:host=$serverName;dbname=$userKey", $adminName, $adminPassword);
 }
 catch(PDOException $ex) {
-    header('HTTP/1.1 520 Server connection error', 520);
+    header('HTTP/1.1 520 Server connection error', true,520);
     die();
 }
 
@@ -84,7 +84,7 @@ try {
     unset($sum, $exp_id);
 }
 catch (PDOException $ex) {
-    header('HTTP/1.1 500 Mysql error', 500);
+    header('HTTP/1.1 500 Mysql error', true,500);
     die();
 }
 

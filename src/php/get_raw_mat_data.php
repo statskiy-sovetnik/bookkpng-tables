@@ -12,7 +12,7 @@ try {
     $userKeyConn = new PDO("mysql:host=$serverName; dbname=$userKey", $adminName, $pass);
 }
 catch(PDOException $ex) {
-    header('HTTP/1.1. 520 Server connection error', 520);
+    header('HTTP/1.1. 520 Server connection error', true,520);
     die();
 }
 
@@ -54,7 +54,7 @@ try {
     echo json_encode($raw_mat_data);
 }
 catch(PDOException $ex) {
-    header('HTTP/1.1. 500 Mysql error', 500);
+    header('HTTP/1.1. 500 Mysql error', true,500);
     die();
 }
 

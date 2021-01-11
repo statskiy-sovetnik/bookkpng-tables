@@ -13,7 +13,6 @@ import {getCookieValue, isEmptyObj} from "../../common";
 /*___ Libs _________________*/
 import parse from 'date-fns/parse';
 import format from 'date-fns/format';
-import {resolvePlugin} from "@babel/core/lib/config/files/index-browser";
 
 class App extends React.Component {
     constructor(props) {
