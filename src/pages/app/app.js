@@ -13,6 +13,7 @@ import {getCookieValue, isEmptyObj} from "../../common";
 /*___ Libs _________________*/
 import parse from 'date-fns/parse';
 import format from 'date-fns/format';
+import {resolvePlugin} from "@babel/core/lib/config/files/index-browser";
 
 class App extends React.Component {
     constructor(props) {
@@ -25,183 +26,12 @@ class App extends React.Component {
         this.props.changeUserName(user_name);
         this.props.changeUserKey(user_key);
 
-        //Берёшь из базы данных raw_mat_usage
-
-        let raw_mat_usage = [
-            {
-                incomes_id: 0,
-                raw_mat_used: [
-                    {
-                        journal_id: 13,
-                        used: 74.00,
-                    },
-                    {
-                        journal_id: 16,
-                        used: 34.50,
-                    }
-                ],
-            },
-            {
-                incomes_id: 1,
-                raw_mat_used: [
-                    {
-                        journal_id: 13,
-                        used: 88.00,
-                    }
-                ],
-            },
-            {
-                incomes_id: 2,
-                raw_mat_used: [
-                    {
-                        journal_id: 13,
-                        used: 22.00,
-                    },
-                    {
-                        journal_id: 16,
-                        used: 37.00,
-                    },
-                ],
-            }
-        ];
-        raw_mat_usage = this.getUpdatedRawMatUsage(raw_mat_usage);
-        const raw_mat_usage_for_journal = this.reformRawMatUsageForJournal(raw_mat_usage);
-
-        //Здесь собираешь данные о сырье
-
-        /*const raw_mat_data = {
-            0: {
-                name: 'Название сырья среднее',
-                provider_name: '"ООО" Мясо России',
-                price: 38.5,
-            },
-            1: {
-                name: 'Так я назвал сырьё',
-                provider_name: '"ОАО" Китай Голимый',
-                price: 184.5
-            },
-            2: {
-                name: 'Другое сырьё',
-                provider_name: 'Библиотеки Пермского края',
-                price: 67.5,
-            }
-        }*/
         let raw_mat_data = {};
+        let raw_mat_usage = [];
+        let raw_mat_usage_for_journal = [];
         let journal_rows_data = {};
-        /*const journal_rows_data = {
-            0: {
-                date: '27/04/2020',
-                raw_mat_id: 1,
-                amount_data: {
-                    amount_total: 180.00,
-                    amount_used: [],
-                },
-                expenses: [
-                    {
-                        id: 0,
-                        amount: 1680.50
-                    },
-                    {
-                        id: 1,
-                        amount: 440.33
-                    },
-                    {
-                        id: 2,
-                        amount: 480.00
-                    },
-                    {
-                        id: 3,
-                        amount: 5402.00
-                    },
-                    {
-                        id: 4,
-                        amount: 111.18
-                    },
-                    {
-                        id: 5,
-                        amount: 560.00
-                    },
-                    {
-                        id: 6,
-                        amount: 1340.00
-                    },
-                    {
-                        id: 7,
-                        amount: 1145.00
-                    }
-                ]
-            },
-            1: {
-                date: '27/03/2020',
-                raw_mat_id: 2,
-                amount_data: {
-                    amount_total: 54.00,
-                    amount_used: [],
-                },
-                expenses: [
-                    {
-                        id: 0,
-                        amount: 1680.50
-                    },
-                    {
-                        id: 2,
-                        amount: 480.00
-                    },
-                    {
-                        id: 4,
-                        amount: 111.18
-                    },
-                    {
-                        id: 5,
-                        amount: 560.00
-                    },
-                ]
-            },
-            2: {
-                date: '24/04/2020',
-                raw_mat_id: 1,
-                amount_data: {
-                    amount_total: 245.00,
-                    amount_used: [],
-                },
-                expenses: [
-                    {
-                        id: 0,
-                        amount: 1680.50
-                    },
-                    {
-                        id: 1,
-                        amount: 440.33
-                    },
-                    {
-                        id: 2,
-                        amount: 480.00
-                    },
-                    {
-                        id: 3,
-                        amount: 5402.00
-                    },
-                    {
-                        id: 4,
-                        amount: 111.18
-                    },
-                    {
-                        id: 5,
-                        amount: 560.00
-                    },
-                    {
-                        id: 6,
-                        amount: 1340.00
-                    },
-                    {
-                        id: 7,
-                        amount: 1145.00
-                    }
-                ]
-            },
-        }*/
         const incomes_rows_data = {
-            0: {
+            1: {
                 date: '18/03/2019',
                 name: 'Бампер дроблёный',
                 customer_name: 'ИП Бурунов Олег',
@@ -214,7 +44,7 @@ class App extends React.Component {
                     }
                 ],
             },
-            1: {
+            2: {
                 date: '19/03/2019',
                 name: 'Недодроблёнка',
                 customer_name: 'Газпром Нефтьть',
@@ -229,7 +59,7 @@ class App extends React.Component {
                 ],
                 sum_of_raw: 43050.00,
             },
-            2: {
+            3: {
                 date: '18/03/2019',
                 name: 'Стекло-угле-платик-резина волокно',
                 customer_name: 'Самсунг Ентерпрайзез',
@@ -284,23 +114,30 @@ class App extends React.Component {
             rawMatData => {
                 Object.assign(raw_mat_data, rawMatData);
 
-                this.updateJournalRowsFromDb('/src/php/get_journal_rows.php', user_key, raw_mat_usage_for_journal,
-                    raw_mat_data).then(
+                //Обновляем raw_mat_usage и raw_mat_usage_for_journal
+                return this.updateRawMatUsageFromDb('/src/php/get_raw_mat_usage.php', user_key);
+            }
+        ).then(
+            //Обновляем journal_rows _______________
 
-                    journal_rows_upd => {
-                        journal_rows_data = journal_rows_upd;
+            all_raw_mat_usage => {
+                raw_mat_usage = all_raw_mat_usage.raw_mat_usage;
+                raw_mat_usage_for_journal = all_raw_mat_usage.raw_mat_usage_for_journal;
 
-                        const incomes_rows_updated = this.getUpdatedIncomesRows(incomes_rows_data, journal_rows_data, raw_mat_usage,
-                            raw_mat_data);
+                return this.updateJournalRowsFromDb('/src/php/get_journal_rows.php', user_key,
+                    raw_mat_usage_for_journal, raw_mat_data);
+            }
+        ).then(
+            journal_rows_upd => {
+                Object.assign(journal_rows_data, journal_rows_upd);
 
-                        //Загрузка в хранилище:
-                        this.props.loadDataBaseJournal(journal_rows_data);
-                        this.props.loadDataBaseIncomes(incomes_rows_updated);
-                        this.props.loadExpensesData(expenses_data);
-                        this.props.loadRawMatUsage(raw_mat_usage);
-                        this.props.loadRawMatUsageForJournal(raw_mat_usage_for_journal);
-                    }
-                )
+                console.log('Сейчас я обновлю и загружу incomes');
+                const incomes_rows_updated = this.getUpdatedIncomesRows(incomes_rows_data, journal_rows_data, raw_mat_usage,
+                    raw_mat_data);
+
+                //Загрузка в хранилище:
+                this.props.loadDataBaseIncomes(incomes_rows_updated);
+                this.props.loadExpensesData(expenses_data);
             }
         );
 
@@ -381,7 +218,10 @@ class App extends React.Component {
             }
         ).then(
             body => {
-                return getUpdatedJournalRows(body, raw_mat_usage_for_journal, raw_mat_data);
+                const journal_rows_upd = getUpdatedJournalRows(body, raw_mat_usage_for_journal, raw_mat_data);
+                this.props.loadDataBaseJournal(journal_rows_upd);
+
+                return journal_rows_upd;
             }
         );
 
@@ -420,7 +260,7 @@ class App extends React.Component {
 
                 //Устанавливаем amount_used для текущей строки
                 raw_mat_usage_for_journal.forEach((raw_mat_obj) => {
-                    const cur_journal_id = raw_mat_obj.journal_id;
+                    const cur_journal_id = +raw_mat_obj.journal_id;
                     if(cur_journal_id !== +id) {
                         return;
                     }
@@ -450,6 +290,114 @@ class App extends React.Component {
                 }
             }
             return rows_updated;
+        }
+    }
+
+    updateRawMatUsageFromDb(source, user_key) {
+        let fetchBody = new FormData();
+        fetchBody.append('key', user_key);
+
+        return fetch(source, {
+            method: 'POST',
+            body: fetchBody,
+        }).then(
+            response => {
+                if(response.status === 500) {
+                    alert('Ошибка mysql-запроса');
+                    return;
+                }
+                if(response.status === 520) {
+                    alert('Ошибка при подключении к базе данных');
+                    return;
+                }
+                if(response.status !== 200) {
+                    alert('Неизвестная ошибка при обработке запроса');
+                    return response.text();
+                }
+
+                console.log('Приняли данные об использовании');
+                return response.json();
+            },
+            error => {
+                alert('Неизвестная ошибка при обработке запроса');
+                console.log("Fetch error: ", error);
+            }
+        ).then(
+            body => {
+                const raw_mat_usage_upd = getUpdatedRawMatUsage(body);
+                const raw_mat_usage_for_journal = reformRawMatUsageForJournal(raw_mat_usage_upd);
+                this.props.loadRawMatUsage(raw_mat_usage_upd);
+                this.props.loadRawMatUsageForJournal(raw_mat_usage_for_journal);
+
+                return {
+                    raw_mat_usage: raw_mat_usage_upd,
+                    raw_mat_usage_for_journal: raw_mat_usage_for_journal,
+                };
+            }
+        );
+
+        function getUpdatedRawMatUsage(raw_mat_usage) {
+            //здесь просто считает общее кол-во сырья и добавляет в каждый объект массива
+            let raw_mat_usage_upd = raw_mat_usage.slice();
+
+            if(isEmptyObj(raw_mat_usage)) {
+                return {};
+            }
+
+            raw_mat_usage_upd.forEach((raw_mat_usage_obj) => {
+                let cur_used_total = 0;
+
+                raw_mat_usage_obj.raw_mat_used.forEach((raw_obj) => {
+                    raw_obj.used = +raw_obj.used;
+                    cur_used_total += raw_obj.used;
+                });
+
+                raw_mat_usage_obj.raw_mat_used_total = cur_used_total;
+            });
+
+            return raw_mat_usage_upd;
+        }
+
+        function reformRawMatUsageForJournal(raw_mat_usage) {
+            let raw_mat_usage_reformed = [];
+            let journal_ids_used = [];
+
+            if(isEmptyObj(raw_mat_usage)) {
+                return {};
+            }
+
+            raw_mat_usage.forEach((incomes_obj) => {
+                const incomes_id = incomes_obj.incomes_id;
+                const raw_mat_used = incomes_obj.raw_mat_used;
+
+                raw_mat_used.forEach((raw_mat_obj) => {
+                    if(journal_ids_used.indexOf(raw_mat_obj.journal_id) === -1) {
+                        journal_ids_used.push(raw_mat_obj.journal_id);
+                        raw_mat_usage_reformed.push({
+                            journal_id: raw_mat_obj.journal_id,
+                            raw_mat_used_total: 0,
+                            raw_mat_used_by: [],
+                        })
+                    }
+                    journal_ids_used.push(raw_mat_obj.journal_id);
+
+                    //Добавим используемое сырьё
+
+                    raw_mat_usage_reformed.forEach((obj) => {
+                        if(obj.journal_id === raw_mat_obj.journal_id) {
+
+                            obj.raw_mat_used_by.push({
+                                incomes_id: incomes_id,
+                                used: raw_mat_obj.used,
+                            });
+
+                            obj.raw_mat_used_total += raw_mat_obj.used;
+                        }
+                    });
+                });
+            });
+
+            return raw_mat_usage_reformed;
         }
     }
 
@@ -507,69 +455,6 @@ class App extends React.Component {
         }
 
         return rows_updated;
-    }
-
-    getUpdatedRawMatUsage(raw_mat_usage) {
-        //здесь просто считает общее кол-во сырья и добавляет в каждый объект массива
-        let raw_mat_usage_upd = raw_mat_usage.slice();
-
-        if(isEmptyObj(raw_mat_usage)) {
-            return {};
-        }
-
-        raw_mat_usage_upd.forEach((raw_mat_usage_obj) => {
-            let cur_used_total = 0;
-
-            raw_mat_usage_obj.raw_mat_used.forEach((raw_obj) => {
-               cur_used_total += raw_obj.used;
-            });
-
-            raw_mat_usage_obj.raw_mat_used_total = cur_used_total;
-        });
-
-        return raw_mat_usage_upd;
-    }
-
-    reformRawMatUsageForJournal(raw_mat_usage) {
-        let raw_mat_usage_reformed = [];
-        let journal_ids_used = [];
-
-        if(isEmptyObj(raw_mat_usage)) {
-            return {};
-        }
-
-        raw_mat_usage.forEach((incomes_obj) => {
-            const incomes_id = incomes_obj.incomes_id;
-            const raw_mat_used = incomes_obj.raw_mat_used;
-
-            raw_mat_used.forEach((raw_mat_obj) => {
-                if(journal_ids_used.indexOf(raw_mat_obj.journal_id) === -1) {
-                    journal_ids_used.push(raw_mat_obj.journal_id);
-                    raw_mat_usage_reformed.push({
-                        journal_id: raw_mat_obj.journal_id,
-                        raw_mat_used_total: 0,
-                        raw_mat_used_by: [],
-                    })
-                }
-                journal_ids_used.push(raw_mat_obj.journal_id);
-
-                //Добавим используемое сырьё
-
-                raw_mat_usage_reformed.forEach((obj) => {
-                    if(obj.journal_id === raw_mat_obj.journal_id) {
-
-                        obj.raw_mat_used_by.push({
-                            incomes_id: incomes_id,
-                            used: raw_mat_obj.used,
-                        });
-
-                        obj.raw_mat_used_total += raw_mat_obj.used;
-                    }
-                });
-            });
-        });
-
-        return raw_mat_usage_reformed;
     }
 
     render() {

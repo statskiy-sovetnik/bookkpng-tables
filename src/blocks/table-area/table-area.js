@@ -458,7 +458,7 @@ class TableArea extends React.Component {
         //Находим объект с данными, соответствующими этому ряду в журнале
         if(!isEmptyObj(raw_mat_usage_for_journal)) {
             raw_mat_usage_for_journal.forEach((obj) => {
-                if(obj.journal_id === +journal_row_id) {
+                if(+obj.journal_id === +journal_row_id) {
                     Object.assign(cur_raw_mat_data, obj);
                 }
             });
@@ -495,6 +495,9 @@ class TableArea extends React.Component {
                 }
 
                 const cur_income_row = incomes_rows[income_obj.incomes_id];
+                if(!cur_income_row) {
+                    return;
+                }
                 let cur_table_row = [];
 
                 //добавим столбец с весом
@@ -531,7 +534,7 @@ class TableArea extends React.Component {
                     </b> &nbsp;
                     Распределено сырья:
                     <b>
-                        &nbsp;{cur_raw_mat_data.raw_mat_used_total || 0 + " кг"}
+                        &nbsp;{(cur_raw_mat_data.raw_mat_used_total || 0) + " кг"}
                     </b> &nbsp;
                     Осталось:
                     <b>
@@ -571,7 +574,7 @@ class TableArea extends React.Component {
 
         //Находим объект с данными, соответствующими этому ряду в Доходах
         raw_mat_usage.forEach((obj) => {
-            if(obj.incomes_id === +incomes_row_id) {
+            if(+obj.incomes_id === +incomes_row_id) {
                 Object.assign(cur_raw_mat_data, obj);
             }
         });
@@ -602,6 +605,9 @@ class TableArea extends React.Component {
                 }
 
                 const cur_journal_row = journal_rows[journal_obj.journal_id];
+                if(!cur_journal_row) {
+                    return;
+                }
                 let cur_table_row = [];
 
                 journal_cut_cols_order.forEach((col_name, j) => {
@@ -628,7 +634,7 @@ class TableArea extends React.Component {
         return (
             <Popover id={'raw-mat-popover_incomes_row-' + incomes_row_id}>
                 <Popover.Title as="h5">
-                    Потрачено на сырьё
+                    Затраты на сырьё
                 </Popover.Title>
                 <Popover.Content>
                     <Table

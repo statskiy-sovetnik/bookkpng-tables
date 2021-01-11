@@ -99,6 +99,7 @@ class ButtonSection extends React.Component{
             error => {
                 alert('Неизвестная ошибка при отправке запроса');
                 console.log('Fetch error: ', error);
+
             }
         ).then(
             body => {
