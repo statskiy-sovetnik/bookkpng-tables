@@ -605,6 +605,7 @@ class TableArea extends React.Component {
                 }
 
                 const cur_journal_row = journal_rows[journal_obj.journal_id];
+                const this_raw_mat_used = +journal_obj.used;
                 if(!cur_journal_row) {
                     return;
                 }
@@ -614,6 +615,10 @@ class TableArea extends React.Component {
                     let cell_data = cur_journal_row[col_name];
                     if(typeof cell_data === 'number') {
                         cell_data = +cell_data.toFixed(3);
+                    }
+                    if(col_name === 'total') {
+                        const raw_mat_total = cur_journal_row.amount_data.amount_total || 0;
+                        cell_data = (cell_data / raw_mat_total * this_raw_mat_used).toFixed(3);
                     }
 
                     cur_table_row.push(
