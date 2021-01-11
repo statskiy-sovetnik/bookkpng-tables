@@ -40,6 +40,25 @@ function isProviderNameValid(value) {
         (value + '').length <= 50;
 }
 
+function isFloat(value) {
+    return /^[0-9]*[.]?[0-9]+$/.test('' + value) &&
+        +value >= 0 &&
+        +value < 2147483646;
+}
+
+function setValidation(elem, isValid) {
+    if(isValid) {
+        elem.classList.add('is-valid');
+        elem.classList.remove('is-invalid');
+    }
+    else {
+        elem.classList.add('is-invalid');
+        elem.classList.remove('is-valid');
+    }
+}
+
+/*_______________*/
+
 function convertDateToMysqlDate(date) {
     date = new Date(date);
     return date.getFullYear() + '-' + formatMonth(date.getMonth()) + "-" + formatDay(date.getDate());  //date to yyyy/MM/dd
@@ -55,4 +74,5 @@ function formatDay(day) {
     return (new_day.length === 1) ? '0' + new_day : new_day;
 }
 
-export {getCookieValue, removeCookie, isRawMatNameValid, isProviderNameValid, convertDateToMysqlDate, isEmptyObj};
+export {getCookieValue, removeCookie, isRawMatNameValid, isProviderNameValid, convertDateToMysqlDate, isEmptyObj, formatDay,
+        isFloat, setValidation};

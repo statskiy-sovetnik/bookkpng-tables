@@ -16,7 +16,13 @@ import Dropdown from "react-bootstrap/Dropdown";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
-import {convertDateToMysqlDate, isProviderNameValid, isRawMatNameValid} from "../../../../common";
+import {
+    convertDateToMysqlDate,
+    isFloat,
+    isProviderNameValid,
+    isRawMatNameValid,
+    setValidation
+} from "../../../../common";
 import journalModalSetShowValidation
     from "../../../../store/actionCreators/journal_new_entry_modal/journalModalSetShowValidation";
 
@@ -37,7 +43,7 @@ class ButtonSection extends React.Component{
     handleExpenseInput(expense_id, value, addedExpenses, setAddedExpenses) {
         const new_added_expenses = {};
         Object.assign(new_added_expenses, addedExpenses);
-        new_added_expenses[expense_id] = +value;
+        new_added_expenses[expense_id] = value;
         this.props.setExpensesValid(this.isJournalNewEntryExpensesValid(new_added_expenses));
         setAddedExpenses(new_added_expenses);
     }
@@ -48,7 +54,7 @@ class ButtonSection extends React.Component{
 
     isJournalNewEntryExpensesValid(addedExpenses) {
         for(let exp_id in addedExpenses) {
-            if(addedExpenses[exp_id] === '') {
+            if(!isFloat(addedExpenses[exp_id])) {
                 return false;
             }
         }
@@ -172,7 +178,6 @@ class ButtonSection extends React.Component{
                     <Form.Control type={'number'} maxLength={9}
                                   required
                                   name={'expense-' + expense_id}
-                                  //value={+addedExpenses[expense_id]}
                                   placeholder={'Сумма'}
                                   size={'sm'}
                                   className={'modal__added-expense-input'}
@@ -180,6 +185,9 @@ class ButtonSection extends React.Component{
                                       event.preventDefault();
                                       this.handleExpenseInput(expense_id, event.currentTarget.value, addedExpenses,
                                           setAddedExpenses);
+                                      const value = event.currentTarget.value;
+                                      const isValid = isFloat(value);
+                                      setValidation(event.currentTarget, isValid);
                                   }}
                     />
                     <Button
@@ -217,7 +225,9 @@ class ButtonSection extends React.Component{
                                   onInput={event => {
                                       const value = event.currentTarget.value;
                                       setRawMatName(value);
-                                      this.props.setRawMatValid(isRawMatNameValid(value));
+                                      const isValid = isRawMatNameValid(value);
+                                      this.props.setRawMatValid(isValid);
+                                      setValidation(event.currentTarget, isValid);
                                   }}
                     />
                 </Col>
@@ -232,7 +242,9 @@ class ButtonSection extends React.Component{
                         onInput={event => {
                             const value = event.currentTarget.value;
                             setProviderName(value);
-                            this.props.setProviderNameValid(isProviderNameValid(value));
+                            const isValid = isProviderNameValid(value);
+                            this.props.setProviderNameValid(isValid);
+                            setValidation(event.currentTarget, isValid);
                         }}
                     />
                 </Col>
@@ -246,9 +258,11 @@ class ButtonSection extends React.Component{
                         maxLength={9}
                         type={'number'} size={'sm'}
                         onInput={event => {
-                           const value = +event.currentTarget.value;
+                           const value = event.currentTarget.value;
                            setNewRawMatPrice(value);
-                           this.props.setPriceValid(event.currentTarget.checkValidity());
+                           const isValid = isFloat(value);
+                           this.props.setPriceValid(isValid);
+                           setValidation(event.currentTarget, isValid);
                         }}
                     />
                 </Col>
@@ -269,7 +283,7 @@ class ButtonSection extends React.Component{
                         <Form
                             id={'journal-new-entry-form'}
                             name={'add-entry-form'}
-                            validated={true}
+                            noValidate
                             onSubmit={event => {
                                 event.preventDefault();
                                 this.handleJournalNewEntryFormSubmit(event, event.currentTarget, this.props.rawMatNameValid,
@@ -336,7 +350,7 @@ class ButtonSection extends React.Component{
                                                 setRawMatDate(date.setHours(0, 0, 0, 0));
                                             }}
                                             id={'journal-new-entry-modal-form-date'}
-                                            className={'form-control form-control-sm'}
+                                            className={'form-control form-control-sm is-valid'}
                                             name={'raw_mat_date'}
                                             locale={'ru'}
                                             dateFormat={'dd/MM/yyyy'}
@@ -353,11 +367,15 @@ class ButtonSection extends React.Component{
                                                       min={0}
                                                       max={2147483646}
                                                       required
+                                                      id={'journal-new-entry-modal__raw-mat-amount-input'}
                                                       name={'raw-mat-amount'}
                                                       onInput={event => {
-                                                          const value = +event.currentTarget.value;
+                                                          const value = event.currentTarget.value;
                                                           setRawMatAmount(value);
-                                                          this.props.setAmountValid(event.currentTarget.checkValidity());
+                                                          const isValid = isFloat(value);
+                                                          this.props.setAmountValid(isValid);
+                                                          //Визуальная валидация:
+                                                          setValidation(event.currentTarget, isValid);
                                                       }}
                                         />
                                     </Form.Group>
