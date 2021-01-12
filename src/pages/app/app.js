@@ -91,10 +91,15 @@ class App extends React.Component {
             }
         ).then(
             incomes_rows_upd => {
-                this.props.loadExpensesData(expenses_data);
+                // Обновляем данные о расходах _____________________
+
+                return this.updateExpensesDataFromDb('/src/php/get_expenses_data.php', user_key);
+            }
+        ).then(
+            expenses_data_from_db => {
+                //всё
             }
         );
-
     }
 
     updateRawMatDataFromDb(source, user_key) {
@@ -264,7 +269,6 @@ class App extends React.Component {
                     return;
                 }
 
-                console.log('Приняли строки доходов');
                 return response.json();
             },
             error => {
@@ -365,7 +369,6 @@ class App extends React.Component {
                     return response.text();
                 }
 
-                console.log('Приняли данные об использовании');
                 return response.json();
             },
             error => {
@@ -451,7 +454,41 @@ class App extends React.Component {
         }
     }
 
+    updateExpensesDataFromDb(source, user_key) {
+        let fetchBody = new FormData();
+        fetchBody.append('key', user_key);
 
+        return fetch(source, {
+            method: 'POST',
+            body: fetchBody,
+        }).then(
+            response => {
+                if (response.status === 500) {
+                    alert('Ошибка mysql-запроса');
+                    return;
+                }
+                if (response.status === 520) {
+                    alert('Ошибка при подключении к базе данных');
+                    return;
+                }
+                if (response.status !== 200) {
+                    alert('Неизвестная ошибка при обработке запроса');
+                    return response.text();
+                }
+
+                return response.json();
+            },
+            error => {
+                alert('Неизвестная серверная ошибка');
+                console.log('Fetch error: ', error);
+            }
+        ).then(
+            body => {
+                this.props.loadExpensesData(body);
+                return body;
+            }
+        );
+    }
 
     render() {
         const journal_sort_names = ['Наименованию', 'Дате', 'Поставщику', 'Кол-ву', 'Цене', 'Сумме', 'Расходам'];
