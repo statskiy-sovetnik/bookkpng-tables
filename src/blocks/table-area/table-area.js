@@ -203,10 +203,21 @@ class TableArea extends React.Component {
                 break;
             case 'Кол-ву':
                 rows_keys_sorted.sort((row_id_1, row_id_2) => {
-                    const sum_1 = +rows[row_id_1].amount_data.amount_total;
-                    const sum_2 = +rows[row_id_2].amount_data.amount_total;
-                    let sort_from_least_coef = sort_from_least ? 1 : -1;
+                    //Здесь могут быть строки журнала или строки доходов
+                    let sum_1 = 0, sum_2 = 0;
 
+                    switch (data) {
+                        case 'journal':
+                            sum_1 = +rows[row_id_1].amount_data.amount_total;
+                            sum_2 = +rows[row_id_2].amount_data.amount_total;
+                            break;
+                        case 'incomes':
+                            sum_1 =  +rows[row_id_1].amount;
+                            sum_2 = +rows[row_id_2].amount;
+                            break;
+                    }
+
+                    let sort_from_least_coef = sort_from_least ? 1 : -1;
                     return (sum_1 - sum_2) * sort_from_least_coef;
                 })
                 break;

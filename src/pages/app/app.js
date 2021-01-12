@@ -251,12 +251,8 @@ class App extends React.Component {
             }
         );
 
-        function getUpdatedIncomesRows(rows_data, journal_rows_data, raw_mat_usage, raw_mat_data) {
+        function getUpdatedIncomesRows(rows_data, journal_rows_data, raw_mat_usage) {
             let rows_updated = {};
-
-            if(isEmptyObj(rows_data) || isEmptyObj(journal_rows_data)) {
-                return {};
-            }
 
             for(let id in rows_data) {
                 const cur_amount = rows_data[id].amount || 0;
