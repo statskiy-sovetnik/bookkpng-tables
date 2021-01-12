@@ -23,7 +23,7 @@ function removeCookie(name) {
 }
 
 function isEmptyObj(obj) {
-    return Object.keys(obj).length === 0;
+    return !obj || Object.keys(obj).length === 0;
 }
 
 //Validation _________________

@@ -42,6 +42,7 @@ export default function mapStateToProps(component) {
             return function (state) {
                 return {
                     userKey: state.auth.userKey,
+                    rawMatUsageForJournal: state.raw_mat_usage_for_journal,
                     journalNewEntryModalIsOpen: state.journal.newEntryModalIsOpen,
                     rawMatData: state.raw_mat_data,
                     rawMatId: state.journal_new_entry_modal.form_state.raw_mat_id,

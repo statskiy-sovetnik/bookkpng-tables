@@ -104,6 +104,22 @@ class ButtonSection extends React.Component{
         ).then(
             body => {
                 console.log(body);
+                return body;
+            }
+        ).then(
+            //Обновляем данные о сырье
+            body => {
+                return this.props.updateRawMatDataFromDb('/src/php/get_raw_mat_data.php', this.props.userKey);
+            }
+        ).then(
+            //Обновляем строки журнала
+            raw_mat_data => {
+                return this.props.updateJournalRowsFromDb('/src/php/get_journal_rows.php', this.props.userKey,
+                    this.props.rawMatUsageForJournal, raw_mat_data);
+            }
+        ).then(
+            journal_rows => {
+                //всё
             }
         );
 

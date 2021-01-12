@@ -29,40 +29,6 @@ class App extends React.Component {
         let raw_mat_usage = [];
         let raw_mat_usage_for_journal = [];
         let journal_rows_data = {};
-        const expenses_data = {
-            0: {
-                color: '#e06c5d',
-                name: 'Транспорт',
-            },
-            1: {
-                color: '#826de0',
-                name: 'Ритуальные услуги',
-            },
-            2: {
-                color: '#69ade0',
-                name: 'Электроэнергия и подписка Netflix',
-            },
-            3: {
-                color: '#43e093',
-                name: 'Пиццы с ананасом',
-            },
-            4: {
-                color: '#e09c4b',
-                name: 'Лазертаг с персоналом'
-            },
-            5: {
-                color: '#d7e049',
-                name: 'Прочие расходы',
-            },
-            6: {
-                color: '#e060b4',
-                name: 'Персонал',
-            },
-            7: {
-                color: '#90e049',
-                name: 'Mercedes AMG GT S 4-door Coupe',
-            },
-        };
 
         this.updateRawMatDataFromDb('/src/php/get_raw_mat_data.php', user_key).then(
             rawMatData => {
@@ -497,7 +463,11 @@ class App extends React.Component {
         return(
             <div>
                 <Menu/>
-                <JournalArea data={'journal'} sort_names={journal_sort_names}/>
+                <JournalArea data={'journal'}
+                             sort_names={journal_sort_names}
+                             updateRawMatDataFromDb = {this.updateRawMatDataFromDb.bind(this)}
+                             updateJournalRowsFromDb = {this.updateJournalRowsFromDb.bind(this)}
+                />
                 <IncomesArea data={'incomes'} sort_names={incomes_sort_names}/>
             </div>
         )

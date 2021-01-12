@@ -744,7 +744,11 @@ class TableArea extends React.Component {
             case 'journal':
                 area_name = 'Журнал';
                 table_area_content.push(
-                    <JournalButtonSection data={'journal'}/>
+                    <JournalButtonSection
+                        data={'journal'}
+                        updateRawMatDataFromDb = {this.props.updateRawMatDataFromDb}
+                        updateJournalRowsFromDb = {this.props.updateJournalRowsFromDb}
+                    />
                 );
 
                 table_area_content.push(
