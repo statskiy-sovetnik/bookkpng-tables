@@ -81,23 +81,49 @@ class TableArea extends React.Component {
                     return;
                 }
 
-                console.log('ряд ' + row_id + ' удалён');
                 return response.text();
             }
         ).then(
             body => {
-                //Обновляем raw_mat_usage
-                return this.props.updateRawMatUsageFromDb('/src/php/get_raw_mat_usage.php', user_key);
-            }
-        ).then(
-            all_raw_mat_usage => {
-                //Обновляем строки журнала
-
-                const raw_mat_usage_for_journal = all_raw_mat_usage.raw_mat_usage_for_journal;
-                return this.props.updateJournalRowsFromDb('/src/php/get_journal_rows.php', user_key,
-                    raw_mat_usage_for_journal, raw_mat_data);
+                switch (data) {
+                    case 'journal':
+                        handleJournalRowRemoval(user_key, raw_mat_data, this.props.updateRawMatDataFromDb,
+                            this.props.updateRawMatUsageFromDb, this.props.updateJournalRowsFromDb);
+                        break;
+                    case 'incomes':
+                        handleIncomesRowRemoval(user_key, raw_mat_data);
+                        break;
+                }
             }
         );
+
+        function handleJournalRowRemoval(user_key, raw_mat_data, updateRawMatDataFromDb, updateRawMatUsageFromDb,
+                                         updateJournalRowsFromDb) {
+            //Обновляем данные о сырье
+            updateRawMatDataFromDb('/src/php/get_raw_mat_data.php', user_key).then(
+
+                //Обновляем данные об использовании сырья
+                raw_mat_data => {
+                    return updateRawMatUsageFromDb('/src/php/get_raw_mat_usage.php', user_key);
+                }
+            ).then(
+
+                //Обновляем строки журнала
+                all_raw_mat_usage => {
+                    const raw_mat_usage_for_journal = all_raw_mat_usage.raw_mat_usage_for_journal;
+                    return updateJournalRowsFromDb('/src/php/get_journal_rows.php', user_key,
+                        raw_mat_usage_for_journal, raw_mat_data);
+                }
+            ).then(
+                journal_rows_upd => {}
+            );
+        }
+
+        function handleIncomesRowRemoval(user_key, raw_mat_data) {
+            this.props.updateRawMatUsageFromDb('/src/get_raw_mat_usage.php', user_key).then(
+
+            )
+        }
     }
 
     renderTableBody(data, rows, cols_order, expenses_data, body_classnames, show_how_many,

@@ -68,6 +68,12 @@ try {
             }
 
             break;
+        case 'incomes':
+            //удаляем таблицу raw_mat_usage
+            $removeJournalRawMatUsage = "DROP TABLE raw_mat_usage_$rowId";
+            $keyConn->exec($removeJournalRawMatUsage);
+            break;
+
     }
 }
 catch (Exception $ex) {
