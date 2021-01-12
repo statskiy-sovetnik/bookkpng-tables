@@ -57,7 +57,7 @@ class TableArea extends React.Component {
         )
     }
 
-    removeTableRow(row_id, data, user_key) {
+    removeTableRow(row_id, data, user_key, raw_mat_data) {
         let fetch_body = new FormData();
         fetch_body.append('row_id', row_id);
         fetch_body.append('data', data);
@@ -86,9 +86,18 @@ class TableArea extends React.Component {
             }
         ).then(
             body => {
-                return body;
+                //Обновляем raw_mat_usage
+                return this.props.updateRawMatUsageFromDb('/src/php/get_raw_mat_usage.php', user_key);
             }
-        )
+        ).then(
+            all_raw_mat_usage => {
+                //Обновляем строки журнала
+
+                const raw_mat_usage_for_journal = all_raw_mat_usage.raw_mat_usage_for_journal;
+                return this.props.updateJournalRowsFromDb('/src/php/get_journal_rows.php', user_key,
+                    raw_mat_usage_for_journal, raw_mat_data);
+            }
+        );
     }
 
     renderTableBody(data, rows, cols_order, expenses_data, body_classnames, show_how_many,
@@ -280,7 +289,7 @@ class TableArea extends React.Component {
                                href={'#'}
                                onClick={event => {
                                    event.preventDefault();
-                                   this.removeTableRow(row_id, data, this.props.userKey);
+                                   this.removeTableRow(row_id, data, this.props.userKey, this.props.rawMatData);
                                }}
                             >
                                 <BtstrapIcon data={'bi-trash'} className={'bi-trash'}/>

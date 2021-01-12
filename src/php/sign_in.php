@@ -50,7 +50,7 @@ try {
         die();
     }
 }
-catch (PDOException $ex) {
+catch (Exception $ex) {
     header('HTTP/1.1 500 Mysql error', true, 500);
     die();
 }

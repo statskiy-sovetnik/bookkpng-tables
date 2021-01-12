@@ -70,7 +70,7 @@ try {
             break;
     }
 }
-catch (PDOException $ex) {
+catch (Exception $ex) {
     header('HTTP/1.1 Mysql error 500', true, 500);
 }
 

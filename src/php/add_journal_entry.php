@@ -83,21 +83,10 @@ try {
     }
     unset($sum, $exp_id);
 }
-catch (PDOException $ex) {
+catch (Exception $ex) {
     header('HTTP/1.1 500 Mysql error', true,500);
     die();
 }
-
-header('Content-Type: text/html; charset=UTF-8', true);
-echo "Новое имя: $newRawMatName 
-Новая цена: $newRawMatPrice 
-Новый поставщик: $newProviderName
-Id: $rawMatId
-Дата: $entryDate 
-Кол-во: $rawMatAmount
-Ключ: $userKey
-Последний id: $lastId";
-
 
 $initConn = null;
 $keyConn = null;

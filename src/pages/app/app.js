@@ -96,8 +96,8 @@ class App extends React.Component {
                 return response.json();
             },
             error => {
-                alert('Неизвестная ошибка');
                 console.log('Fetch error: ', error);
+                alert('Неизвестная ошибка');
             }
         ).then(
             body => {
@@ -135,13 +135,15 @@ class App extends React.Component {
                 }
 
                 return response.json();
+                //return response.text();
             },
             error => {
-                alert('Неизвестная ошибка при обработке запроса');
                 console.log('Fetch error: ', error);
+                alert('Неизвестная ошибка при обработке запроса');
             }
         ).then(
             body => {
+                console.log(body);
                 const journal_rows_upd = getUpdatedJournalRows(body, raw_mat_usage_for_journal, raw_mat_data);
                 this.props.loadDataBaseJournal(journal_rows_upd);
 
@@ -152,7 +154,7 @@ class App extends React.Component {
         function getUpdatedJournalRows(rows_data, raw_mat_usage_for_journal, raw_mat_data) {
             let rows_updated = {};
 
-            if(isEmptyObj(raw_mat_data) || isEmptyObj(rows_data) || isEmptyObj(raw_mat_usage_for_journal)) {
+            if(isEmptyObj(raw_mat_data) || isEmptyObj(rows_data)) {
                 return {};
             }
 
@@ -238,8 +240,8 @@ class App extends React.Component {
                 return response.json();
             },
             error => {
-                alert('Неизвестная ошибка при обработке запроса');
                 console.log('Fetch error: ', error);
+                alert('Неизвестная ошибка при обработке запроса');
             }
         ).then(
             body => {
@@ -252,7 +254,7 @@ class App extends React.Component {
         function getUpdatedIncomesRows(rows_data, journal_rows_data, raw_mat_usage, raw_mat_data) {
             let rows_updated = {};
 
-            if(isEmptyObj(rows_data) || isEmptyObj(journal_rows_data) || isEmptyObj(raw_mat_usage) || isEmptyObj(raw_mat_data)) {
+            if(isEmptyObj(rows_data) || isEmptyObj(journal_rows_data)) {
                 return {};
             }
 
@@ -331,6 +333,7 @@ class App extends React.Component {
                     return;
                 }
                 if(response.status !== 200) {
+                    console.log('In update raw mat usage');
                     alert('Неизвестная ошибка при обработке запроса');
                     return response.text();
                 }
@@ -338,11 +341,13 @@ class App extends React.Component {
                 return response.json();
             },
             error => {
-                alert('Неизвестная ошибка при обработке запроса');
                 console.log("Fetch error: ", error);
+                alert('Неизвестная ошибка при обработке запроса');
             }
         ).then(
             body => {
+                body = isEmptyObj(body) ? [] : body;
+
                 const raw_mat_usage_upd = getUpdatedRawMatUsage(body);
                 const raw_mat_usage_for_journal = reformRawMatUsageForJournal(raw_mat_usage_upd);
                 this.props.loadRawMatUsage(raw_mat_usage_upd);
@@ -360,7 +365,7 @@ class App extends React.Component {
             let raw_mat_usage_upd = raw_mat_usage.slice();
 
             if(isEmptyObj(raw_mat_usage)) {
-                return {};
+                return [];
             }
 
             raw_mat_usage_upd.forEach((raw_mat_usage_obj) => {
@@ -382,7 +387,7 @@ class App extends React.Component {
             let journal_ids_used = [];
 
             if(isEmptyObj(raw_mat_usage)) {
-                return {};
+                return [];
             }
 
             raw_mat_usage.forEach((incomes_obj) => {
@@ -438,6 +443,7 @@ class App extends React.Component {
                     return;
                 }
                 if (response.status !== 200) {
+                    console.log('In update expenses data');
                     alert('Неизвестная ошибка при обработке запроса');
                     return response.text();
                 }
@@ -445,8 +451,8 @@ class App extends React.Component {
                 return response.json();
             },
             error => {
+                console.log('Fetch error in upd expenses data: ', error);
                 alert('Неизвестная серверная ошибка');
-                console.log('Fetch error: ', error);
             }
         ).then(
             body => {
@@ -466,6 +472,7 @@ class App extends React.Component {
                 <JournalArea data={'journal'}
                              sort_names={journal_sort_names}
                              updateRawMatDataFromDb = {this.updateRawMatDataFromDb.bind(this)}
+                             updateRawMatUsageFromDb = {this.updateRawMatUsageFromDb.bind(this)}
                              updateJournalRowsFromDb = {this.updateJournalRowsFromDb.bind(this)}
                 />
                 <IncomesArea data={'incomes'} sort_names={incomes_sort_names}/>

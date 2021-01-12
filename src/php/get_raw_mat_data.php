@@ -26,7 +26,7 @@ try {
 
     //Если нет строк в выдаче
     if(!$rawMatDataRows) {
-        echo json_encode($raw_mat_data);
+        echo json_encode([]);
         die();
     }
 
@@ -53,7 +53,7 @@ try {
     header('Content-Type: application/json; charset=UTF-8', true);
     echo json_encode($raw_mat_data);
 }
-catch(PDOException $ex) {
+catch(Exception $ex) {
     header('HTTP/1.1. 500 Mysql error', true,500);
     die();
 }

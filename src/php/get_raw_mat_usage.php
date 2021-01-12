@@ -23,11 +23,12 @@ try {
     $incomesIdsRes = $keyConn->query($getIncomesIds);
     if(!$incomesIdsRes || $incomesIdsRes->rowCount() == 0) {
         header('Content-Type: application/json', true);
-        echo '';
+        echo json_encode([]);
         die();
     }
 
     $incomesRowsNum = $incomesIdsRes->rowCount();
+    $arr_ind = 0;
     $c = 0;
     $rawMatUsage = [];
     while($c < $incomesRowsNum) {
@@ -37,6 +38,7 @@ try {
         $getRawMatUsage = "SELECT * FROM raw_mat_usage_$curIncomesId";
         $rawMatUsageRes = $keyConn->query($getRawMatUsage);
         if(!$rawMatUsageRes || $rawMatUsageRes->rowCount() == 0) {
+            $c++;
             continue; //ничего не добавляем в rawMatUsage
         }
 
@@ -53,16 +55,17 @@ try {
            $curRawMatUsage['raw_mat_used'][$i]['used'] = $curRawMatUsageRes['used'];
            $i++;
         }
-        $rawMatUsage[$c] = $curRawMatUsage;
+        $rawMatUsage[$arr_ind] = $curRawMatUsage;
 
         $c++;
+        $arr_ind++;
     }
 
     //Отправляем ответ
     header('Content-Type: application/json; charset=UTF-8', true);
     echo json_encode($rawMatUsage);
 }
-catch(PDOException $ex) {
+catch(Exception $ex) {
     header('HTTP/1.1 500 Mysql error', true,500);
     die();
 }

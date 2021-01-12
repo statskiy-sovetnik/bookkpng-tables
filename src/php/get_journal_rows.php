@@ -25,7 +25,7 @@ try {
     //Возвращаем пустой json объект, если таблица пустая
     if(!$rowsRes || $rowsRes->rowCount() == 0) {
         header('Content-Type: application/json', true);
-        echo '';
+        echo json_encode([]);
         die();
     }
     $rowsNum = $rowsRes->rowCount();
@@ -81,7 +81,7 @@ try {
     header('Content-Type: application/json; charset=UTF-8', true);
     echo json_encode($journalRows);
 }
-catch(PDOException $ex) {
+catch(Exception $ex) {
     header('HTTP/1.1 500 Mysql error', true,500);
     die();
 }
