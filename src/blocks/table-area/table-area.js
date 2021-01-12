@@ -91,7 +91,8 @@ class TableArea extends React.Component {
                             this.props.updateRawMatUsageFromDb, this.props.updateJournalRowsFromDb);
                         break;
                     case 'incomes':
-                        handleIncomesRowRemoval(user_key, raw_mat_data);
+                        handleIncomesRowRemoval(user_key, raw_mat_data, this.props.journalRows,
+                            this.props.updateRawMatUsageFromDb, this.props.updateIncomesRowsFromDb);
                         break;
                 }
             }
@@ -119,10 +120,16 @@ class TableArea extends React.Component {
             );
         }
 
-        function handleIncomesRowRemoval(user_key, raw_mat_data) {
-            this.props.updateRawMatUsageFromDb('/src/get_raw_mat_usage.php', user_key).then(
-
-            )
+        function handleIncomesRowRemoval(user_key, raw_mat_data, journal_rows, updateRawMatUsageFromDb, updateIncomesRowsFromDb) {
+            updateRawMatUsageFromDb('/src/php/get_raw_mat_usage.php', user_key).then(
+                all_raw_mat_usage => {
+                    const raw_mat_usage = all_raw_mat_usage.raw_mat_usage;
+                    return updateIncomesRowsFromDb('/src/php/get_incomes_rows.php', user_key, raw_mat_usage, raw_mat_data,
+                        journal_rows);
+                }
+            ).then(
+                incomes_rows_upd => {}
+            );
         }
     }
 

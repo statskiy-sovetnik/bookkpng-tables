@@ -135,6 +135,7 @@ export default function mapStateToProps(component) {
         case 'IncomesArea':
             return function (state) {
                 return {
+                    userKey: state.auth.userKey,
                     incomesRows: state.incomes.rows,
                     incomesColOrder: state.incomes.columns_order,
                     incomesColNames: state.incomes.head_col_names,
@@ -144,6 +145,7 @@ export default function mapStateToProps(component) {
                     rawMatUsage: state.raw_mat_usage,
                     incomesTableWidth: state.incomes.table_width,
                     expensesData: state.expenses_data,
+                    rawMatData: state.raw_mat_data,
                     incomesEntriesPack: state.incomes.entriesPack,
                     incomesEntriesShown: state.incomes.entriesShouldBeShown,
                     incomesAppliedFromDate: state.incomes.appliedFromDate,

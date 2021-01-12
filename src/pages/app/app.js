@@ -234,6 +234,7 @@ class App extends React.Component {
                 }
                 if(response.status !== 200) {
                     alert('Неизвестная серверная ошибка');
+                    console.log('not 200 response status in upd incomes rows');
                     return;
                 }
 
@@ -471,7 +472,11 @@ class App extends React.Component {
                              updateRawMatUsageFromDb = {this.updateRawMatUsageFromDb.bind(this)}
                              updateJournalRowsFromDb = {this.updateJournalRowsFromDb.bind(this)}
                 />
-                <IncomesArea data={'incomes'} sort_names={incomes_sort_names}/>
+                <IncomesArea data={'incomes'}
+                             sort_names={incomes_sort_names}
+                             updateRawMatUsageFromDb = {this.updateRawMatUsageFromDb.bind(this)}
+                             updateIncomesRowsFromDb = {this.updateIncomesRowsFromDb.bind(this)}
+                />
             </div>
         )
     }

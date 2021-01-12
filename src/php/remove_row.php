@@ -30,7 +30,7 @@ try {
             break;
         case 'incomes':
             $tableName = 'incomes';
-            $expensesTableName = "incomes_journal_$rowId";
+            $expensesTableName = "expenses_incomes_$rowId";
             break;
         default:
             header('HTTP/1.1 Wrong table name 507', true, 507);
