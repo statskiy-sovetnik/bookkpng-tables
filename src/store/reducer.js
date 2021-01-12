@@ -331,6 +331,16 @@ export default function reducer(state, action) {
                 }
             }
 
+        //_____ Incomes New Entry Modal _________
+        case actionTypes.INCOMES_NEW_ENTRY_MODAL_TOGGLE_OPEN:
+            return {
+                ...state,
+                incomes_new_entry_modal: {
+                    ...state.incomes_new_entry_modal,
+                    isOpen: action.value,
+                }
+            }
+
         //_______ Journal Sort _________
 
         case actionTypes.JOURNAL_SORT_DIR_CHANGE:

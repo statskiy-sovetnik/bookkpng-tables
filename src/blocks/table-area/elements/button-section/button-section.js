@@ -36,6 +36,10 @@ class ButtonSection extends React.Component{
         toggleJournalNewEntryModal(true);
     }
 
+    handleIncomesNewEntryBtnClick(toggleIncomesNewEntryModal) {
+        toggleIncomesNewEntryModal(true);
+    }
+
     handleJournalNewEntryModalClose(toggleModal) {
         toggleModal(false);
     }
@@ -440,6 +444,23 @@ class ButtonSection extends React.Component{
         );
     }
 
+    renderIncomesNewEntryModal(modal_is_open, toggleModal) {
+        return (
+            <Modal show={modal_is_open} onHide={() => toggleModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Новая запись</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    Тут я добавлю новую запись в Доходы
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant={'dark'} >Отмена</Button>
+                    <Button variant={'success'}>Добавить</Button>
+                </Modal.Footer>
+            </Modal>
+        )
+    }
+
     render() {
         let addEntryBtnClickHandler;
         let add_entry_button_icon;
@@ -470,6 +491,11 @@ class ButtonSection extends React.Component{
                     <BtstrapIcon data={'bi-bookmark-plus'}
                                  className={'bi-bookmark-plus button__btstrap-icon btstrap-icon_size-14 btstrap-icon_color-white'}/>
                 );
+                new_entry_modal = this.renderIncomesNewEntryModal(this.props.newEntryModalIsOpen,
+                    this.props.toggleNewEntryModal);
+                addEntryBtnClickHandler = this.handleIncomesNewEntryBtnClick;
+                toggleNewEntryModalIsOpen = this.props.toggleNewEntryModal;
+                break;
         }
 
         return (

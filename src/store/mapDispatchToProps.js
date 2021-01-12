@@ -50,6 +50,7 @@ import journalModalSetExpensesValid from "./actionCreators/journal_new_entry_mod
 import journalModalSetRawMatId from "./actionCreators/journal_new_entry_modal/journalModalSetRawMatId";
 import changeUserKey from "./actionCreators/auth/changeUserKey";
 import journalModalClearForm from "./actionCreators/journal_new_entry_modal/journalModalClearForm";
+import incomesNewEntryModalToggleOpen from "./actionCreators/incomes_new_entry_modal/incomesNewEntryModalToggleOpen";
 
 export default function mapDispatchToProps(component) {
     switch (component) {
@@ -114,6 +115,13 @@ export default function mapDispatchToProps(component) {
                     setPriceValid: (bool) => dispatch(journalModalSetPriceValid(bool)),
                     setAmountValid: (bool) => dispatch(journalModalSetAmountValid(bool)),
                     setExpensesValid: (bool) => dispatch(journalModalSetExpensesValid(bool)),
+                }
+            }
+
+        case 'IncomesButtonSection':
+            return function (dispatch) {
+                return {
+                    toggleNewEntryModal: bool => dispatch(incomesNewEntryModalToggleOpen(bool)),
                 }
             }
 

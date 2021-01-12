@@ -66,6 +66,14 @@ export default function mapStateToProps(component) {
                 }
             }
 
+        //____ Incomes Button Section _______
+        case 'IncomesButtonSection':
+            return function (state) {
+                return {
+                    newEntryModalIsOpen: state.incomes_new_entry_modal.isOpen,
+                }
+            }
+
         //______ Journal Sort ________________
 
         case 'SortJournal':

@@ -25,6 +25,9 @@ export default {
     JOURNAL_MODAL_SET_EXPENSES_VALID: 'journalModalSetExpensesValid',
     JOURNAL_MODAL_CLEAR_FORM: 'journalModalClearForm',
 
+    //Incomes New Entry Modal
+    INCOMES_NEW_ENTRY_MODAL_TOGGLE_OPEN: 'incomesNewEntryModalToggleOpen',
+
     //Journal Sorts Section
     JOURNAL_SORT_TYPE_CHANGE: 'journalSortTypeChange',
     JOURNAL_SORT_DIR_CHANGE: 'journalSortDirChange',

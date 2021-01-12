@@ -98,6 +98,10 @@ const initialState = {
         }
     },
 
+    incomes_new_entry_modal: {
+        isOpen: false,
+    },
+
     incomes: {
         sortName: 'Наименованию',
         sortFromLeast: true,
