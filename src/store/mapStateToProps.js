@@ -19,6 +19,7 @@ export default function mapStateToProps(component) {
         case 'JournalArea':
             return function (state) {
                 return {
+                    userKey: state.auth.userKey,
                     journalRows: state.journal.rows,
                     incomesRows: state.incomes.rows,
                     incomesColNames: state.incomes.head_col_names,

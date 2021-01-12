@@ -57,6 +57,40 @@ class TableArea extends React.Component {
         )
     }
 
+    removeTableRow(row_id, data, user_key) {
+        let fetch_body = new FormData();
+        fetch_body.append('row_id', row_id);
+        fetch_body.append('data', data);
+        fetch_body.append('key', user_key);
+
+        fetch('/src/php/remove_row.php', {
+            method: 'POST',
+            body: fetch_body,
+        }).then(
+            response => {
+                if(response.status === 520) {
+                    alert('Ошибка при подключении к базе данных');
+                    return;
+                }
+                if(response.status === 500) {
+                    alert('Ошибка mysql-запроса');
+                    return;
+                }
+                if(response.status !== 200) {
+                    alert('Неизвестная ошибка при обработке запроса');
+                    return;
+                }
+
+                console.log('ряд ' + row_id + ' удалён');
+                return response.text();
+            }
+        ).then(
+            body => {
+                return body;
+            }
+        )
+    }
+
     renderTableBody(data, rows, cols_order, expenses_data, body_classnames, show_how_many,
                     fromDate, toDate, sort_type, sort_from_least, another_table_rows, raw_mat_usage_for_journal, raw_mat_usage,
                     incomes_head_cols, journal_head_cols) {
@@ -244,7 +278,10 @@ class TableArea extends React.Component {
                             <Button className={'button button_size-small button_inline-flex'}
                                variant={'dark'}
                                href={'#'}
-                               onClick={event => {event.preventDefault()}}
+                               onClick={event => {
+                                   event.preventDefault();
+                                   this.removeTableRow(row_id, data, this.props.userKey);
+                               }}
                             >
                                 <BtstrapIcon data={'bi-trash'} className={'bi-trash'}/>
                             </Button>
