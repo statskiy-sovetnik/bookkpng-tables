@@ -52,6 +52,12 @@ import changeUserKey from "./actionCreators/auth/changeUserKey";
 import journalModalClearForm from "./actionCreators/journal_new_entry_modal/journalModalClearForm";
 import incomesNewEntryModalToggleOpen from "./actionCreators/incomes_new_entry_modal/incomesNewEntryModalToggleOpen";
 import incomesSetAddedExpenses from "./actionCreators/incomes_new_entry_modal/incomesSetAddedExpenses";
+import incomesNewEntryModalSetName from "./actionCreators/incomes_new_entry_modal/incomesNewEntryModalSetName";
+import incomesNewEntryModalSetCustomerName
+    from "./actionCreators/incomes_new_entry_modal/incomesNewEntryModalSetCustomerName";
+import incomesNewEntryModalSetPrice from "./actionCreators/incomes_new_entry_modal/incomesNewEntryModalSetPrice";
+import incomesNewEntryModalSetAmount from "./actionCreators/incomes_new_entry_modal/incomesNewEntryModalSetAmount";
+import incomesNewEntryModalSetDate from "./actionCreators/incomes_new_entry_modal/incomesNewEntryModalSetDate";
 
 export default function mapDispatchToProps(component) {
     switch (component) {
@@ -124,6 +130,11 @@ export default function mapDispatchToProps(component) {
                 return {
                     toggleNewEntryModal: bool => dispatch(incomesNewEntryModalToggleOpen(bool)),
                     setAddedExpenses: data => dispatch(incomesSetAddedExpenses(data)),
+                    setName: value => dispatch(incomesNewEntryModalSetName(value)),
+                    setCustomerName: value => dispatch(incomesNewEntryModalSetCustomerName(value)),
+                    setPrice: value => dispatch(incomesNewEntryModalSetPrice(value)),
+                    setAmount: value => dispatch(incomesNewEntryModalSetAmount(value)),
+                    setDatepickerDate: value => dispatch(incomesNewEntryModalSetDate(value)),
                 }
             }
 

@@ -351,6 +351,61 @@ export default function reducer(state, action) {
                     }
                 }
             }
+        case actionTypes.INCOMES_NEW_ENTRY_MODAL_SET_NAME:
+            return {
+                ...state,
+                incomes_new_entry_modal: {
+                    ...state.incomes_new_entry_modal,
+                    form_state: {
+                        ...state.incomes_new_entry_modal.form_state,
+                        name: action.value,
+                    }
+                }
+            }
+        case actionTypes.INCOMES_NEW_ENTRY_MODAL_SET_CUSTOMER_NAME:
+            return {
+                ...state,
+                incomes_new_entry_modal: {
+                    ...state.incomes_new_entry_modal,
+                    form_state: {
+                        ...state.incomes_new_entry_modal.form_state,
+                        customer_name: action.value,
+                    }
+                }
+            }
+        case actionTypes.INCOMES_NEW_ENTRY_MODAL_SET_AMOUNT:
+            return {
+                ...state,
+                incomes_new_entry_modal: {
+                    ...state.incomes_new_entry_modal,
+                    form_state: {
+                        ...state.incomes_new_entry_modal.form_state,
+                        amount: action.value,
+                    }
+                }
+            }
+        case actionTypes.INCOMES_NEW_ENTRY_MODAL_SET_PRICE:
+            return {
+                ...state,
+                incomes_new_entry_modal: {
+                    ...state.incomes_new_entry_modal,
+                    form_state: {
+                        ...state.incomes_new_entry_modal.form_state,
+                        price: action.value,
+                    }
+                }
+            }
+        case actionTypes.INCOMES_NEW_ENTRY_MODAL_SET_DATE:
+            return {
+                ...state,
+                incomes_new_entry_modal: {
+                    ...state.incomes_new_entry_modal,
+                    form_state: {
+                        ...state.incomes_new_entry_modal.form_state,
+                        date: action.value,
+                    }
+                }
+            }
 
         //_______ Journal Sort _________
 

@@ -534,9 +534,9 @@ class ButtonSection extends React.Component{
                                         Дата
                                     </Form.Label>
                                     <DatePicker
-                                        selected={+new Date()}
+                                        selected={this.props.formStateDate}
                                         onChange={date => {
-
+                                            this.props.setDatepickerDate(date.setHours(0, 0, 0, 0));
                                         }}
                                         className={'form-control form-control-sm'}
                                         dateFormat={'dd/MM/yyyy'}
@@ -550,6 +550,10 @@ class ButtonSection extends React.Component{
                                     <Form.Control
                                         size={'sm'}
                                         type={'number'}
+                                        onInput={event => {
+                                            const value = event.currentTarget.value;
+                                            this.props.setAmount(value);
+                                        }}
                                     />
                                 </Col>
                             </Form.Group>
@@ -561,6 +565,10 @@ class ButtonSection extends React.Component{
                                     <Form.Control
                                         type={'text'}
                                         size={'sm'}
+                                        onInput={event => {
+                                            const value = event.currentTarget.value;
+                                            this.props.setName(value);
+                                        }}
                                     />
                                 </Col>
                                 <Col xs={4}>
@@ -570,6 +578,10 @@ class ButtonSection extends React.Component{
                                     <Form.Control
                                         type={'text'}
                                         size={'sm'}
+                                        onInput={event => {
+                                            const value = event.currentTarget.value;
+                                            this.props.setCustomerName(value);
+                                        }}
                                     />
                                 </Col>
                             </Form.Group>
@@ -581,6 +593,10 @@ class ButtonSection extends React.Component{
                                     <Form.Control
                                         size={'sm'}
                                         type={'number'}
+                                        onInput={event => {
+                                            const value = event.currentTarget.value;
+                                            this.props.setPrice(value);
+                                        }}
                                     />
                                 </Col>
                             </Form.Group>

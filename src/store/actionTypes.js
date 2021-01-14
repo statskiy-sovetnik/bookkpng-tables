@@ -28,6 +28,11 @@ export default {
     //Incomes New Entry Modal
     INCOMES_NEW_ENTRY_MODAL_TOGGLE_OPEN: 'incomesNewEntryModalToggleOpen',
     INCOMES_SET_ADDED_EXPENSES: 'incomesSetAddedExpenses',
+    INCOMES_NEW_ENTRY_MODAL_SET_NAME: 'incomesNewEntryModalSetName',
+    INCOMES_NEW_ENTRY_MODAL_SET_CUSTOMER_NAME: 'incomesNewEntryModalSetCustomerName',
+    INCOMES_NEW_ENTRY_MODAL_SET_DATE: 'incomesNewEntryModalSetDate',
+    INCOMES_NEW_ENTRY_MODAL_SET_PRICE: 'incomesNewEntryModalSetPrice',
+    INCOMES_NEW_ENTRY_MODAL_SET_AMOUNT: 'incomesNewEntryModalSetAmount',
 
     //Journal Sorts Section
     JOURNAL_SORT_TYPE_CHANGE: 'journalSortTypeChange',

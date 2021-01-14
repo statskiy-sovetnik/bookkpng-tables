@@ -101,6 +101,11 @@ const initialState = {
     incomes_new_entry_modal: {
         isOpen: false,
         form_state: {
+            date: +new Date(),
+            amount: null,
+            name: null,
+            customer_name: null,
+            price: null,
             expenses: {
                 //0: 1156.5,
             }

@@ -73,6 +73,11 @@ export default function mapStateToProps(component) {
                     newEntryModalIsOpen: state.incomes_new_entry_modal.isOpen,
                     expensesData: state.expenses_data,
                     addedExpenses: state.incomes_new_entry_modal.form_state.expenses,
+                    formStateName: state.incomes_new_entry_modal.form_state.name,
+                    formStateCustomerName: state.incomes_new_entry_modal.form_state.customer_name,
+                    formStateAmount: state.incomes_new_entry_modal.form_state.amount,
+                    formStateDate: state.incomes_new_entry_modal.form_state.date,
+                    formStatePrice: state.incomes_new_entry_modal.form_state.price,
                 }
             }
 
