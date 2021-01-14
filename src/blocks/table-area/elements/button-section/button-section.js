@@ -371,7 +371,7 @@ class ButtonSection extends React.Component{
                                                 setRawMatDate(date.setHours(0, 0, 0, 0));
                                             }}
                                             id={'journal-new-entry-modal-form-date'}
-                                            className={'form-control form-control-sm is-valid'}
+                                            className={'form-control form-control-sm is-valid modal__datepicker-input'}
                                             name={'raw_mat_date'}
                                             locale={'ru'}
                                             dateFormat={'dd/MM/yyyy'}
@@ -446,15 +446,83 @@ class ButtonSection extends React.Component{
 
     renderIncomesNewEntryModal(modal_is_open, toggleModal) {
         return (
-            <Modal show={modal_is_open} onHide={() => toggleModal(false)}>
+            <Modal show={modal_is_open}
+                   size={'lg'}
+                   onHide={() => toggleModal(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>Новая запись</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    Тут я добавлю новую запись в Доходы
+                    <Container className={'modal-body-container'}>
+                        <Form>
+                            <Form.Group as={Row}>
+                                <Col xs={3}>
+                                    <Form.Label className={'text text_size-14'}>
+                                        Дата
+                                    </Form.Label>
+                                    <DatePicker
+                                        selected={+new Date()}
+                                        onChange={date => {
+
+                                        }}
+                                        className={'form-control form-control-sm'}
+                                        dateFormat={'dd/MM/yyyy'}
+                                        locale={'ru'}
+                                    />
+                                </Col>
+                                <Col xs={3}>
+                                    <Form.Label className={'text text_size-14'}>
+                                        Кол-во
+                                    </Form.Label>
+                                    <Form.Control
+                                        size={'sm'}
+                                        type={'number'}
+                                    />
+                                </Col>
+                            </Form.Group>
+                            <Form.Group as={Row}>
+                                <Col xs={4}>
+                                    <Form.Label className={'text text_size-14'}>
+                                        Наименование
+                                    </Form.Label>
+                                    <Form.Control
+                                        type={'text'}
+                                        size={'sm'}
+                                    />
+                                </Col>
+                                <Col xs={4}>
+                                    <Form.Label className={'text text_size-14'}>
+                                        Покупатель
+                                    </Form.Label>
+                                    <Form.Control
+                                        type={'text'}
+                                        size={'sm'}
+                                    />
+                                </Col>
+                            </Form.Group>
+                            <Form.Group as={Row}>
+                                <Col xs={3}>
+                                    <Form.Label className={'text text_size-14'}>
+                                        Цена продажи
+                                    </Form.Label>
+                                    <Form.Control
+                                        size={'sm'}
+                                        type={'number'}
+                                    />
+                                </Col>
+                            </Form.Group>
+                        </Form>
+                    </Container>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant={'dark'} >Отмена</Button>
+                    <Button variant={'dark'}
+                            onClick={event => {
+                                event.preventDefault();
+                                toggleModal(false);
+                            }}
+                    >
+                        Отмена
+                    </Button>
                     <Button variant={'success'}>Добавить</Button>
                 </Modal.Footer>
             </Modal>
