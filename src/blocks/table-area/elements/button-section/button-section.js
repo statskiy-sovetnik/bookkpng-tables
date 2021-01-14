@@ -44,11 +44,11 @@ class ButtonSection extends React.Component{
         toggleModal(false);
     }
 
-    handleExpenseInput(expense_id, value, addedExpenses, setAddedExpenses) {
+    handleExpenseInput(expense_id, value, addedExpenses, setAddedExpenses, isExpensesValid) {
         const new_added_expenses = {};
         Object.assign(new_added_expenses, addedExpenses);
         new_added_expenses[expense_id] = value;
-        this.props.setExpensesValid(this.isJournalNewEntryExpensesValid(new_added_expenses));
+        //this.props.setExpensesValid(isExpensesValid(new_added_expenses));
         setAddedExpenses(new_added_expenses);
     }
 
@@ -205,7 +205,7 @@ class ButtonSection extends React.Component{
                                   onInput={event => {
                                       event.preventDefault();
                                       this.handleExpenseInput(expense_id, event.currentTarget.value, addedExpenses,
-                                          setAddedExpenses);
+                                          setAddedExpenses, this.isJournalNewEntryExpensesValid);
                                       const value = event.currentTarget.value;
                                       const isValid = isFloat(value);
                                       setValidation(event.currentTarget, isValid);
@@ -444,7 +444,80 @@ class ButtonSection extends React.Component{
         );
     }
 
-    renderIncomesNewEntryModal(modal_is_open, toggleModal) {
+    renderIncomesNewEntryModal(modal_is_open, toggleModal, expenses_data, added_expenses, setAddedExpenses) {
+
+        let expenses_links = [];
+        let added_expenses_list = [];
+
+        //Добавляем ссылки с расходами в выпадающий список
+        for(let expense_id in expenses_data) {
+            expenses_links.push(
+                <Dropdown.Item href={'#'}
+                               key={'journal-modal_expense-dropdown-link-' + expense_id}
+                               className={'text text_size-13 modal__dropdown-item'}
+                               onClick={event => {
+                                   event.preventDefault();
+                                   let new_added_expenses = {};
+                                   Object.assign(new_added_expenses, added_expenses);
+                                   new_added_expenses[expense_id] = added_expenses[expense_id] || '';
+                                   setAddedExpenses(new_added_expenses);
+                                   //Валидация:
+                                   //this.props.setExpensesValid(false);
+                               }}
+                >
+                    {expenses_data[expense_id].name}
+                </Dropdown.Item>
+            );
+        }
+
+        //Добавляем блок со списком добавленных расходов
+        for(let exp_id in added_expenses) {
+            added_expenses_list.push(
+                <li key={'incomes-modal-added-expense-list-item-' + exp_id}
+                    className={'modal__added-expense-list-item'}
+                >
+                    <a href={'#'} onClick={event => event.preventDefault()}
+                       className={'modal__added-expense-square'}
+                       style={{'backgroundColor': expenses_data[exp_id].color}}
+                    />
+                    <span className={'text text_size-13 text_color-dark modal__added-expense-text'}>
+                        {expenses_data[exp_id].name}
+                    </span>
+                    <Form.Control type={'number'} maxLength={9}
+                                  required
+                                  name={'expense-' + exp_id}
+                                  placeholder={'Сумма'}
+                                  size={'sm'}
+                                  className={'modal__added-expense-input'}
+                                  onInput={event => {
+                                      event.preventDefault();
+                                      this.handleExpenseInput(exp_id, event.currentTarget.value, added_expenses,
+                                          setAddedExpenses);
+                                      const value = event.currentTarget.value;
+                                      //const isValid = isFloat(value);
+                                      //setValidation(event.currentTarget, isValid);
+                                  }}
+                    />
+                    <Button
+                        variant={'secondary'}
+                        data-target={exp_id}
+                        className={'button button_size-small'}
+                        onClick={event => {
+                            event.preventDefault();
+                            const cur_expense_id = event.currentTarget.getAttribute('data-target');
+                            let new_added_expenses = {};
+                            Object.assign(new_added_expenses, added_expenses);
+                            //Удаляем свойство, тем самым убирается поле из списка
+                            delete new_added_expenses[cur_expense_id];
+                            setAddedExpenses(new_added_expenses);
+                        }}
+                    >
+                        Удалить
+                    </Button>
+                </li>
+            );
+        }
+
         return (
             <Modal show={modal_is_open}
                    size={'lg'}
@@ -472,7 +545,7 @@ class ButtonSection extends React.Component{
                                 </Col>
                                 <Col xs={3}>
                                     <Form.Label className={'text text_size-14'}>
-                                        Кол-во
+                                        Кол-во (кг)
                                     </Form.Label>
                                     <Form.Control
                                         size={'sm'}
@@ -503,13 +576,33 @@ class ButtonSection extends React.Component{
                             <Form.Group as={Row}>
                                 <Col xs={3}>
                                     <Form.Label className={'text text_size-14'}>
-                                        Цена продажи
+                                        Цена продажи (руб)
                                     </Form.Label>
                                     <Form.Control
                                         size={'sm'}
                                         type={'number'}
                                     />
                                 </Col>
+                            </Form.Group>
+
+                            <Form.Group>
+                                <Form.Label className={'text text_size-14'}>
+                                    Дополнительные расходы (необязательно)
+                                </Form.Label>
+                                <ul className={'ulist modal__added-expenses-list'}>
+                                    {added_expenses_list}
+                                </ul>
+                                <Dropdown>
+                                    <Dropdown.Toggle variant={'dark'} size={'sm'} className={'button'}>
+                                        Добавить
+                                    </Dropdown.Toggle>
+                                    <Dropdown.Menu>
+                                        {expenses_links}
+                                    </Dropdown.Menu>
+                                </Dropdown>
+                                <Form.Text className={'text text_color-grey'}>
+                                    Вы сможете добавить их в свою таблицу в любое время
+                                </Form.Text>
                             </Form.Group>
                         </Form>
                     </Container>
@@ -560,7 +653,8 @@ class ButtonSection extends React.Component{
                                  className={'bi-bookmark-plus button__btstrap-icon btstrap-icon_size-14 btstrap-icon_color-white'}/>
                 );
                 new_entry_modal = this.renderIncomesNewEntryModal(this.props.newEntryModalIsOpen,
-                    this.props.toggleNewEntryModal);
+                    this.props.toggleNewEntryModal, this.props.expensesData, this.props.addedExpenses,
+                    this.props.setAddedExpenses);
                 addEntryBtnClickHandler = this.handleIncomesNewEntryBtnClick;
                 toggleNewEntryModalIsOpen = this.props.toggleNewEntryModal;
                 break;

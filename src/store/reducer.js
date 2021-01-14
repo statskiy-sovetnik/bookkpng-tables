@@ -340,6 +340,17 @@ export default function reducer(state, action) {
                     isOpen: action.value,
                 }
             }
+        case actionTypes.INCOMES_SET_ADDED_EXPENSES:
+            return {
+                ...state,
+                incomes_new_entry_modal: {
+                    ...state.incomes_new_entry_modal,
+                    form_state: {
+                        ...state.incomes_new_entry_modal.form_state,
+                        expenses: action.value,
+                    }
+                }
+            }
 
         //_______ Journal Sort _________
 

@@ -100,6 +100,11 @@ const initialState = {
 
     incomes_new_entry_modal: {
         isOpen: false,
+        form_state: {
+            expenses: {
+                //0: 1156.5,
+            }
+        }
     },
 
     incomes: {

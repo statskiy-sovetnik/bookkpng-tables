@@ -27,6 +27,7 @@ export default {
 
     //Incomes New Entry Modal
     INCOMES_NEW_ENTRY_MODAL_TOGGLE_OPEN: 'incomesNewEntryModalToggleOpen',
+    INCOMES_SET_ADDED_EXPENSES: 'incomesSetAddedExpenses',
 
     //Journal Sorts Section
     JOURNAL_SORT_TYPE_CHANGE: 'journalSortTypeChange',

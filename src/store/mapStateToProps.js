@@ -71,6 +71,8 @@ export default function mapStateToProps(component) {
             return function (state) {
                 return {
                     newEntryModalIsOpen: state.incomes_new_entry_modal.isOpen,
+                    expensesData: state.expenses_data,
+                    addedExpenses: state.incomes_new_entry_modal.form_state.expenses,
                 }
             }
 

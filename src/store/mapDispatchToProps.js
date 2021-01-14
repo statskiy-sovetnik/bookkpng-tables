@@ -51,6 +51,7 @@ import journalModalSetRawMatId from "./actionCreators/journal_new_entry_modal/jo
 import changeUserKey from "./actionCreators/auth/changeUserKey";
 import journalModalClearForm from "./actionCreators/journal_new_entry_modal/journalModalClearForm";
 import incomesNewEntryModalToggleOpen from "./actionCreators/incomes_new_entry_modal/incomesNewEntryModalToggleOpen";
+import incomesSetAddedExpenses from "./actionCreators/incomes_new_entry_modal/incomesSetAddedExpenses";
 
 export default function mapDispatchToProps(component) {
     switch (component) {
@@ -122,6 +123,7 @@ export default function mapDispatchToProps(component) {
             return function (dispatch) {
                 return {
                     toggleNewEntryModal: bool => dispatch(incomesNewEntryModalToggleOpen(bool)),
+                    setAddedExpenses: data => dispatch(incomesSetAddedExpenses(data)),
                 }
             }
 
