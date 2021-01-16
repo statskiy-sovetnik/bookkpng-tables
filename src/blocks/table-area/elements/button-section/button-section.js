@@ -16,6 +16,8 @@ import Dropdown from "react-bootstrap/Dropdown";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
+
+//Common _________
 import {
     convertDateToMysqlDate,
     isFloat,
@@ -25,6 +27,7 @@ import {
 } from "../../../../common";
 import journalModalSetShowValidation
     from "../../../../store/actionCreators/journal_new_entry_modal/journalModalSetShowValidation";
+import {INCOMES_NEW_ENTRY_AREA_W as TableArea} from "../../table-area";
 
 class ButtonSection extends React.Component{
 
@@ -444,7 +447,8 @@ class ButtonSection extends React.Component{
         );
     }
 
-    renderIncomesNewEntryModal(modal_is_open, toggleModal, expenses_data, added_expenses, setAddedExpenses) {
+    renderIncomesNewEntryModal(modal_is_open, toggleModal, expenses_data, added_expenses, setAddedExpenses,
+                               sort_names) {
 
         let expenses_links = [];
         let added_expenses_list = [];
@@ -527,7 +531,7 @@ class ButtonSection extends React.Component{
                 </Modal.Header>
                 <Modal.Body>
                     <Container className={'modal-body-container'}>
-                        <Form>
+                        <Form className={'modal__form'}>
                             <Form.Group as={Row}>
                                 <Col xs={3}>
                                     <Form.Label className={'text text_size-14'}>
@@ -605,6 +609,9 @@ class ButtonSection extends React.Component{
                                 <Form.Label className={'text text_size-14'}>
                                     Дополнительные расходы (необязательно)
                                 </Form.Label>
+                                <p className={'modal__column-prompt-text text text_size-12 text_color-grey'}>
+                                    Вы сможете добавить их в свою таблицу в любое время
+                                </p>
                                 <ul className={'ulist modal__added-expenses-list'}>
                                     {added_expenses_list}
                                 </ul>
@@ -616,11 +623,21 @@ class ButtonSection extends React.Component{
                                         {expenses_links}
                                     </Dropdown.Menu>
                                 </Dropdown>
-                                <Form.Text className={'text text_color-grey'}>
-                                    Вы сможете добавить их в свою таблицу в любое время
-                                </Form.Text>
                             </Form.Group>
                         </Form>
+
+                        <p className={'modal__column-label text text_color-black text_size-14'}>
+                            Выберите сырьё (необязательно)
+                        </p>
+                        <p className={'modal__column-prompt-text text text_size-12 text_color-grey'}>
+                            Выбранные записи включатся в список расходов новой записи.
+                            Вы сможете добавить новые расходы позже
+                        </p>
+                        <TableArea
+                            className={'modal__table-area'}
+                            data={'incomes-new-entry'}
+                            sort_names={sort_names}
+                        />
                     </Container>
                 </Modal.Body>
                 <Modal.Footer>
@@ -643,6 +660,8 @@ class ButtonSection extends React.Component{
         let add_entry_button_icon;
         let toggleNewEntryModalIsOpen;
         let new_entry_modal;
+
+        const incomes_new_entry_sort_names = ['Дате', 'Наименованию', 'Поставщику', 'Кол-ву', 'Сумме', 'Расходам'];
 
         switch (this.props.data) {
             case 'journal':
@@ -670,7 +689,7 @@ class ButtonSection extends React.Component{
                 );
                 new_entry_modal = this.renderIncomesNewEntryModal(this.props.newEntryModalIsOpen,
                     this.props.toggleNewEntryModal, this.props.expensesData, this.props.addedExpenses,
-                    this.props.setAddedExpenses);
+                    this.props.setAddedExpenses, incomes_new_entry_sort_names);
                 addEntryBtnClickHandler = this.handleIncomesNewEntryBtnClick;
                 toggleNewEntryModalIsOpen = this.props.toggleNewEntryModal;
                 break;

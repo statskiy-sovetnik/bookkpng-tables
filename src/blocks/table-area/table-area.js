@@ -16,10 +16,12 @@ import BtstrapIcon from "../btstrap-icon/btstrap-icon";
 import {
     JOURNAL_CONTROL_SECTION_W as JournalControlSection,
     INCOMES_CONTROL_SECTION_W as IncomesControlSection,
+    INCOMES_NEW_ENTRY_CONTROL_SECTION_W as IncomesNewEntryControlSection,
 } from "./elements/table-control-section/table-control-section";
 import {
     JOURNAL_TABLE as TableJournal,
     INCOMES_TABLE as TableIncomes,
+    INCOMES_NEW_ENTRY_TABLE as TableIncomesNewEntry,
 } from "../table/table";
 
 /*___ Bootstrap _________________*/
@@ -136,11 +138,16 @@ class TableArea extends React.Component {
     renderTableBody(data, rows, cols_order, expenses_data, body_classnames, show_how_many,
                     fromDate, toDate, sort_type, sort_from_least, another_table_rows, raw_mat_usage_for_journal, raw_mat_usage,
                     incomes_head_cols, journal_head_cols) {
+        console.log(rows);
+        if(data === 'incomes-new-entry') {
+            console.log('Im gonna render this mans career');
+        }
         if(Object.keys(rows).length === 0) {return}
 
         let table_rows = [];
         let rows_keys_sorted = Object.keys(rows).slice();
         let rows_keys = Object.keys(rows).slice();
+
 
         //Sorting Rows By Date Range ________________
 
@@ -340,6 +347,9 @@ class TableArea extends React.Component {
                             </Button>
                         </td>
                     )
+                }
+                else if(col_name === 'select') {
+                    //пока ничего
                 }
                 else if(col_name === 'amount_data') {
                     let amount_content = [];
@@ -806,6 +816,7 @@ class TableArea extends React.Component {
     render() {
         let area_name,
             new_entry_modal,
+            props_classes = this.props.className || '',
             table_area_content = [];
 
         const expenses_data = this.props.expensesData;
@@ -833,6 +844,9 @@ class TableArea extends React.Component {
         switch(this.props.data) {
             case 'journal':
                 area_name = 'Журнал';
+                table_area_content.push(
+                    <Heading className={'text_color-dark'}>{area_name}</Heading>
+                );
                 table_area_content.push(
                     <JournalButtonSection
                         data={'journal'}
@@ -875,6 +889,9 @@ class TableArea extends React.Component {
             case 'incomes':
                 area_name = 'Доходы';
                 table_area_content.push(
+                    <Heading className={'text_color-dark'}>{area_name}</Heading>
+                );
+                table_area_content.push(
                     <IncomesButtonSection data={'incomes'}/>
                 );
 
@@ -909,17 +926,45 @@ class TableArea extends React.Component {
                     this.renderTableBottomPanel(incomes_entries_left, this.props.incomesEntriesPack, this.props.incomesEntriesShown)
                 );
                 break;
-            case 'expenses':
-                area_name = 'Расходы';
+            case 'incomes-new-entry':
+                table_area_content.push(
+                    <IncomesNewEntryControlSection
+                        data={'incomes-new-entry'}
+                        key={'control-section'}
+                        sort_names={this.props.sort_names}
+                    />
+                );
+                table_area_content.push(
+                    <TableIncomesNewEntry
+                        responsive={true}
+                        style={{'width': this.props.tableWidth}}
+                        key={'incomes-table'}
+                    >
+                        {[
+                            this.renderTableHead(
+                                'incomes-new-entry',
+                                this.props.colsNames,
+                                this.props.colsOrder,
+                                head_classnames,
+                            ),
+                            this.renderTableBody(
+                                'incomes-new-entry',
+                                this.props.journalRows || {},
+                                this.props.colsOrder,
+                                [], tbody_classnames, this.props.entriesShouldBeShown, null,
+                                null, this.props.sortName, this.props.sortFromLeast, {},
+                                {}, {}, [], []
+                            )
+                        ]}
+                    </TableIncomesNewEntry>
+                )
                 break;
             default:
                 area_name = 'Журнал';
         }
 
         return (
-            <Container xl='true' className={'table-area'}>
-                {new_entry_modal}
-                <Heading className={'text_color-dark'}>{area_name}</Heading>
+            <Container xl='true' className={'table-area ' + props_classes}>
                 {
                     //Control section and the table itself:
                     //____________________________
@@ -932,5 +977,9 @@ class TableArea extends React.Component {
 
 const JOURNAL_AREA_W = connect(mapStateToProps('JournalArea'), mapDispatchToProps('JournalArea'))(TableArea);
 const INCOMES_AREA_W = connect(mapStateToProps('IncomesArea'), mapDispatchToProps('IncomesArea'))(TableArea);
-export {JOURNAL_AREA_W, INCOMES_AREA_W};
+const INCOMES_NEW_ENTRY_AREA_W = connect(
+    mapStateToProps('IncomesNewEntryArea'),
+    mapDispatchToProps('IncomesNewEntryArea')
+)(TableArea);
+export {JOURNAL_AREA_W, INCOMES_AREA_W, INCOMES_NEW_ENTRY_AREA_W};
 

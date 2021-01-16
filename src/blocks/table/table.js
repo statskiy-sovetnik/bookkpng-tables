@@ -32,5 +32,9 @@ const INCOMES_TABLE = connect(
     mapStateToProps('TableIncomes'),
     mapDispatchToProps('TableIncomes'),
 )(CustomTable);
+const INCOMES_NEW_ENTRY_TABLE = connect(
+    mapStateToProps('TableIncomesNewEntry'),
+    mapDispatchToProps('TableIncomesNewEntry'),
+)(CustomTable);
 
-export {JOURNAL_TABLE, INCOMES_TABLE};
+export {JOURNAL_TABLE, INCOMES_TABLE, INCOMES_NEW_ENTRY_TABLE};

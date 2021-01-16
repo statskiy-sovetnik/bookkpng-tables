@@ -103,6 +103,12 @@ html, body {
 .modal-content .modal-body-container {
   width: 750px; }
 
+.modal-content .modal__column-label {
+  margin-bottom: 8px; }
+
+.modal-content .modal__column-prompt-text {
+  margin-bottom: 10px; }
+
 .modal-content .modal__input-group__side-margin-button {
   margin-right: 10px; }
 
@@ -116,7 +122,6 @@ html, body {
   background-color: #e0e0e0; }
 
 .modal-content ul.modal__added-expenses-list {
-  margin-bottom: 15px;
   margin-top: 5px;
   padding-left: 15px; }
 
@@ -135,6 +140,13 @@ html, body {
   .modal-content .modal__added-expense-list-item .modal__added-expense-input {
     width: 100px;
     margin-right: 10px; }
+
+.modal-content .modal__table-area {
+  margin: 0 !important;
+  padding: 0 !important; }
+
+.modal-content .modal__form {
+  margin-bottom: 30px; }
 
 .menu__user-block {
   display: flex;

@@ -109,7 +109,22 @@ const initialState = {
             expenses: {
                 //0: 1156.5,
             }
-        }
+        },
+        //Table Area
+        sortName: 'Дате',
+        sortFromLeast: false,
+        columns_order: [ 'select', 'date', 'name', 'provider_name', 'amount_data', 'price'],
+        head_col_names: {
+            date: 'Дата',
+            name: 'Наименование',
+            provider_name: 'Поставщик',
+            amount_data: 'Кол-во (кг)',
+            price: 'Цена (руб)',
+            select: 'Выбрать',
+        },
+        table_width: 850,
+        entriesPack: ENTRIES_PACK,
+        entriesShouldBeShown: ENTRIES_PACK,
     },
 
     incomes: {

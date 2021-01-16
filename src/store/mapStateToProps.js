@@ -78,6 +78,28 @@ export default function mapStateToProps(component) {
                     formStateAmount: state.incomes_new_entry_modal.form_state.amount,
                     formStateDate: state.incomes_new_entry_modal.form_state.date,
                     formStatePrice: state.incomes_new_entry_modal.form_state.price,
+
+                }
+            }
+
+        //______ INCOMES NEW ENTRY MODAL _________
+        case 'IncomesNewEntryArea':
+            return function (state) {
+                return {
+                    sortName: state.incomes_new_entry_modal.sortName,
+                    sortFromLeast: state.incomes_new_entry_modal.sortFromLeast,
+                    colsOrder: state.incomes_new_entry_modal.columns_order,
+                    colsNames: state.incomes_new_entry_modal.head_col_names,
+                    tableWidth: state.incomes_new_entry_modal.table_width,
+                    journalRows: state.journal.rows,
+                    entriesPack: state.incomes_new_entry_modal.entriesPack,
+                    entriesShouldBeShown: state.incomes_new_entry_modal.entriesShouldBeShown,
+                }
+            }
+        case 'SortNameIncomesNewEntry':
+            return function (state) {
+                return {
+                    sortName: state.incomes_new_entry_modal.sortName,
                 }
             }
 
@@ -95,7 +117,9 @@ export default function mapStateToProps(component) {
                     sortFromLeast: state.journal.sortFromLeast,
                 }
             }
+
         //______ Journal Period Filter ______________
+
         case 'JournalPeriodSort':
             return function (state) {
                 return {

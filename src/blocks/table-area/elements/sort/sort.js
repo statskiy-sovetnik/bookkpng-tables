@@ -103,6 +103,32 @@ class Sort extends React.Component{
                     )
                 }
                 break;
+            case 'incomes-new-entry-name':
+                sort_btn_id = 'incomesNewEntryNameSortBtn';
+                current_sort_name = this.props.sortName || '';
+                onchange_handler = this.props.changeSortType;
+                is_dir_sort = false;
+                console.log(sort_names);
+                for(let i = 0; i < sort_names.length; i++) {
+                    dropdown_items.push(
+                        <Dropdown.Item
+                            onClick={(event) => {
+                                this.changeSortValue(event, onchange_handler, is_dir_sort, direction_names);
+                            }}
+                            href="#" key={"sort-type-" + sort_names[i] + "-up"}
+                        >
+                            {sort_names[i]}
+                        </Dropdown.Item>
+                    )
+                }
+                break;
+            case 'incomes-new-entry-direction':
+                sort_btn_id = 'incomesNewEntrySortDirectionBtn';
+                dropdown_items = sort_directions;
+                current_sort_name = this.props.sortFromLeast ? 'По возраст.' : 'По убыв.';
+                onchange_handler = this.props.changeSortDirection;
+                is_dir_sort = true;
+                break;
         }
 
         return (
@@ -141,5 +167,14 @@ const SORT_INCOMES_DIR_W = connect(
     mapStateToProps('SortDirIncomes'),
     mapDispatchToProps('SortDirIncomes')
 )(Sort);
+const SORT_INCOMES_NEW_ENTRY_NAME = connect(
+    mapStateToProps('SortNameIncomesNewEntry'),
+    mapDispatchToProps('SortNameIncomesNewEntry')
+)(Sort);
+const SORT_INCOMES_NEW_ENTRY_DIR = connect(
+    mapStateToProps('SortDirIncomesNewEntry'),
+    mapDispatchToProps('SortDirIncomesNewEntry')
+)(Sort);
 
-export {SORT_JOURNAL_W, SORT_DIRECTION_JOURNAL_W, SORT_INCOMES_NAME_W, SORT_INCOMES_DIR_W}
+export {SORT_JOURNAL_W, SORT_DIRECTION_JOURNAL_W, SORT_INCOMES_NAME_W, SORT_INCOMES_DIR_W, SORT_INCOMES_NEW_ENTRY_NAME,
+SORT_INCOMES_NEW_ENTRY_DIR}

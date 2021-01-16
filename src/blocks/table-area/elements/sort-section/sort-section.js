@@ -5,6 +5,8 @@ import {
     SORT_DIRECTION_JOURNAL_W as SortDirectionJournal,
     SORT_INCOMES_NAME_W as SortNameIncomes,
     SORT_INCOMES_DIR_W as SortDirIncomes,
+    SORT_INCOMES_NEW_ENTRY_NAME as SortNameIncomesNewEntry,
+    SORT_INCOMES_NEW_ENTRY_DIR as SortDirIncomesNewEntry,
 } from "../sort/sort";
 
 export default function SortSection(props) {
@@ -17,7 +19,7 @@ export default function SortSection(props) {
                     <SortJournal data={'journal-name'}  sort_names={props.sort_names} key={'journal-sort-name'}/>
                     <SortDirectionJournal data={'journal-direction'} key={'journal-sort-dir'}/>
                 </span>
-            )
+            );
             break;
         case 'incomes':
             sort = (
@@ -25,7 +27,21 @@ export default function SortSection(props) {
                     <SortNameIncomes data={'incomes-name'}  sort_names={props.sort_names} key={'sort-name'}/>
                     <SortDirIncomes data={'incomes-direction'} key={'sort-dir'}/>
                 </span>
-            )
+            );
+            break;
+        case 'incomes-new-entry':
+            sort = (
+                <span className={'table-area__sorts-wrapper'}>
+                    <SortNameIncomesNewEntry
+                        data={'incomes-new-entry-name'}
+                        sort_names={props.sort_names}
+                        key={'sort-name'}/>
+                    <SortDirIncomesNewEntry
+                        data={'incomes-new-entry-direction'}
+                        key={'sort-dir'}
+                    />
+                </span>
+            );
             break;
     }
 
