@@ -51,7 +51,7 @@ class ButtonSection extends React.Component{
         const new_added_expenses = {};
         Object.assign(new_added_expenses, addedExpenses);
         new_added_expenses[expense_id] = value;
-        //this.props.setExpensesValid(isExpensesValid(new_added_expenses));
+        this.props.setExpensesValid(isExpensesValid(new_added_expenses));
         setAddedExpenses(new_added_expenses);
     }
 
@@ -59,7 +59,7 @@ class ButtonSection extends React.Component{
         return raw_mat_name_valid && provider_name_valid && price_valid && amount_valid && expenses_valid;
     }
 
-    isJournalNewEntryExpensesValid(addedExpenses) {
+    isExpensesValid(addedExpenses) {
         for(let exp_id in addedExpenses) {
             if(!isFloat(addedExpenses[exp_id])) {
                 return false;
@@ -208,7 +208,7 @@ class ButtonSection extends React.Component{
                                   onInput={event => {
                                       event.preventDefault();
                                       this.handleExpenseInput(expense_id, event.currentTarget.value, addedExpenses,
-                                          setAddedExpenses, this.isJournalNewEntryExpensesValid);
+                                          setAddedExpenses, this.isExpensesValid);
                                       const value = event.currentTarget.value;
                                       const isValid = isFloat(value);
                                       setValidation(event.currentTarget, isValid);

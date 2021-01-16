@@ -138,10 +138,6 @@ class TableArea extends React.Component {
     renderTableBody(data, rows, cols_order, expenses_data, body_classnames, show_how_many,
                     fromDate, toDate, sort_type, sort_from_least, another_table_rows, raw_mat_usage_for_journal, raw_mat_usage,
                     incomes_head_cols, journal_head_cols) {
-        console.log(rows);
-        if(data === 'incomes-new-entry') {
-            console.log('Im gonna render this mans career');
-        }
         if(Object.keys(rows).length === 0) {return}
 
         let table_rows = [];
@@ -349,6 +345,13 @@ class TableArea extends React.Component {
                     )
                 }
                 else if(col_name === 'select') {
+                    cur_row.push(
+                        <td className={cell_class}
+                            key={data + '-' + row_id + '-' + col_name}
+                        >
+
+                        </td>
+                    )
                     //пока ничего
                 }
                 else if(col_name === 'amount_data') {

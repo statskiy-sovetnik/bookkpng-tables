@@ -146,7 +146,9 @@ html, body {
   padding: 0 !important; }
 
 .modal-content .modal__form {
-  margin-bottom: 30px; }
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #d4d4de; }
 
 .menu__user-block {
   display: flex;
