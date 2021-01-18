@@ -110,6 +110,9 @@ const initialState = {
                 //0: 1156.5,
             },
             rowsChecked: [],
+            rowsUsageState: {
+                //0: 76.5,
+            }
         },
         validation: {
             amount: false,
@@ -117,20 +120,22 @@ const initialState = {
             customer_name: false,
             price: false,
             expenses: true,
+            rows_usage: true,
         },
         //Table Area
         sortName: 'Дате',
         sortFromLeast: false,
-        columns_order: [ 'select', 'date', 'name', 'provider_name', 'amount_data', 'price'],
+        columns_order: [ 'select', 'usage', 'date', 'name', 'provider_name', 'amount_data', 'price'],
         head_col_names: {
             date: 'Дата',
+            usage: 'Использ-ть сырья (кг)',
             name: 'Наименование',
             provider_name: 'Поставщик',
             amount_data: 'Кол-во (кг)',
             price: 'Цена (руб)',
             select: 'Выбрать',
         },
-        table_width: 850,
+        table_width: 920,
         entriesPack: ENTRIES_PACK,
         entriesShouldBeShown: ENTRIES_PACK,
     },

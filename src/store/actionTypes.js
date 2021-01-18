@@ -43,6 +43,8 @@ export default {
     INCOMES_NEW_ENTRY_MODAL_SET_PRICE_VALID: 'incomesNewEntryModalSetPriceValid',
     INCOMES_NEW_ENTRY_MODAL_SET_AMOUNT_VALID: 'incomesNewEntryModalSetAmountValid',
     INCOMES_NEW_ENTRY_MODAL_SET_EXPENSES_VALID: 'incomesNewEntryModalSetExpensesValid',
+    INCOMES_NEW_ENTRY_MODAL_SET_ROWS_USAGE_VALID: 'incomesNewEntryModalSetRowsUsageValid',
+    INCOMES_NEW_ENTRY_MODAL_SET_ROWS_USAGE_STATE: 'incomesNewEntryModalSetRowsUsageState',
 
     //Journal Sorts Section
     JOURNAL_SORT_TYPE_CHANGE: 'journalSortTypeChange',

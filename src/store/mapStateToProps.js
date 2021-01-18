@@ -84,6 +84,7 @@ export default function mapStateToProps(component) {
                     isNameValid: state.incomes_new_entry_modal.validation.name,
                     isCustomerNameValid: state.incomes_new_entry_modal.validation.customer_name,
                     isExpensesValid: state.incomes_new_entry_modal.validation.expenses,
+                    isRowsUsageValid: state.incomes_new_entry_modal.validation.rows_usage,
                 }
             }
 
@@ -101,6 +102,7 @@ export default function mapStateToProps(component) {
                     entriesPack: state.incomes_new_entry_modal.entriesPack,
                     entriesShouldBeShown: state.incomes_new_entry_modal.entriesShouldBeShown,
                     rowsChecked: state.incomes_new_entry_modal.form_state.rowsChecked,
+                    rowsUsageState: state.incomes_new_entry_modal.form_state.rowsUsageState,
                 }
             }
         case 'EntrySwitchLengthSectionIncomesNewEntry':

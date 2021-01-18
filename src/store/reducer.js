@@ -506,6 +506,28 @@ export default function reducer(state, action) {
                     }
                 }
             }
+        case actionTypes.INCOMES_NEW_ENTRY_MODAL_SET_ROWS_USAGE_VALID:
+            return {
+                ...state,
+                incomes_new_entry_modal: {
+                    ...state.incomes_new_entry_modal,
+                    validation: {
+                        ...state.incomes_new_entry_modal.validation,
+                        rows_usage: action.value,
+                    }
+                }
+            }
+        case actionTypes.INCOMES_NEW_ENTRY_MODAL_SET_ROWS_USAGE_STATE:
+            return {
+                ...state,
+                incomes_new_entry_modal: {
+                    ...state.incomes_new_entry_modal,
+                    form_state: {
+                        ...state.incomes_new_entry_modal.form_state,
+                        rowsUsageState: action.value,
+                    }
+                }
+            }
 
 
         //_______ Journal Sort _________

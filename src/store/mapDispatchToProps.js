@@ -76,6 +76,10 @@ import incomesNewEntryModalSetAmountValid
     from "./actionCreators/incomes_new_entry_modal/incomesNewEntryModalSetAmountValid";
 import incomesNewEntryModalSetExpensesValid
     from "./actionCreators/incomes_new_entry_modal/incomesNewEntryModalSetExpensesValid";
+import incomesNewEntryModalSetRowsUsageState
+    from "./actionCreators/incomes_new_entry_modal/incomesNewEntryModalSetRowsUsageState";
+import incomesNewEntryModalSetRowsUsageValid
+    from "./actionCreators/incomes_new_entry_modal/incomesNewEntryModalSetRowsUsageValid";
 
 export default function mapDispatchToProps(component) {
     switch (component) {
@@ -263,6 +267,8 @@ export default function mapDispatchToProps(component) {
             return function (dispatch) {
                 return {
                     setCheckedRows: rows => dispatch(incomesNewEntryModalSetRowsChecked(rows)),
+                    setUsageRowsState: rows => dispatch(incomesNewEntryModalSetRowsUsageState(rows)),
+                    setRowsUsageValid: bool => dispatch(incomesNewEntryModalSetRowsUsageValid(bool)),
                 }
             }
         //Sort

@@ -31,8 +31,9 @@ import Popover from "react-bootstrap/Popover";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Table from "react-bootstrap/Table";
 import InputGroup from "react-bootstrap/InputGroup";
+import FormControl from 'react-bootstrap/FormControl';
 
-import {isEmptyObj} from "../../common";
+import {isEmptyObj, isFloat, setValidation} from "../../common";
 
 class TableArea extends React.Component {
     constructor(props) {
@@ -138,16 +139,46 @@ class TableArea extends React.Component {
 
     handleTableCheckboxClick(row_id, rows_checked, setRowsChecked) {
         let new_rows_checked = rows_checked.slice();
+        let rows_usage = {};
+        Object.assign(rows_usage, this.props.rowsUsageState);
+        rows_usage = rows_usage || {};
+        let new_rows_usage = {};
+        Object.assign(new_rows_usage, rows_usage);
         const place_id = new_rows_checked.indexOf(+row_id);
 
+        //Обновляем отмеченные ряды, а также состояние полей (usage) отмеченных рядов
         if(place_id !== -1) {
             new_rows_checked.splice(place_id, 1);
+            delete new_rows_usage[row_id];
+            this.props.setUsageRowsState(new_rows_usage);
         }
         else {
             new_rows_checked.push(+row_id);
+            this.props.setRowsUsageValid(false);
         }
 
         setRowsChecked(new_rows_checked);
+    }
+
+    handleTableUsageInput(usage_rows, row_id, value) {
+        let new_usage_rows = {};
+        Object.assign(new_usage_rows, usage_rows);
+        new_usage_rows[row_id] = value;
+        const is_usage_rows_valid = this.isRowsUsageValid(new_usage_rows);
+
+        this.props.setRowsUsageValid(is_usage_rows_valid);
+        this.props.setUsageRowsState(new_usage_rows);
+    }
+
+    isRowsUsageValid(rows_usage) {
+        let valid = true;
+        for(let row_id in rows_usage) {
+            if(!isFloat(rows_usage[row_id])) {
+                valid = false;
+                break;
+            }
+        }
+        return valid;
     }
 
     renderTableBody(data, rows, cols_order, expenses_data, body_classnames, show_how_many,
@@ -338,20 +369,19 @@ class TableArea extends React.Component {
         //RENDERING ROWS _________________________
 
         for(let i in rows_keys_sorted) {
-            const row_id = +rows_keys_sorted[i];
-            let trow_classnames = '';
-
             if(i >= show_how_many) {
                 break;
             }
 
+            const row_id = +rows_keys_sorted[i];
+            let trow_classnames = '';
             let cur_row = [];
             const row_data = rows[row_id];
             let cell_class = 'table__body-cell';
+            const row_place_id = rows_checked.indexOf(row_id);
+            const cur_row_checked = !(row_place_id === -1);
 
             if(data === 'incomes-new-entry') {
-                const row_place_id = rows_checked.indexOf(row_id);
-                const cur_row_checked = !(row_place_id === -1);
                 trow_classnames += cur_row_checked ? ' table__checked-row' : '';
             }
 
@@ -388,6 +418,36 @@ class TableArea extends React.Component {
                         </td>
                     )
                     //пока ничего
+                }
+                else if(col_name === 'usage') { //в таблице при добавлении новой записи в Доходы
+                    if(!cur_row_checked) {
+                        cur_row.push(
+                            <td className={cell_class}
+                                key={data + '-' + row_id + '-' + col_name}
+                            > - </td>
+                        )
+                    }
+                    else {
+                        cur_row.push(
+                            <td
+                                className={cell_class}
+                                key={data + '-' + row_id + '-' + col_name}
+                            >
+                                <FormControl
+                                    style={{'width': '120px'}}
+                                    type={'number'}
+                                    size={'sm'}
+                                    autoFocus
+                                    onInput={event => {
+                                        const value = event.currentTarget.value;
+                                        const is_valid = isFloat(value);
+                                        this.handleTableUsageInput(this.props.rowsUsageState, row_id, value);
+                                        setValidation(event.currentTarget, is_valid);
+                                    }}
+                                />
+                            </td>
+                        )
+                    }
                 }
                 else if(col_name === 'amount_data') {
                     let amount_content = [];

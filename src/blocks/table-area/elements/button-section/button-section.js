@@ -59,8 +59,9 @@ class ButtonSection extends React.Component{
         return raw_mat_name_valid && provider_name_valid && price_valid && amount_valid && expenses_valid;
     }
 
-    isIncomesNewEntryFormValid(name_valid, customer_name_valid, price_valid, amount_valid, expenses_valid) {
-        return name_valid && customer_name_valid && price_valid && amount_valid && expenses_valid;
+    isIncomesNewEntryFormValid(name_valid, customer_name_valid, price_valid, amount_valid, expenses_valid,
+                               rows_usage_valid) {
+        return name_valid && customer_name_valid && price_valid && amount_valid && expenses_valid && rows_usage_valid;
     }
 
     isExpensesValid(addedExpenses) {
@@ -136,6 +137,19 @@ class ButtonSection extends React.Component{
 
         this.props.clearForm();
         this.props.toggleNewEntryModal(false);
+    }
+
+    handleIncomesNewEntrySubmit(event, form) {
+        let fetch_body = new FormData(form);
+
+        fetch('/src/php/add_incomes_entry.php', {
+            method: 'POST',
+            body: fetch_body,
+        }).then(
+            response => {
+
+            }
+        );
     }
 
     renderJournalNewEntryModal(modal_is_open, toggleModal, raw_mat_data, expenses_data, setRawMatName, setProviderName,
@@ -498,7 +512,6 @@ class ButtonSection extends React.Component{
                                   size={'sm'}
                                   className={'modal__added-expense-input'}
                                   onInput={event => {
-                                      console.log('Ну вввожу ведьб');
                                       event.preventDefault();
                                       this.handleExpenseInput(exp_id, event.currentTarget.value, added_expenses,
                                           setAddedExpenses, this.isExpensesValid);
@@ -676,7 +689,8 @@ class ButtonSection extends React.Component{
                     <Button
                         variant={'success'}
                         disabled={!this.isIncomesNewEntryFormValid(this.props.isNameValid, this.props.isCustomerNameValid,
-                            this.props.isPriceValid, this.props.isAmountValid, this.props.isExpensesValid)}
+                            this.props.isPriceValid, this.props.isAmountValid, this.props.isExpensesValid,
+                            this.props.isRowsUsageValid)}
                     >Добавить</Button>
                 </Modal.Footer>
             </Modal>
