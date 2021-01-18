@@ -406,6 +406,17 @@ export default function reducer(state, action) {
                     }
                 }
             }
+        case actionTypes.INCOMES_NEW_ENTRY_MODAL_SET_ROWS_CHECKED:
+            return {
+                ...state,
+                incomes_new_entry_modal: {
+                    ...state.incomes_new_entry_modal,
+                    form_state: {
+                        ...state.incomes_new_entry_modal.form_state,
+                        rowsChecked: action.value,
+                    }
+                }
+            }
 
         //_______ Journal Sort _________
 

@@ -560,6 +560,19 @@ class ButtonSection extends React.Component{
                                         }}
                                     />
                                 </Col>
+                                <Col xs={3}>
+                                    <Form.Label className={'text text_size-14'}>
+                                        Цена продажи (руб)
+                                    </Form.Label>
+                                    <Form.Control
+                                        size={'sm'}
+                                        type={'number'}
+                                        onInput={event => {
+                                            const value = event.currentTarget.value;
+                                            this.props.setPrice(value);
+                                        }}
+                                    />
+                                </Col>
                             </Form.Group>
                             <Form.Group as={Row}>
                                 <Col xs={4}>
@@ -585,21 +598,6 @@ class ButtonSection extends React.Component{
                                         onInput={event => {
                                             const value = event.currentTarget.value;
                                             this.props.setCustomerName(value);
-                                        }}
-                                    />
-                                </Col>
-                            </Form.Group>
-                            <Form.Group as={Row}>
-                                <Col xs={3}>
-                                    <Form.Label className={'text text_size-14'}>
-                                        Цена продажи (руб)
-                                    </Form.Label>
-                                    <Form.Control
-                                        size={'sm'}
-                                        type={'number'}
-                                        onInput={event => {
-                                            const value = event.currentTarget.value;
-                                            this.props.setPrice(value);
                                         }}
                                     />
                                 </Col>

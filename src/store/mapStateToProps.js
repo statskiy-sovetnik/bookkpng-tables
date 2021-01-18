@@ -83,6 +83,7 @@ export default function mapStateToProps(component) {
             }
 
         //______ INCOMES NEW ENTRY MODAL _________
+        //Table
         case 'IncomesNewEntryArea':
             return function (state) {
                 return {
@@ -94,8 +95,10 @@ export default function mapStateToProps(component) {
                     journalRows: state.journal.rows,
                     entriesPack: state.incomes_new_entry_modal.entriesPack,
                     entriesShouldBeShown: state.incomes_new_entry_modal.entriesShouldBeShown,
+                    rowsChecked: state.incomes_new_entry_modal.form_state.rowsChecked,
                 }
             }
+        //Modal
         case 'SortNameIncomesNewEntry':
             return function (state) {
                 return {

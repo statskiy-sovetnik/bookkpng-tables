@@ -30,7 +30,8 @@ import Container from "react-bootstrap/Container";
 import Popover from "react-bootstrap/Popover";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Table from "react-bootstrap/Table";
-import Modal from "react-bootstrap/Modal";
+import InputGroup from "react-bootstrap/InputGroup";
+
 import {isEmptyObj} from "../../common";
 
 class TableArea extends React.Component {
@@ -135,6 +136,20 @@ class TableArea extends React.Component {
         }
     }
 
+    handleTableCheckboxClick(row_id, rows_checked, setRowsChecked) {
+        let new_rows_checked = rows_checked.slice();
+        const place_id = new_rows_checked.indexOf(+row_id);
+
+        if(place_id !== -1) {
+            new_rows_checked.splice(place_id, 1);
+        }
+        else {
+            new_rows_checked.push(+row_id);
+        }
+
+        setRowsChecked(new_rows_checked);
+    }
+
     renderTableBody(data, rows, cols_order, expenses_data, body_classnames, show_how_many,
                     fromDate, toDate, sort_type, sort_from_least, another_table_rows, raw_mat_usage_for_journal, raw_mat_usage,
                     incomes_head_cols, journal_head_cols) {
@@ -143,7 +158,11 @@ class TableArea extends React.Component {
         let table_rows = [];
         let rows_keys_sorted = Object.keys(rows).slice();
         let rows_keys = Object.keys(rows).slice();
+        let rows_checked = [];
 
+        if(data === 'incomes-new-entry') {
+            rows_checked = this.props.rowsChecked;
+        }
 
         //Sorting Rows By Date Range ________________
 
@@ -316,6 +335,7 @@ class TableArea extends React.Component {
 
         for(let i in rows_keys_sorted) {
             const row_id = +rows_keys_sorted[i];
+            let trow_classnames = '';
 
             if(i >= show_how_many) {
                 break;
@@ -324,6 +344,12 @@ class TableArea extends React.Component {
             let cur_row = [];
             const row_data = rows[row_id];
             let cell_class = 'table__body-cell';
+
+            if(data === 'incomes-new-entry') {
+                const row_place_id = rows_checked.indexOf(row_id);
+                const cur_row_checked = !(row_place_id === -1);
+                trow_classnames += cur_row_checked ? ' table__checked-row' : '';
+            }
 
             cols_order.forEach((col_name) => {
                 if(col_name === 'control') {
@@ -349,7 +375,12 @@ class TableArea extends React.Component {
                         <td className={cell_class}
                             key={data + '-' + row_id + '-' + col_name}
                         >
-
+                            <InputGroup.Checkbox
+                                onChange={event => {
+                                    this.handleTableCheckboxClick(row_id, rows_checked, this.props.setCheckedRows);
+                                }}
+                                className={'modal__table-checkbox'}
+                            />
                         </td>
                     )
                     //пока ничего
@@ -538,7 +569,10 @@ class TableArea extends React.Component {
             });
 
             table_rows.push(
-                <tr key={data + '-' + row_id + '-row'}>
+                <tr
+                    className={trow_classnames}
+                    key={data + '-' + row_id + '-row'}
+                >
                     {cur_row}
                 </tr>
             );
@@ -930,6 +964,9 @@ class TableArea extends React.Component {
                 );
                 break;
             case 'incomes-new-entry':
+                const rows = this.props.journalRows || {};
+                const entries_left = Object.keys(rows).length - this.props.entriesShouldBeShown;
+
                 table_area_content.push(
                     <IncomesNewEntryControlSection
                         data={'incomes-new-entry'}
@@ -960,7 +997,11 @@ class TableArea extends React.Component {
                             )
                         ]}
                     </TableIncomesNewEntry>
-                )
+                );
+                table_area_content.push(
+                    this.renderTableBottomPanel(entries_left, this.props.entriesPack,
+                        this.props.entriesShouldBeShown)
+                );
                 break;
             default:
                 area_name = 'Журнал';

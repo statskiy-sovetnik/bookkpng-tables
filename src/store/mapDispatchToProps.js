@@ -58,6 +58,8 @@ import incomesNewEntryModalSetCustomerName
 import incomesNewEntryModalSetPrice from "./actionCreators/incomes_new_entry_modal/incomesNewEntryModalSetPrice";
 import incomesNewEntryModalSetAmount from "./actionCreators/incomes_new_entry_modal/incomesNewEntryModalSetAmount";
 import incomesNewEntryModalSetDate from "./actionCreators/incomes_new_entry_modal/incomesNewEntryModalSetDate";
+import incomesNewEntryModalSetRowsChecked
+    from "./actionCreators/incomes_new_entry_modal/incomesNewEntryModalSetRowsChecked";
 
 export default function mapDispatchToProps(component) {
     switch (component) {
@@ -233,5 +235,13 @@ export default function mapDispatchToProps(component) {
                 }
             }
 
+        // __________ INCOMES NEW ENTRY MODAL ____________
+
+        case 'IncomesNewEntryArea':
+            return function (dispatch) {
+                return {
+                    setCheckedRows: rows => dispatch(incomesNewEntryModalSetRowsChecked(rows)),
+                }
+            }
     }
 }

@@ -33,6 +33,9 @@ export default {
     INCOMES_NEW_ENTRY_MODAL_SET_DATE: 'incomesNewEntryModalSetDate',
     INCOMES_NEW_ENTRY_MODAL_SET_PRICE: 'incomesNewEntryModalSetPrice',
     INCOMES_NEW_ENTRY_MODAL_SET_AMOUNT: 'incomesNewEntryModalSetAmount',
+    INCOMES_NEW_ENTRY_MODAL_SET_ROWS_CHECKED: 'incomesNewEntryModalSetRowsChecked',
+    INCOMES_NEW_ENTRY_MODAL_SET_SORT_NAME: 'incomesNewEntryModalSetSortName',
+    INCOMES_NEW_ENTRY_MODAL_SET_SORT_DIR: 'incomesNewEntryModalSetSortDir',
 
     //Journal Sorts Section
     JOURNAL_SORT_TYPE_CHANGE: 'journalSortTypeChange',

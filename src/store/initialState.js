@@ -108,7 +108,8 @@ const initialState = {
             price: null,
             expenses: {
                 //0: 1156.5,
-            }
+            },
+            rowsChecked: [],
         },
         //Table Area
         sortName: 'Дате',
