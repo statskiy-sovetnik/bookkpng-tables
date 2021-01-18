@@ -66,6 +66,16 @@ import incomesNewEntryModalSetEntriesPack
     from "./actionCreators/incomes_new_entry_modal/incomesNewEntryModalSetEntriesPack";
 import incomesNewEntryModalSetEntriesShouldBeShown
     from "./actionCreators/incomes_new_entry_modal/incomesNewEntryModalSetEntriesShouldBeShown";
+import incomesNewEntryModalSetNameValid
+    from "./actionCreators/incomes_new_entry_modal/incomesNewEntryModalSetNameValid";
+import incomesNewEntryModalSetCustomerNameValid
+    from "./actionCreators/incomes_new_entry_modal/incomesNewEntryModalSetCustomerNameValid";
+import incomesNewEntryModalSetPriceValid
+    from "./actionCreators/incomes_new_entry_modal/incomesNewEntryModalSetPriceValid";
+import incomesNewEntryModalSetAmountValid
+    from "./actionCreators/incomes_new_entry_modal/incomesNewEntryModalSetAmountValid";
+import incomesNewEntryModalSetExpensesValid
+    from "./actionCreators/incomes_new_entry_modal/incomesNewEntryModalSetExpensesValid";
 
 export default function mapDispatchToProps(component) {
     switch (component) {
@@ -143,6 +153,12 @@ export default function mapDispatchToProps(component) {
                     setPrice: value => dispatch(incomesNewEntryModalSetPrice(value)),
                     setAmount: value => dispatch(incomesNewEntryModalSetAmount(value)),
                     setDatepickerDate: value => dispatch(incomesNewEntryModalSetDate(value)),
+                    //validation
+                    setNameValid: bool => dispatch(incomesNewEntryModalSetNameValid(bool)),
+                    setCustomerNameValid: bool => dispatch(incomesNewEntryModalSetCustomerNameValid(bool)),
+                    setPriceValid: bool => dispatch(incomesNewEntryModalSetPriceValid(bool)),
+                    setAmountValid: bool => dispatch(incomesNewEntryModalSetAmountValid(bool)),
+                    setExpensesValid: bool => dispatch(incomesNewEntryModalSetExpensesValid(bool)),
                 }
             }
 

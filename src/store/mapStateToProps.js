@@ -78,7 +78,12 @@ export default function mapStateToProps(component) {
                     formStateAmount: state.incomes_new_entry_modal.form_state.amount,
                     formStateDate: state.incomes_new_entry_modal.form_state.date,
                     formStatePrice: state.incomes_new_entry_modal.form_state.price,
-
+                    //form validation:
+                    isAmountValid: state.incomes_new_entry_modal.validation.amount,
+                    isPriceValid: state.incomes_new_entry_modal.validation.price,
+                    isNameValid: state.incomes_new_entry_modal.validation.name,
+                    isCustomerNameValid: state.incomes_new_entry_modal.validation.customer_name,
+                    isExpensesValid: state.incomes_new_entry_modal.validation.expenses,
                 }
             }
 
@@ -106,6 +111,7 @@ export default function mapStateToProps(component) {
                 }
             }
         //Modal
+
         case 'SortNameIncomesNewEntry':
             return function (state) {
                 return {

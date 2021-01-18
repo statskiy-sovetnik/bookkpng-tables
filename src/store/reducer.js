@@ -450,6 +450,62 @@ export default function reducer(state, action) {
                     entriesShouldBeShown: action.value,
                 }
             }
+        //Validation
+        case actionTypes.INCOMES_NEW_ENTRY_MODAL_SET_NAME_VALID:
+            return {
+                ...state,
+                incomes_new_entry_modal: {
+                    ...state.incomes_new_entry_modal,
+                    validation: {
+                        ...state.incomes_new_entry_modal.validation,
+                        name: action.value,
+                    }
+                }
+            }
+        case actionTypes.INCOMES_NEW_ENTRY_MODAL_SET_CUSTOMER_NAME_VALID:
+            return {
+                ...state,
+                incomes_new_entry_modal: {
+                    ...state.incomes_new_entry_modal,
+                    validation: {
+                        ...state.incomes_new_entry_modal.validation,
+                        customer_name: action.value,
+                    }
+                }
+            }
+        case actionTypes.INCOMES_NEW_ENTRY_MODAL_SET_PRICE_VALID:
+            return {
+                ...state,
+                incomes_new_entry_modal: {
+                    ...state.incomes_new_entry_modal,
+                    validation: {
+                        ...state.incomes_new_entry_modal.validation,
+                        price: action.value,
+                    }
+                }
+            }
+        case actionTypes.INCOMES_NEW_ENTRY_MODAL_SET_AMOUNT_VALID:
+            return {
+                ...state,
+                incomes_new_entry_modal: {
+                    ...state.incomes_new_entry_modal,
+                    validation: {
+                        ...state.incomes_new_entry_modal.validation,
+                        amount: action.value,
+                    }
+                }
+            }
+        case actionTypes.INCOMES_NEW_ENTRY_MODAL_SET_EXPENSES_VALID:
+            return {
+                ...state,
+                incomes_new_entry_modal: {
+                    ...state.incomes_new_entry_modal,
+                    validation: {
+                        ...state.incomes_new_entry_modal.validation,
+                        expenses: action.value,
+                    }
+                }
+            }
 
 
         //_______ Journal Sort _________

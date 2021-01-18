@@ -38,6 +38,11 @@ export default {
     INCOMES_NEW_ENTRY_MODAL_SET_SORT_DIR: 'incomesNewEntryModalSetSortDir',
     INCOMES_NEW_ENTRY_MODAL_SET_ENTRIES_PACK: 'incomesNewEntryModalSetEntriesPack',
     INCOMES_NEW_ENTRY_MODAL_SET_ENTRIES_SHOULD_BE_SHOWN: 'incomesNewEntryModalSetEntriesShouldBeShown',
+    INCOMES_NEW_ENTRY_MODAL_SET_NAME_VALID: 'incomesNewEntryModalSetNameValid',
+    INCOMES_NEW_ENTRY_MODAL_SET_CUSTOMER_NAME_VALID: 'incomesNewEntryModalSetCustomerNameValid',
+    INCOMES_NEW_ENTRY_MODAL_SET_PRICE_VALID: 'incomesNewEntryModalSetPriceValid',
+    INCOMES_NEW_ENTRY_MODAL_SET_AMOUNT_VALID: 'incomesNewEntryModalSetAmountValid',
+    INCOMES_NEW_ENTRY_MODAL_SET_EXPENSES_VALID: 'incomesNewEntryModalSetExpensesValid',
 
     //Journal Sorts Section
     JOURNAL_SORT_TYPE_CHANGE: 'journalSortTypeChange',

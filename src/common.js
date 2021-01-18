@@ -34,6 +34,12 @@ function isRawMatNameValid(value) {
             (value + '').length <= 40;
 }
 
+function isGoodsNameValid(value) {
+    return /^[\w\d\sа-яё]+$/i.test("" + value) &&
+        (value + '').length >= 1 &&
+        (value + '').length <= 40;
+}
+
 function isProviderNameValid(value) {
     return /^[\w\d\sа-яё]+$/i.test("" + value) &&
         (value + '').length >= 1 &&
@@ -75,4 +81,4 @@ function formatDay(day) {
 }
 
 export {getCookieValue, removeCookie, isRawMatNameValid, isProviderNameValid, convertDateToMysqlDate, isEmptyObj, formatDay,
-        isFloat, setValidation};
+        isFloat, setValidation, isGoodsNameValid};

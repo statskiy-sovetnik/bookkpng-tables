@@ -20,7 +20,7 @@ import Container from "react-bootstrap/Container";
 //Common _________
 import {
     convertDateToMysqlDate,
-    isFloat,
+    isFloat, isGoodsNameValid,
     isProviderNameValid,
     isRawMatNameValid,
     setValidation
@@ -57,6 +57,10 @@ class ButtonSection extends React.Component{
 
     isJournalNewEntryFormValid(raw_mat_name_valid, provider_name_valid, price_valid, amount_valid, expenses_valid) {
         return raw_mat_name_valid && provider_name_valid && price_valid && amount_valid && expenses_valid;
+    }
+
+    isIncomesNewEntryFormValid(name_valid, customer_name_valid, price_valid, amount_valid, expenses_valid) {
+        return name_valid && customer_name_valid && price_valid && amount_valid && expenses_valid;
     }
 
     isExpensesValid(addedExpenses) {
@@ -466,7 +470,7 @@ class ButtonSection extends React.Component{
                                    new_added_expenses[expense_id] = added_expenses[expense_id] || '';
                                    setAddedExpenses(new_added_expenses);
                                    //Валидация:
-                                   //this.props.setExpensesValid(false);
+                                   this.props.setExpensesValid(false);
                                }}
                 >
                     {expenses_data[expense_id].name}
@@ -494,12 +498,13 @@ class ButtonSection extends React.Component{
                                   size={'sm'}
                                   className={'modal__added-expense-input'}
                                   onInput={event => {
+                                      console.log('Ну вввожу ведьб');
                                       event.preventDefault();
                                       this.handleExpenseInput(exp_id, event.currentTarget.value, added_expenses,
-                                          setAddedExpenses);
+                                          setAddedExpenses, this.isExpensesValid);
                                       const value = event.currentTarget.value;
-                                      //const isValid = isFloat(value);
-                                      //setValidation(event.currentTarget, isValid);
+                                      const isValid = isFloat(value);
+                                      setValidation(event.currentTarget, isValid);
                                   }}
                     />
                     <Button
@@ -542,7 +547,7 @@ class ButtonSection extends React.Component{
                                         onChange={date => {
                                             this.props.setDatepickerDate(date.setHours(0, 0, 0, 0));
                                         }}
-                                        className={'form-control form-control-sm'}
+                                        className={'form-control form-control-sm is-valid'}
                                         dateFormat={'dd/MM/yyyy'}
                                         locale={'ru'}
                                     />
@@ -554,9 +559,15 @@ class ButtonSection extends React.Component{
                                     <Form.Control
                                         size={'sm'}
                                         type={'number'}
+                                        required
+                                        min={0}
+                                        max={999999}
                                         onInput={event => {
                                             const value = event.currentTarget.value;
+                                            const is_valid = isFloat(value);
                                             this.props.setAmount(value);
+                                            this.props.setAmountValid(is_valid);
+                                            setValidation(event.currentTarget, is_valid);
                                         }}
                                     />
                                 </Col>
@@ -567,9 +578,15 @@ class ButtonSection extends React.Component{
                                     <Form.Control
                                         size={'sm'}
                                         type={'number'}
+                                        required
+                                        min={0}
+                                        max={9999999}
                                         onInput={event => {
                                             const value = event.currentTarget.value;
+                                            const is_valid = isFloat(value);
                                             this.props.setPrice(value);
+                                            this.props.setPriceValid(is_valid);
+                                            setValidation(event.currentTarget, is_valid);
                                         }}
                                     />
                                 </Col>
@@ -582,9 +599,15 @@ class ButtonSection extends React.Component{
                                     <Form.Control
                                         type={'text'}
                                         size={'sm'}
+                                        required
+                                        minLength={1}
+                                        maxLength={40}
                                         onInput={event => {
                                             const value = event.currentTarget.value;
+                                            const is_valid = isGoodsNameValid(value);
                                             this.props.setName(value);
+                                            this.props.setNameValid(is_valid);
+                                            setValidation(event.currentTarget, is_valid);
                                         }}
                                     />
                                 </Col>
@@ -597,7 +620,10 @@ class ButtonSection extends React.Component{
                                         size={'sm'}
                                         onInput={event => {
                                             const value = event.currentTarget.value;
+                                            const is_valid = isProviderNameValid(value);
                                             this.props.setCustomerName(value);
+                                            this.props.setCustomerNameValid(is_valid);
+                                            setValidation(event.currentTarget, is_valid);
                                         }}
                                     />
                                 </Col>
@@ -647,7 +673,11 @@ class ButtonSection extends React.Component{
                     >
                         Отмена
                     </Button>
-                    <Button variant={'success'}>Добавить</Button>
+                    <Button
+                        variant={'success'}
+                        disabled={!this.isIncomesNewEntryFormValid(this.props.isNameValid, this.props.isCustomerNameValid,
+                            this.props.isPriceValid, this.props.isAmountValid, this.props.isExpensesValid)}
+                    >Добавить</Button>
                 </Modal.Footer>
             </Modal>
         )

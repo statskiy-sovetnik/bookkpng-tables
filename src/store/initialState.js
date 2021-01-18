@@ -111,6 +111,13 @@ const initialState = {
             },
             rowsChecked: [],
         },
+        validation: {
+            amount: false,
+            name: false,
+            customer_name: false,
+            price: false,
+            expenses: true,
+        },
         //Table Area
         sortName: 'Дате',
         sortFromLeast: false,
