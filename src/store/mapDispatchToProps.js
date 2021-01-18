@@ -62,6 +62,10 @@ import incomesNewEntryModalSetRowsChecked
     from "./actionCreators/incomes_new_entry_modal/incomesNewEntryModalSetRowsChecked";
 import incomesNewEntryModalSetSortName from "./actionCreators/incomes_new_entry_modal/incomesNewEntryModalSetSortName";
 import incomesNewEntryModalSetSortDir from "./actionCreators/incomes_new_entry_modal/incomesNewEntryModalSetSortDir";
+import incomesNewEntryModalSetEntriesPack
+    from "./actionCreators/incomes_new_entry_modal/incomesNewEntryModalSetEntriesPack";
+import incomesNewEntryModalSetEntriesShouldBeShown
+    from "./actionCreators/incomes_new_entry_modal/incomesNewEntryModalSetEntriesShouldBeShown";
 
 export default function mapDispatchToProps(component) {
     switch (component) {
@@ -256,6 +260,14 @@ export default function mapDispatchToProps(component) {
             return function (dispatch) {
                 return {
                     setSortFromLeast: bool => dispatch(incomesNewEntryModalSetSortDir(bool)),
+                }
+            }
+        //Length switch
+        case 'EntrySwitchLengthSectionIncomesNewEntry':
+            return function (dispatch) {
+                return {
+                    changeEntriesPack: value => dispatch(incomesNewEntryModalSetEntriesPack(value)),
+                    changeEntriesShouldBeShown: value => dispatch(incomesNewEntryModalSetEntriesShouldBeShown(value)),
                 }
             }
     }

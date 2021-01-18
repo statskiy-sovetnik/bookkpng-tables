@@ -331,7 +331,7 @@ export default function reducer(state, action) {
                 }
             }
 
-        //_____ Incomes New Entry Modal _________
+        //_____ INCOMES NEw ENTRY MODAL _________
         case actionTypes.INCOMES_NEW_ENTRY_MODAL_TOGGLE_OPEN:
             return {
                 ...state,
@@ -417,6 +417,7 @@ export default function reducer(state, action) {
                     }
                 }
             }
+        //Control section
         case actionTypes.INCOMES_NEW_ENTRY_MODAL_SET_SORT_NAME:
             return {
                 ...state,
@@ -433,6 +434,23 @@ export default function reducer(state, action) {
                     sortFromLeast: action.value,
                 }
             }
+        case actionTypes.INCOMES_NEW_ENTRY_MODAL_SET_ENTRIES_PACK:
+            return {
+                ...state,
+                incomes_new_entry_modal: {
+                    ...state.incomes_new_entry_modal,
+                    entriesPack: action.value,
+                }
+            }
+        case actionTypes.INCOMES_NEW_ENTRY_MODAL_SET_ENTRIES_SHOULD_BE_SHOWN:
+            return {
+                ...state,
+                incomes_new_entry_modal: {
+                    ...state.incomes_new_entry_modal,
+                    entriesShouldBeShown: action.value,
+                }
+            }
+
 
         //_______ Journal Sort _________
 

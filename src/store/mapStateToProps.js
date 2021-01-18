@@ -98,6 +98,13 @@ export default function mapStateToProps(component) {
                     rowsChecked: state.incomes_new_entry_modal.form_state.rowsChecked,
                 }
             }
+        case 'EntrySwitchLengthSectionIncomesNewEntry':
+            return function (state) {
+                return {
+                    entriesPack: state.incomes_new_entry_modal.entriesPack,
+                    entriesShouldBeShown: state.incomes_new_entry_modal.entriesShouldBeShown,
+                }
+            }
         //Modal
         case 'SortNameIncomesNewEntry':
             return function (state) {
