@@ -44,6 +44,7 @@ class ButtonSection extends React.Component{
     }
 
     handleJournalNewEntryModalClose(toggleModal) {
+        this.props.clearForm();
         toggleModal(false);
     }
 
@@ -150,6 +151,11 @@ class ButtonSection extends React.Component{
 
             }
         );
+    }
+
+    handleIncomesNewEntryModalHide(toggleModal) {
+        this.props.clearModalForm();
+        toggleModal(false);
     }
 
     renderJournalNewEntryModal(modal_is_open, toggleModal, raw_mat_data, expenses_data, setRawMatName, setProviderName,
@@ -315,7 +321,9 @@ class ButtonSection extends React.Component{
             <Modal
                 show={modal_is_open}
                 size={'lg'}
-                onHide={(event) => {this.handleJournalNewEntryModalClose(toggleModal)}}
+                onHide={(event) => {
+                    this.handleJournalNewEntryModalClose(toggleModal)
+                }}
             >
                 <Modal.Header closeButton>
                     <Modal.Title>Новая запись</Modal.Title>
@@ -543,7 +551,9 @@ class ButtonSection extends React.Component{
         return (
             <Modal show={modal_is_open}
                    size={'lg'}
-                   onHide={() => toggleModal(false)}>
+                   onHide={() => {
+                       this.handleIncomesNewEntryModalHide(toggleModal);
+                   }}>
                 <Modal.Header closeButton>
                     <Modal.Title>Новая запись</Modal.Title>
                 </Modal.Header>

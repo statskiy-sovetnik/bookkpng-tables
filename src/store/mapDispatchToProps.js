@@ -80,6 +80,7 @@ import incomesNewEntryModalSetRowsUsageState
     from "./actionCreators/incomes_new_entry_modal/incomesNewEntryModalSetRowsUsageState";
 import incomesNewEntryModalSetRowsUsageValid
     from "./actionCreators/incomes_new_entry_modal/incomesNewEntryModalSetRowsUsageValid";
+import incomesNewEntryModalClearForm from "./actionCreators/incomes_new_entry_modal/incomesNewEntryModalClearForm";
 
 export default function mapDispatchToProps(component) {
     switch (component) {
@@ -150,6 +151,7 @@ export default function mapDispatchToProps(component) {
         case 'IncomesButtonSection':
             return function (dispatch) {
                 return {
+                    clearModalForm: () => dispatch(incomesNewEntryModalClearForm()),
                     toggleNewEntryModal: bool => dispatch(incomesNewEntryModalToggleOpen(bool)),
                     setAddedExpenses: data => dispatch(incomesSetAddedExpenses(data)),
                     setName: value => dispatch(incomesNewEntryModalSetName(value)),
@@ -163,6 +165,10 @@ export default function mapDispatchToProps(component) {
                     setPriceValid: bool => dispatch(incomesNewEntryModalSetPriceValid(bool)),
                     setAmountValid: bool => dispatch(incomesNewEntryModalSetAmountValid(bool)),
                     setExpensesValid: bool => dispatch(incomesNewEntryModalSetExpensesValid(bool)),
+                    setRowsUsageValid: bool => dispatch(incomesNewEntryModalSetRowsUsageValid(bool)),
+                    //table rows
+                    setCheckedRows: rows => dispatch(incomesNewEntryModalSetRowsChecked(rows)),
+                    setUsageRowsState: rows => dispatch(incomesNewEntryModalSetRowsUsageState(rows)),
                 }
             }
 

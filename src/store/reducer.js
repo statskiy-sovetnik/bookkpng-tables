@@ -340,6 +340,18 @@ export default function reducer(state, action) {
                     isOpen: action.value,
                 }
             }
+        case actionTypes.INCOMES_NEW_ENTRY_MODAL_CLEAR_FORM:
+            let incomes_init_validation = {};
+            let incomes_init_form_state = {};
+            return {
+                ...state,
+                incomes_new_entry_modal: {
+                    ...state.incomes_new_entry_modal,
+                    form_state: Object.assign(incomes_init_form_state, initialState.incomes_new_entry_modal.form_state),
+                    validation: Object.assign(incomes_init_validation, initialState.incomes_new_entry_modal.validation),
+                }
+            }
+
         case actionTypes.INCOMES_SET_ADDED_EXPENSES:
             return {
                 ...state,
