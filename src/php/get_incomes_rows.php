@@ -62,7 +62,7 @@ try {
                 $expensesObj = [];
                 $expensesObjRes = $curRowExpensesRes->fetch();
                 $expensesObj['id'] = $expensesObjRes['expense_id'];
-                $expensesObj['amount'] = $expensesObjRes['amount'];
+                $expensesObj['amount'] = $expensesObjRes['sum'];
 
                 $curRowExpensesArr[$i] = $expensesObj;
                 $i++;

@@ -142,13 +142,41 @@ class ButtonSection extends React.Component{
 
     handleIncomesNewEntrySubmit(event, form) {
         let fetch_body = new FormData(form);
+        fetch_body.append('rows_usage', JSON.stringify(this.props.rowsUsageState));
+        fetch_body.append('user_key', this.props.userKey);
+        fetch_body.append('expenses', JSON.stringify(this.props.addedExpenses));
+        fetch_body.append('date', convertDateToMysqlDate(this.props.formStateDate));
+        console.log(this.props.addedExpenses);
+        console.log(this.props.rowsUsageState);
 
         fetch('/src/php/add_incomes_entry.php', {
             method: 'POST',
             body: fetch_body,
         }).then(
             response => {
+                if(response.status === 520) {
+                    alert('Ошибка при подключении к базе данных');
+                    return;
+                }
+                if(response.status === 500) {
+                    alert('Ошибка при отправке запроса mysql');
+                    return;
+                }
+                if(response.status !== 200) {
+                    alert('Неизвестная серверная ошибка');
+                    return;
+                }
 
+                console.log('Проверка пройдена');
+                return response.json();
+            },
+            error => {
+                alert('Неизвестная ошибка при обработке запроса');
+                console.log('Fetch: ', error);
+            }
+        ).then(
+            body => {
+                console.log(body[2]);
             }
         );
     }
@@ -559,7 +587,15 @@ class ButtonSection extends React.Component{
                 </Modal.Header>
                 <Modal.Body>
                     <Container className={'modal-body-container'}>
-                        <Form className={'modal__form'}>
+                        <Form
+                            className={'modal__form'}
+                            id={'incomes-new-entry-form'}
+                            onSubmit={event => {
+                                event.preventDefault();
+                                this.handleIncomesNewEntrySubmit(event, event.currentTarget);
+                                return false;
+                            }}
+                        >
                             <Form.Group as={Row}>
                                 <Col xs={3}>
                                     <Form.Label className={'text text_size-14'}>
@@ -583,6 +619,7 @@ class ButtonSection extends React.Component{
                                         size={'sm'}
                                         type={'number'}
                                         required
+                                        name={'amount'}
                                         min={0}
                                         max={999999}
                                         onInput={event => {
@@ -602,6 +639,7 @@ class ButtonSection extends React.Component{
                                         size={'sm'}
                                         type={'number'}
                                         required
+                                        name={'price'}
                                         min={0}
                                         max={9999999}
                                         onInput={event => {
@@ -623,6 +661,7 @@ class ButtonSection extends React.Component{
                                         type={'text'}
                                         size={'sm'}
                                         required
+                                        name={'goods-name'}
                                         minLength={1}
                                         maxLength={40}
                                         onInput={event => {
@@ -641,6 +680,10 @@ class ButtonSection extends React.Component{
                                     <Form.Control
                                         type={'text'}
                                         size={'sm'}
+                                        required
+                                        name={'customer-name'}
+                                        minLength={1}
+                                        maxLength={50}
                                         onInput={event => {
                                             const value = event.currentTarget.value;
                                             const is_valid = isProviderNameValid(value);
@@ -698,10 +741,14 @@ class ButtonSection extends React.Component{
                     </Button>
                     <Button
                         variant={'success'}
+                        form={'incomes-new-entry-form'}
+                        type={'submit'}
                         disabled={!this.isIncomesNewEntryFormValid(this.props.isNameValid, this.props.isCustomerNameValid,
                             this.props.isPriceValid, this.props.isAmountValid, this.props.isExpensesValid,
                             this.props.isRowsUsageValid)}
-                    >Добавить</Button>
+                    >
+                        Добавить
+                    </Button>
                 </Modal.Footer>
             </Modal>
         )

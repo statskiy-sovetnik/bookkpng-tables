@@ -70,6 +70,7 @@ export default function mapStateToProps(component) {
         case 'IncomesButtonSection':
             return function (state) {
                 return {
+                    userKey: state.auth.userKey,
                     newEntryModalIsOpen: state.incomes_new_entry_modal.isOpen,
                     expensesData: state.expenses_data,
                     addedExpenses: state.incomes_new_entry_modal.form_state.expenses,
@@ -85,6 +86,8 @@ export default function mapStateToProps(component) {
                     isCustomerNameValid: state.incomes_new_entry_modal.validation.customer_name,
                     isExpensesValid: state.incomes_new_entry_modal.validation.expenses,
                     isRowsUsageValid: state.incomes_new_entry_modal.validation.rows_usage,
+                    //table
+                    rowsUsageState: state.incomes_new_entry_modal.form_state.rowsUsageState,
                 }
             }
 
