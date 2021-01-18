@@ -215,8 +215,8 @@ class TableArea extends React.Component {
                 break;
             case 'Поставщику':
                 rows_keys_sorted.sort((row_id_1, row_id_2) => {
-                    const name_1 = rows[row_id_1].provider_name;
-                    const name_2 = rows[row_id_2].provider_name;
+                    const name_1 = rows[row_id_1].provider_name || rows[row_id_1].customer_name;
+                    const name_2 = rows[row_id_2].provider_name || rows[row_id_2].customer_name;
                     let sort_from_least_coef = sort_from_least ? 1 : -1;
 
                     if(name_1 < name_2) {
@@ -269,6 +269,10 @@ class TableArea extends React.Component {
                         case 'incomes':
                             sum_1 =  +rows[row_id_1].amount;
                             sum_2 = +rows[row_id_2].amount;
+                            break;
+                        case 'incomes-new-entry':
+                            sum_1 = +rows[row_id_1].amount_data.amount_total;
+                            sum_2 = +rows[row_id_2].amount_data.amount_total;
                             break;
                     }
 

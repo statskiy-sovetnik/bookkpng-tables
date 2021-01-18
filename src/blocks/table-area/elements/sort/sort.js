@@ -106,9 +106,8 @@ class Sort extends React.Component{
             case 'incomes-new-entry-name':
                 sort_btn_id = 'incomesNewEntryNameSortBtn';
                 current_sort_name = this.props.sortName || '';
-                onchange_handler = this.props.changeSortType;
+                onchange_handler = this.props.setSortType;
                 is_dir_sort = false;
-                console.log(sort_names);
                 for(let i = 0; i < sort_names.length; i++) {
                     dropdown_items.push(
                         <Dropdown.Item
@@ -126,7 +125,7 @@ class Sort extends React.Component{
                 sort_btn_id = 'incomesNewEntrySortDirectionBtn';
                 dropdown_items = sort_directions;
                 current_sort_name = this.props.sortFromLeast ? 'По возраст.' : 'По убыв.';
-                onchange_handler = this.props.changeSortDirection;
+                onchange_handler = this.props.setSortFromLeast;
                 is_dir_sort = true;
                 break;
         }

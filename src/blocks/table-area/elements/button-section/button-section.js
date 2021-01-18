@@ -659,7 +659,7 @@ class ButtonSection extends React.Component{
         let toggleNewEntryModalIsOpen;
         let new_entry_modal;
 
-        const incomes_new_entry_sort_names = ['Дате', 'Наименованию', 'Поставщику', 'Кол-ву', 'Сумме', 'Расходам'];
+        const incomes_new_entry_sort_names = ['Дате', 'Наименованию', 'Поставщику', 'Кол-ву', 'Цене'];
 
         switch (this.props.data) {
             case 'journal':
