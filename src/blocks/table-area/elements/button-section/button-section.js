@@ -65,6 +65,62 @@ class ButtonSection extends React.Component{
         return name_valid && customer_name_valid && price_valid && amount_valid && expenses_valid && rows_usage_valid;
     }
 
+    handleIncomesNewEntrySubmit(event, form) {
+        let raw_mat_usage_for_journal = {};
+
+        let fetch_body = new FormData(form);
+        fetch_body.append('rows_usage', JSON.stringify(this.props.rowsUsageState));
+        fetch_body.append('user_key', this.props.userKey);
+        fetch_body.append('expenses', JSON.stringify(this.props.addedExpenses));
+        fetch_body.append('date', convertDateToMysqlDate(this.props.formStateDate));
+
+        fetch('/src/php/add_incomes_entry.php', {
+            method: 'POST',
+            body: fetch_body,
+        }).then(
+            response => {
+                if(response.status === 520) {
+                    alert('Ошибка при подключении к базе данных');
+                    return;
+                }
+                if(response.status === 500) {
+                    alert('Ошибка при отправке запроса mysql');
+                    return;
+                }
+                if(response.status !== 200) {
+                    alert('Неизвестная серверная ошибка');
+                    return;
+                }
+
+                return response.text();
+            },
+            error => {
+                alert('Неизвестная ошибка при обработке запроса');
+                console.log('Fetch: ', error);
+            }
+        ).then(
+            body => {
+                //console.log(body[2]);
+                return this.props.updateRawMatUsageFromDb('/src/php/get_raw_mat_usage.php', this.props.userKey);
+            }
+        ).then(
+            all_raw_mat_usage => {
+                const raw_mat_usage = all_raw_mat_usage.raw_mat_usage;
+                this.props.updateIncomesRowsFromDb('/src/php/get_incomes_rows.php', this.props.userKey, raw_mat_usage,
+                    this.props.rawMatData, this.props.journalRows);
+                return raw_mat_usage_for_journal = all_raw_mat_usage.raw_mat_usage_for_journal;
+            }
+        ).then(
+            raw_mat_usage_for_journal => {
+                const upd_journal_rows = this.updateJournalRowsLocally(this.props.journalRows, raw_mat_usage_for_journal);
+                this.props.loadDataBaseJournal(upd_journal_rows);
+            }
+        );
+
+        this.props.clearModalForm();
+        this.props.toggleNewEntryModal(false);
+    }
+
     isExpensesValid(addedExpenses) {
         for(let exp_id in addedExpenses) {
             if(!isFloat(addedExpenses[exp_id])) {
@@ -140,45 +196,27 @@ class ButtonSection extends React.Component{
         this.props.toggleNewEntryModal(false);
     }
 
-    handleIncomesNewEntrySubmit(event, form) {
-        let fetch_body = new FormData(form);
-        fetch_body.append('rows_usage', JSON.stringify(this.props.rowsUsageState));
-        fetch_body.append('user_key', this.props.userKey);
-        fetch_body.append('expenses', JSON.stringify(this.props.addedExpenses));
-        fetch_body.append('date', convertDateToMysqlDate(this.props.formStateDate));
-        console.log(this.props.addedExpenses);
-        console.log(this.props.rowsUsageState);
+    updateJournalRowsLocally(journal_rows, raw_mat_usage_for_journal) {
+        raw_mat_usage_for_journal = raw_mat_usage_for_journal || [];
+        let new_journal_rows = journal_rows || {};
 
-        fetch('/src/php/add_incomes_entry.php', {
-            method: 'POST',
-            body: fetch_body,
-        }).then(
-            response => {
-                if(response.status === 520) {
-                    alert('Ошибка при подключении к базе данных');
-                    return;
-                }
-                if(response.status === 500) {
-                    alert('Ошибка при отправке запроса mysql');
-                    return;
-                }
-                if(response.status !== 200) {
-                    alert('Неизвестная серверная ошибка');
+        for(let row_id in journal_rows) {
+            let cur_used_total = 0;
+
+            //Находим данные об использованном сырье этой строки
+            raw_mat_usage_for_journal.forEach(usage_obj => {
+                const journal_id = usage_obj.journal_id;
+                if(+journal_id !== +row_id) {
                     return;
                 }
 
-                console.log('Проверка пройдена');
-                return response.json();
-            },
-            error => {
-                alert('Неизвестная ошибка при обработке запроса');
-                console.log('Fetch: ', error);
-            }
-        ).then(
-            body => {
-                console.log(body[2]);
-            }
-        );
+                cur_used_total += +usage_obj.raw_mat_used_total;
+            });
+
+            new_journal_rows[row_id].amount_data.amount_used_total = cur_used_total;
+        }
+
+        return new_journal_rows;
     }
 
     handleIncomesNewEntryModalHide(toggleModal) {

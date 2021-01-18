@@ -30,7 +30,7 @@ try {
     $addIncomesRow = "INSERT INTO incomes(date, name, customer_name, amount, price)
                         VALUES ('$date', '$goodsName', '$customerName', '$amount', '$price')";
     $keyConn->exec($addIncomesRow);
-    echo json_encode($keyConn->errorInfo());
+    //echo json_encode($keyConn->errorInfo());
 }
 catch(Exception $ex) {
     header('HTTP/1.1 Aborted adding an income row', true, 500);

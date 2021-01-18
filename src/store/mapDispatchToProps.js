@@ -151,6 +151,7 @@ export default function mapDispatchToProps(component) {
         case 'IncomesButtonSection':
             return function (dispatch) {
                 return {
+                    loadDataBaseJournal: (rows) => dispatch(loadDataBaseJournal(rows)),
                     clearModalForm: () => dispatch(incomesNewEntryModalClearForm()),
                     toggleNewEntryModal: bool => dispatch(incomesNewEntryModalToggleOpen(bool)),
                     setAddedExpenses: data => dispatch(incomesSetAddedExpenses(data)),

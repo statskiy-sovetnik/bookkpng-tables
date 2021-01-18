@@ -993,7 +993,12 @@ class TableArea extends React.Component {
                     <Heading className={'text_color-dark'}>{area_name}</Heading>
                 );
                 table_area_content.push(
-                    <IncomesButtonSection data={'incomes'}/>
+                    <IncomesButtonSection
+                        data={'incomes'}
+                        updateJournalRowsFromDb = {this.props.updateJournalRowsFromDb}
+                        updateRawMatUsageFromDb={this.props.updateRawMatUsageFromDb}
+                        updateIncomesRowsFromDb={this.props.updateIncomesRowsFromDb}
+                    />
                 );
 
                 table_area_content.push(
