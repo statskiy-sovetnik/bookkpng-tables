@@ -276,6 +276,7 @@ export default function mapDispatchToProps(component) {
                     setCheckedRows: rows => dispatch(incomesNewEntryModalSetRowsChecked(rows)),
                     setUsageRowsState: rows => dispatch(incomesNewEntryModalSetRowsUsageState(rows)),
                     setRowsUsageValid: bool => dispatch(incomesNewEntryModalSetRowsUsageValid(bool)),
+                    changeEntriesShouldBeShown: value => dispatch(incomesNewEntryModalSetEntriesShouldBeShown(value)),
                 }
             }
         //Sort
