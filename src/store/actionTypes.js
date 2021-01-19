@@ -47,6 +47,10 @@ export default {
     INCOMES_NEW_ENTRY_MODAL_SET_ROWS_USAGE_STATE: 'incomesNewEntryModalSetRowsUsageState',
     INCOMES_NEW_ENTRY_MODAL_CLEAR_FORM: 'incomesNewEntryModalClearForm',
 
+    //INCOMES NEW RAW MAT MODAL _________________
+
+    INCOMES_NEW_RAW_MAT_MODAL_TOGGLE_OPEN: 'incomesNewRawMatModalToggleOpen',
+
     //Journal Sorts Section
     JOURNAL_SORT_TYPE_CHANGE: 'journalSortTypeChange',
     JOURNAL_SORT_DIR_CHANGE: 'journalSortDirChange',

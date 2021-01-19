@@ -173,6 +173,16 @@ const initialState = {
         table_width: 2200,
     },
 
+    incomes_new_raw_mat_modal: {
+        modalIsOpen: false,
+        rowsChecked: [],
+        rowsUsageState: {
+            //0: 559.4,
+        },
+        sortNames: ['Дате', 'Наименованию', 'Поставщику', 'Кол-ву', 'Цене'],
+
+    },
+
     raw_mat_usage: [
     /*{
         incomes_id: 0,

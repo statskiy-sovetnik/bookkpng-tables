@@ -33,7 +33,13 @@ import Table from "react-bootstrap/Table";
 import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from 'react-bootstrap/FormControl';
 
-import {isEmptyObj, isFloat, setValidation} from "../../common";
+import {isEmptyObj, isFloat, isGoodsNameValid, isProviderNameValid, setValidation} from "../../common";
+import Modal from "react-bootstrap/Modal";
+import Form from "react-bootstrap/Form";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import DatePicker from "react-datepicker";
+import Dropdown from "react-bootstrap/Dropdown";
 
 class TableArea extends React.Component {
     constructor(props) {
@@ -607,7 +613,11 @@ class TableArea extends React.Component {
                             </OverlayTrigger>
                             <a className="text text_color-dark body-cell__icon-wrapper_right-icon"
                                href={'#'}
-                               onClick={event => {event.preventDefault()}}
+                               onClick={event => {
+                                   event.preventDefault();
+                                   //Открываем модальное окно добавления расходов на сырьё
+                                   this.props.toggleNewRawMatModal(true);
+                               }}
                             >
                                 <BtstrapIcon data={'bi-plus-circle'}
                                              className={'bi-plus-circle btstrap-icon_size-11 btstrap-icon_color-dark '}/>
@@ -866,6 +876,56 @@ class TableArea extends React.Component {
         );
     }
 
+    renderNewRawMatIncomesModal(modal_is_open, toggleModal, sort_names) {
+        return (
+            <Modal show={modal_is_open}
+                   size={'lg'}
+                   onHide={() => {
+                       toggleModal(false);
+                       //this.handleIncomesNewEntryModalHide(toggleModal);
+                   }}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Добавить рахсоды на сырьё</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Container className={'modal-body-container'}>
+                        <p className={'modal__column-label text text_color-black text_size-14'}>
+                            Выберите сырьё
+                        </p>
+                        <p className={'modal__column-prompt-text text text_size-12 text_color-grey'}>
+                            Выбранные записи включатся в список расходов текущей строки
+                        </p>
+                        {/*<TableArea
+                            className={'modal__table-area'}
+                            data={'incomes-new-raw-mat'}
+                            sort_names={sort_names}
+                        />*/}
+                    </Container>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant={'dark'}
+                            onClick={event => {
+                                event.preventDefault();
+                                toggleModal(false);
+                            }}
+                    >
+                        Отмена
+                    </Button>
+                    <Button
+                        variant={'success'}
+                        disabled={true}
+                        onClick={event => {
+                            event.preventDefault();
+                            //здесь вызвать функцию, которая отправит запрос
+                        }}
+                    >
+                        Добавить
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+        )
+    }
+
     renderTableBottomPanel(entries_left, entries_pack, entries_should_be_shown) {
         const content = (entries_left > 0 ? (
             <div className={'content-area'}>
@@ -992,6 +1052,11 @@ class TableArea extends React.Component {
                 table_area_content.push(
                     <Heading className={'text_color-dark'}>{area_name}</Heading>
                 );
+                //Модальное окно добавления расходов на сырье
+                table_area_content.push(
+                    this.renderNewRawMatIncomesModal(this.props.newRawMatModalIsOpen, this.props.toggleNewRawMatModal,
+                        this.props.newRawMatSortNames)
+                );
                 table_area_content.push(
                     <IncomesButtonSection
                         data={'incomes'}
@@ -1094,5 +1159,9 @@ const INCOMES_NEW_ENTRY_AREA_W = connect(
     mapStateToProps('IncomesNewEntryArea'),
     mapDispatchToProps('IncomesNewEntryArea')
 )(TableArea);
-export {JOURNAL_AREA_W, INCOMES_AREA_W, INCOMES_NEW_ENTRY_AREA_W};
+const INCOMES_NEW_RAW_MAT_AREA_W = connect(
+    mapStateToProps('IncomesNewRawMatArea'),
+    mapDispatchToProps('IncomesNewRawMatArea')
+)(TableArea);
+export {JOURNAL_AREA_W, INCOMES_AREA_W, INCOMES_NEW_ENTRY_AREA_W, INCOMES_NEW_RAW_MAT_AREA_W};
 

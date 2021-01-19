@@ -541,6 +541,16 @@ export default function reducer(state, action) {
                 }
             }
 
+        //INCOMES NEW RAW MAT MODAL ________________
+
+        case actionTypes.INCOMES_NEW_RAW_MAT_MODAL_TOGGLE_OPEN:
+            return {
+                ...state,
+                incomes_new_raw_mat_modal: {
+                    ...state.incomes_new_raw_mat_modal,
+                    modalIsOpen: action.value,
+                }
+            }
 
         //_______ Journal Sort _________
 

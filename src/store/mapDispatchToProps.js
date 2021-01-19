@@ -81,6 +81,8 @@ import incomesNewEntryModalSetRowsUsageState
 import incomesNewEntryModalSetRowsUsageValid
     from "./actionCreators/incomes_new_entry_modal/incomesNewEntryModalSetRowsUsageValid";
 import incomesNewEntryModalClearForm from "./actionCreators/incomes_new_entry_modal/incomesNewEntryModalClearForm";
+import incomesNewRawMatModalToggleOpen
+    from "./actionCreators/incomes_new_raw_mat_modal/incomesNewRawMatModalToggleOpen";
 
 export default function mapDispatchToProps(component) {
     switch (component) {
@@ -221,7 +223,11 @@ export default function mapDispatchToProps(component) {
         case 'IncomesArea':
             return function (dispatch) {
                 return {
-                    changeEntriesShouldBeShown: (value) => dispatch(entriesShouldBeShownChangeIncomes(value))
+                    changeEntriesShouldBeShown: (value) => dispatch(entriesShouldBeShownChangeIncomes(value)),
+
+                    //__________ INCOMES NEW RAW MAT MODAL ____________
+                    toggleNewRawMatModal: bool => dispatch(incomesNewRawMatModalToggleOpen(bool)),
+
                 }
             }
 
@@ -298,6 +304,13 @@ export default function mapDispatchToProps(component) {
                 return {
                     changeEntriesPack: value => dispatch(incomesNewEntryModalSetEntriesPack(value)),
                     changeEntriesShouldBeShown: value => dispatch(incomesNewEntryModalSetEntriesShouldBeShown(value)),
+                }
+            }
+
+
+        case 'IncomesNewRawMatArea':
+            return function (dispatch) {
+                return {
                 }
             }
     }

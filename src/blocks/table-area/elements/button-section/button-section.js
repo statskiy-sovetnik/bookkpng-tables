@@ -27,7 +27,8 @@ import {
 } from "../../../../common";
 import journalModalSetShowValidation
     from "../../../../store/actionCreators/journal_new_entry_modal/journalModalSetShowValidation";
-import {INCOMES_NEW_ENTRY_AREA_W as TableArea} from "../../table-area";
+import {INCOMES_NEW_ENTRY_AREA_W as TableArea,
+} from "../../table-area";
 
 class ButtonSection extends React.Component{
 

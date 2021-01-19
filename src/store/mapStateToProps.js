@@ -120,11 +120,19 @@ export default function mapStateToProps(component) {
                 }
             }
         //Modal
-
         case 'SortNameIncomesNewEntry':
             return function (state) {
                 return {
                     sortName: state.incomes_new_entry_modal.sortName,
+                }
+            }
+
+        //_______ INCOMES NEW RAW MAT MODAL __________
+        //modal
+        case 'IncomesNewRawMatArea':
+            return function (state) {
+                return {
+
                 }
             }
 
@@ -216,6 +224,10 @@ export default function mapStateToProps(component) {
                     incomesAppliedToDate: state.incomes.appliedToDate,
                     incomesSortType: state.incomes.sortName,
                     incomesSortFromLeast: state.incomes.sortFromLeast,
+
+                    //New Raw Mat Modal ______________
+                    newRawMatModalIsOpen: state.incomes_new_raw_mat_modal.modalIsOpen,
+                    newRawMatSortNames: state.incomes_new_raw_mat_modal.sortNames,
                 }
             }
 
