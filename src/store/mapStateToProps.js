@@ -129,10 +129,46 @@ export default function mapStateToProps(component) {
 
         //_______ INCOMES NEW RAW MAT MODAL __________
         //modal
+        case 'IncomesNewRawMatModal':
+            return function (state) {
+                return {
+                    newRawMatSortNames: state.incomes_new_raw_mat_modal.sortNames,
+                }
+            }
+
         case 'IncomesNewRawMatArea':
             return function (state) {
                 return {
-
+                    //control section
+                    sortName: state.incomes_new_raw_mat_modal.sortType,
+                    sortFromLeast: state.incomes_new_raw_mat_modal.sortFromLeast,
+                    entriesPack: state.incomes_new_raw_mat_modal.entriesPack,
+                    entriesShouldBeShown: state.incomes_new_raw_mat_modal.entriesShouldBeShown,
+                    //table
+                    tableWidth: state.incomes_new_raw_mat_modal.tableWidth,
+                    colsNames: state.incomes_new_raw_mat_modal.head_col_names,
+                    colsOrder: state.incomes_new_raw_mat_modal.columns_order,
+                    journalRows: state.journal.rows,
+                }
+            }
+        //control section
+        case 'SortNameIncomesNewRawMat':
+            return function (state) {
+                return {
+                    sortName: state.incomes_new_raw_mat_modal.sortType,
+                }
+            }
+        case 'SortDirIncomesNewRawMat':
+            return function (state) {
+                return {
+                    sortFromLeast: state.incomes_new_raw_mat_modal.sortFromLeast,
+                }
+            }
+        case 'EntrySwitchLengthSectionIncomesNewRawMat':
+            return function (state) {
+                return {
+                    entriesPack: state.incomes_new_raw_mat_modal.entriesPack,
+                    entriesShouldBeShown: state.incomes_new_raw_mat_modal.entriesShouldBeShown,
                 }
             }
 
@@ -227,7 +263,6 @@ export default function mapStateToProps(component) {
 
                     //New Raw Mat Modal ______________
                     newRawMatModalIsOpen: state.incomes_new_raw_mat_modal.modalIsOpen,
-                    newRawMatSortNames: state.incomes_new_raw_mat_modal.sortNames,
                 }
             }
 

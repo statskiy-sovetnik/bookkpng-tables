@@ -50,6 +50,11 @@ export default {
     //INCOMES NEW RAW MAT MODAL _________________
 
     INCOMES_NEW_RAW_MAT_MODAL_TOGGLE_OPEN: 'incomesNewRawMatModalToggleOpen',
+    //control section
+    INCOMES_NEW_RAW_MAT_MODAL_SET_SORT_NAME: 'incomesNewRawMatModalSetSortName',
+    INCOMES_NEW_RAW_MAT_MODAL_SET_SORT_FROM_LEAST: 'incomesNewRawMatModalSetSortFromLeast',
+    INCOMES_NEW_RAW_MAT_MODAL_SET_ENTRIES_PACK: 'incomesNewRawMatModalSetEntriesPack',
+    INCOMES_NEW_RAW_MAT_MODAL_SET_ENTRIES_SHOW: 'incomesNewRawMatModalSetEntriesShow',
 
     //Journal Sorts Section
     JOURNAL_SORT_TYPE_CHANGE: 'journalSortTypeChange',

@@ -179,8 +179,23 @@ const initialState = {
         rowsUsageState: {
             //0: 559.4,
         },
+        //control-section
         sortNames: ['Дате', 'Наименованию', 'Поставщику', 'Кол-ву', 'Цене'],
-
+        sortType: 'Дате',
+        sortFromLeast: false,
+        entriesPack: ENTRIES_PACK,
+        entriesShouldBeShown: ENTRIES_PACK,
+        columns_order: [ 'select', 'usage', 'date', 'name', 'provider_name', 'amount_data', 'price'],
+        head_col_names: {
+            date: 'Дата',
+            usage: 'Использ-ть сырья (кг)',
+            name: 'Наименование',
+            provider_name: 'Поставщик',
+            amount_data: 'Кол-во (кг)',
+            price: 'Цена (руб)',
+            select: 'Выбрать',
+        },
+        tableWidth: 920,
     },
 
     raw_mat_usage: [

@@ -83,6 +83,14 @@ import incomesNewEntryModalSetRowsUsageValid
 import incomesNewEntryModalClearForm from "./actionCreators/incomes_new_entry_modal/incomesNewEntryModalClearForm";
 import incomesNewRawMatModalToggleOpen
     from "./actionCreators/incomes_new_raw_mat_modal/incomesNewRawMatModalToggleOpen";
+import incomesNewRawMatModalSetSortName
+    from "./actionCreators/incomes_new_raw_mat_modal/incomesNewRawMatModalSetSortName";
+import incomesNewRawMatModalSetSortFromLeast
+    from "./actionCreators/incomes_new_raw_mat_modal/incomesNewRawMatModalSetSortFromLeast";
+import incomesNewRawMatModalSetEntriesPack
+    from "./actionCreators/incomes_new_raw_mat_modal/incomesNewRawMatModalSetEntriesPack";
+import incomesNewRawMatModalSetEntriesShow
+    from "./actionCreators/incomes_new_raw_mat_modal/incomesNewRawMatModalSetEntriesShow";
 
 export default function mapDispatchToProps(component) {
     switch (component) {
@@ -307,10 +315,32 @@ export default function mapDispatchToProps(component) {
                 }
             }
 
-
+        //____ INCOMES NEW RAW MAT MODAL ______________
         case 'IncomesNewRawMatArea':
             return function (dispatch) {
                 return {
+                    changeEntriesPack: value => dispatch(incomesNewRawMatModalSetEntriesPack(value)),
+                    changeEntriesShouldBeShown: value => dispatch(incomesNewRawMatModalSetEntriesShow(value)),
+                }
+            }
+        case 'SortNameIncomesNewRawMat':
+            return function (dispatch) {
+                return {
+                    setSortType: value => dispatch(incomesNewRawMatModalSetSortName(value)),
+                }
+            }
+        case 'SortDirIncomesNewRawMat':
+            return function (dispatch) {
+                return {
+                    setSortFromLeast: value => dispatch(incomesNewRawMatModalSetSortFromLeast(value)),
+                }
+            }
+        //control section
+        case 'EntrySwitchLengthSectionIncomesNewRawMat':
+            return function (dispatch) {
+                return {
+                    changeEntriesPack: value => dispatch(incomesNewRawMatModalSetEntriesPack(value)),
+                    changeEntriesShouldBeShown: value => dispatch(incomesNewRawMatModalSetEntriesShow(value)),
                 }
             }
     }

@@ -17,12 +17,17 @@ import {
     JOURNAL_CONTROL_SECTION_W as JournalControlSection,
     INCOMES_CONTROL_SECTION_W as IncomesControlSection,
     INCOMES_NEW_ENTRY_CONTROL_SECTION_W as IncomesNewEntryControlSection,
+    INCOMES_NEW_RAW_MAT_CONTROL_SECTION_W as IncomesNewRawMatControlSection,
 } from "./elements/table-control-section/table-control-section";
 import {
     JOURNAL_TABLE as TableJournal,
     INCOMES_TABLE as TableIncomes,
     INCOMES_NEW_ENTRY_TABLE as TableIncomesNewEntry,
+    INCOMES_NEW_RAW_MAT_TABLE as TableIncomesNewRawMat,
 } from "../table/table";
+import {
+    INCOMES_NEW_RAW_MAT_MODAL as IncomesNewRawMatModal,
+} from "../modal/modal";
 
 /*___ Bootstrap _________________*/
 import Button from "react-bootstrap/Button";
@@ -34,12 +39,7 @@ import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from 'react-bootstrap/FormControl';
 
 import {isEmptyObj, isFloat, isGoodsNameValid, isProviderNameValid, setValidation} from "../../common";
-import Modal from "react-bootstrap/Modal";
-import Form from "react-bootstrap/Form";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import DatePicker from "react-datepicker";
-import Dropdown from "react-bootstrap/Dropdown";
+
 
 class TableArea extends React.Component {
     constructor(props) {
@@ -232,6 +232,7 @@ class TableArea extends React.Component {
 
         }
 
+        //Сортировка по одному из типов
         switch (sort_type) {
             case 'Наименованию':
                 rows_keys_sorted.sort((row_id_1, row_id_2) => {
@@ -876,56 +877,6 @@ class TableArea extends React.Component {
         );
     }
 
-    renderNewRawMatIncomesModal(modal_is_open, toggleModal, sort_names) {
-        return (
-            <Modal show={modal_is_open}
-                   size={'lg'}
-                   onHide={() => {
-                       toggleModal(false);
-                       //this.handleIncomesNewEntryModalHide(toggleModal);
-                   }}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Добавить рахсоды на сырьё</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Container className={'modal-body-container'}>
-                        <p className={'modal__column-label text text_color-black text_size-14'}>
-                            Выберите сырьё
-                        </p>
-                        <p className={'modal__column-prompt-text text text_size-12 text_color-grey'}>
-                            Выбранные записи включатся в список расходов текущей строки
-                        </p>
-                        {/*<TableArea
-                            className={'modal__table-area'}
-                            data={'incomes-new-raw-mat'}
-                            sort_names={sort_names}
-                        />*/}
-                    </Container>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant={'dark'}
-                            onClick={event => {
-                                event.preventDefault();
-                                toggleModal(false);
-                            }}
-                    >
-                        Отмена
-                    </Button>
-                    <Button
-                        variant={'success'}
-                        disabled={true}
-                        onClick={event => {
-                            event.preventDefault();
-                            //здесь вызвать функцию, которая отправит запрос
-                        }}
-                    >
-                        Добавить
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-        )
-    }
-
     renderTableBottomPanel(entries_left, entries_pack, entries_should_be_shown) {
         const content = (entries_left > 0 ? (
             <div className={'content-area'}>
@@ -972,6 +923,10 @@ class TableArea extends React.Component {
                 {content}
             </Container>
         )
+    }
+
+    handleIncomesNewRawMatModalHide(toggleModal) {
+        toggleModal(false);
     }
 
     render() {
@@ -1054,8 +1009,15 @@ class TableArea extends React.Component {
                 );
                 //Модальное окно добавления расходов на сырье
                 table_area_content.push(
-                    this.renderNewRawMatIncomesModal(this.props.newRawMatModalIsOpen, this.props.toggleNewRawMatModal,
-                        this.props.newRawMatSortNames)
+                    <IncomesNewRawMatModal
+                        data={'incomes-new-raw-mat'}
+                        size={'lg'}
+                        show={this.props.newRawMatModalIsOpen}
+                        submitBtnDisabled={true}
+                        onHide={() => {
+                            this.handleIncomesNewRawMatModalHide.bind(this)(this.props.toggleNewRawMatModal);
+                        }}
+                    />
                 );
                 table_area_content.push(
                     <IncomesButtonSection
@@ -1134,6 +1096,46 @@ class TableArea extends React.Component {
                 );
                 table_area_content.push(
                     this.renderTableBottomPanel(entries_left, this.props.entriesPack,
+                        this.props.entriesShouldBeShown)
+                );
+                break;
+            case 'incomes-new-raw-mat':
+                const new_raw_mat_rows = this.props.journalRows || {};
+                const new_raw_mat_entries_left = Object.keys(new_raw_mat_rows).length - this.props.entriesShouldBeShown;
+
+                table_area_content.push(
+                    <IncomesNewRawMatControlSection
+                        data={'incomes-new-raw-mat'}
+                        key={'control-section'}
+                        sort_names={this.props.sort_names}
+                    />
+                );
+                table_area_content.push(
+                    <TableIncomesNewRawMat
+                        responsive={true}
+                        style={{'width': this.props.tableWidth}}
+                        key={'incomes-table'}
+                    >
+                        {[
+                            this.renderTableHead(
+                                'incomes-new-raw-mat',
+                                this.props.colsNames,
+                                this.props.colsOrder,
+                                head_classnames,
+                            ),
+                            this.renderTableBody(
+                                'incomes-new-raw-mat',
+                                this.props.journalRows || {},
+                                this.props.colsOrder,
+                                [], tbody_classnames, this.props.entriesShouldBeShown, null,
+                                null, this.props.sortName, this.props.sortFromLeast, {},
+                                {}, {}, [], []
+                            )
+                        ]}
+                    </TableIncomesNewRawMat>
+                );
+                table_area_content.push(
+                    this.renderTableBottomPanel(new_raw_mat_entries_left, this.props.entriesPack,
                         this.props.entriesShouldBeShown)
                 );
                 break;

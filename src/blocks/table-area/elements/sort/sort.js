@@ -128,6 +128,31 @@ class Sort extends React.Component{
                 onchange_handler = this.props.setSortFromLeast;
                 is_dir_sort = true;
                 break;
+            case 'incomes-new-raw-mat-name':
+                sort_btn_id = 'incomesNewRawMatNameSortBtn';
+                current_sort_name = this.props.sortName || '';
+                onchange_handler = this.props.setSortType;
+                is_dir_sort = false;
+                for(let i = 0; i < sort_names.length; i++) {
+                    dropdown_items.push(
+                        <Dropdown.Item
+                            onClick={(event) => {
+                                this.changeSortValue(event, onchange_handler, is_dir_sort, direction_names);
+                            }}
+                            href="#" key={"sort-type-" + sort_names[i] + "-up"}
+                        >
+                            {sort_names[i]}
+                        </Dropdown.Item>
+                    )
+                }
+                break;
+            case 'incomes-new-raw-mat-direction':
+                sort_btn_id = 'incomesNewRawMatSortDirectionBtn';
+                dropdown_items = sort_directions;
+                current_sort_name = this.props.sortFromLeast ? 'По возраст.' : 'По убыв.';
+                onchange_handler = this.props.setSortFromLeast;
+                is_dir_sort = true;
+                break;
         }
 
         return (
@@ -174,6 +199,14 @@ const SORT_INCOMES_NEW_ENTRY_DIR = connect(
     mapStateToProps('SortDirIncomesNewEntry'),
     mapDispatchToProps('SortDirIncomesNewEntry')
 )(Sort);
+const SORT_INCOMES_NEW_RAW_MAT_NAME = connect(
+    mapStateToProps('SortNameIncomesNewRawMat'),
+    mapDispatchToProps('SortNameIncomesNewRawMat')
+)(Sort);
+const SORT_INCOMES_NEW_RAW_MAT_DIR = connect(
+    mapStateToProps('SortDirIncomesNewRawMat'),
+    mapDispatchToProps('SortDirIncomesNewRawMat')
+)(Sort);
 
 export {SORT_JOURNAL_W, SORT_DIRECTION_JOURNAL_W, SORT_INCOMES_NAME_W, SORT_INCOMES_DIR_W, SORT_INCOMES_NEW_ENTRY_NAME,
-SORT_INCOMES_NEW_ENTRY_DIR}
+SORT_INCOMES_NEW_ENTRY_DIR, SORT_INCOMES_NEW_RAW_MAT_DIR, SORT_INCOMES_NEW_RAW_MAT_NAME}

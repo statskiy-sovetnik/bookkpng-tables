@@ -551,6 +551,39 @@ export default function reducer(state, action) {
                     modalIsOpen: action.value,
                 }
             }
+        //control section
+        case actionTypes.INCOMES_NEW_RAW_MAT_MODAL_SET_SORT_NAME:
+            return {
+                ...state,
+                incomes_new_raw_mat_modal: {
+                    ...state.incomes_new_raw_mat_modal,
+                    sortType: action.value,
+                }
+            }
+        case actionTypes.INCOMES_NEW_RAW_MAT_MODAL_SET_SORT_FROM_LEAST:
+            return {
+                ...state,
+                incomes_new_raw_mat_modal: {
+                    ...state.incomes_new_raw_mat_modal,
+                    sortFromLeast: action.value,
+                }
+            }
+        case actionTypes.INCOMES_NEW_RAW_MAT_MODAL_SET_ENTRIES_PACK:
+            return {
+                ...state,
+                incomes_new_raw_mat_modal: {
+                    ...state.incomes_new_raw_mat_modal,
+                    entriesPack: action.value,
+                }
+            }
+        case actionTypes.INCOMES_NEW_RAW_MAT_MODAL_SET_ENTRIES_SHOW:
+            return {
+                ...state,
+                incomes_new_raw_mat_modal: {
+                    ...state.incomes_new_raw_mat_modal,
+                    entriesShouldBeShown: action.value,
+                }
+            }
 
         //_______ Journal Sort _________
 

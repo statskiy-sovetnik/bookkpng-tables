@@ -12,6 +12,7 @@ import {
     JOURNAL_ENTRY_LENGTH_SWITCH as EntryLengthSwitchJournal,
     INCOMES_ENTRY_LENGTH_SWITCH as EntryLengthSwitchIncomes,
     INCOMES_NEW_ENTRY_LENGTH_SWITCH as EntryLengthSwitchIncomesNewEntry,
+    INCOMES_NEW_RAW_MAT_LENGTH_SWITCH as EntryLengthSwitchIncomesNewRawMat,
 } from "../entry-length-switch-section/entry-length-switch-section";
 import SortSection from "../sort-section/sort-section";
 
@@ -63,6 +64,21 @@ class TableControlSection extends React.Component {
                     />
                 );
                 break;
+            case 'incomes-new-raw-mat':
+                sort_section = (
+                    <SortSection
+                        data={'incomes-new-raw-mat'}
+                        key={'sort-section'}
+                        sort_names={this.props.sort_names}
+                    />
+                );
+                period_sort_section = '';
+                entry_length_switch_section = (
+                    <EntryLengthSwitchIncomesNewRawMat
+                        key={'entry-length-switch'}
+                    />
+                );
+                break;
         }
 
         return (
@@ -91,5 +107,10 @@ const INCOMES_NEW_ENTRY_CONTROL_SECTION_W = connect(
     mapStateToProps('IncomesNewEntryControlSection'),
     mapDispatchToProps('IncomesNewEntryControlSection'),
 )(TableControlSection);
+const INCOMES_NEW_RAW_MAT_CONTROL_SECTION_W = connect(
+    mapStateToProps('IncomesNewRawMatControlSection'),
+    mapDispatchToProps('IncomesNewRawMatControlSection'),
+)(TableControlSection);
 
-export {JOURNAL_CONTROL_SECTION_W, INCOMES_CONTROL_SECTION_W, INCOMES_NEW_ENTRY_CONTROL_SECTION_W}
+export {JOURNAL_CONTROL_SECTION_W, INCOMES_CONTROL_SECTION_W, INCOMES_NEW_ENTRY_CONTROL_SECTION_W,
+INCOMES_NEW_RAW_MAT_CONTROL_SECTION_W}
