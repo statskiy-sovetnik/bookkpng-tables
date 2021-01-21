@@ -100,6 +100,8 @@ import incomesNewRawMatModalSetCheckedRowsValid
 import incomesNewRawMatModalSetRowsUsageValid
     from "./actionCreators/incomes_new_raw_mat_modal/incomesNewRawMatModalSetRowsUsageValid";
 import incomesNewRawMatModalClearForm from "./actionCreators/incomes_new_raw_mat_modal/incomesNewRawMatModalClearForm";
+import incomesNewRawMatModalSetTargetRow
+    from "./actionCreators/incomes_new_raw_mat_modal/incomesNewRawMatModalSetTargetRow";
 
 export default function mapDispatchToProps(component) {
     switch (component) {
@@ -244,6 +246,9 @@ export default function mapDispatchToProps(component) {
 
                     //__________ INCOMES NEW RAW MAT MODAL ____________
                     toggleNewRawMatModal: bool => dispatch(incomesNewRawMatModalToggleOpen(bool)),
+                    loadDataBaseIncomes: rows => dispatch(loadDataBaseIncomes(rows)),
+                    loadDataBaseJournal: rows => dispatch(loadDataBaseJournal(rows)),
+                    setNewRawMatModalTargetRow: value => dispatch(incomesNewRawMatModalSetTargetRow(value)),
                     clearNewRawMatModal: () => dispatch(incomesNewRawMatModalClearForm())
                 }
             }

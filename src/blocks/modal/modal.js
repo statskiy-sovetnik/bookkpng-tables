@@ -61,7 +61,7 @@ class CustomModal extends React.Component {
                             disabled={this.props.submitBtnDisabled}
                             onClick={event => {
                                 event.preventDefault();
-                                //здесь вызвать функцию, которая отправит запрос
+                                this.props.submitHandler();
                             }}
                         >
                             Добавить

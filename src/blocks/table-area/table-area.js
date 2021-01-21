@@ -627,6 +627,7 @@ class TableArea extends React.Component {
                                onClick={event => {
                                    event.preventDefault();
                                    //Открываем модальное окно добавления расходов на сырьё
+                                   this.props.setNewRawMatModalTargetRow(row_id);
                                    this.props.toggleNewRawMatModal(true);
                                }}
                             >
@@ -712,10 +713,6 @@ class TableArea extends React.Component {
 
         if(!isEmptyObj(cur_raw_mat_data)) {
             cur_raw_mat_data.raw_mat_used_by.forEach((income_obj, i) => {
-                if(i >= cut_cols_counter) {
-                    return
-                }
-
                 const cur_income_row = incomes_rows[income_obj.incomes_id];
                 if(!cur_income_row) {
                     return;
@@ -822,10 +819,6 @@ class TableArea extends React.Component {
 
         if(!isEmptyObj(cur_raw_mat_data)) {
             cur_raw_mat_data.raw_mat_used.forEach((journal_obj, i) => {
-                if(i >= cut_cols_counter) {
-                    return
-                }
-
                 const cur_journal_row = journal_rows[journal_obj.journal_id];
                 const this_raw_mat_used = +journal_obj.used;
                 if(!cur_journal_row) {
@@ -944,6 +937,107 @@ class TableArea extends React.Component {
         this.props.clearNewRawMatModal();
     }
 
+    handleIncomesNewRawMatSubmit() {
+        let fetch_body = new FormData();
+        fetch_body.append('rows-usage', JSON.stringify(this.props.rowsUsageState));
+        fetch_body.append('key', this.props.userKey);
+        fetch_body.append('incomes-row-id', this.props.targetRow);
+
+        fetch('/src/php/add_raw_mat_usage.php', {
+            body: fetch_body,
+            method: 'POST',
+        }).then(
+            response => {
+                if(response.status === 520) {
+                    alert('Ошибка при подключении к базе данных');
+                    return;
+                }
+                if(response.status === 500) {
+                    alert('Ошибка при отправке запроса');
+                    return;
+                }
+                if(response.status !== 200) {
+                    alert('Неизвестная ошибка при отправке запроса');
+                    return;
+                }
+
+                return response.text();
+            },
+            error => {
+                alert('Неизвестная ошибка при отправке запроса');
+                console.log('Fetch error: ', error);
+            }
+        ).then(
+            body => {
+                //обновляем raw_mat_usage
+                return this.props.updateRawMatUsageFromDb('/src/php/get_raw_mat_usage.php',
+                    this.props.userKey);
+            }
+        ).then(
+            all_raw_mat_usage => {
+                //обновляем локально строки Доходов и строки Журнала
+                const incomes_rows_upd = this.updateIncomesRowsLocally(this.props.incomesRows, this.props.journalRows,
+                    all_raw_mat_usage.raw_mat_usage);
+                let copy = {};
+                Object.assign(copy, this.props.journalRows);
+                const journal_rows_upd = this.updateJournalRowsLocally(copy,
+                    all_raw_mat_usage.raw_mat_usage_for_journal);
+                this.props.loadDataBaseJournal(journal_rows_upd);
+                this.props.loadDataBaseIncomes(incomes_rows_upd);
+                this.handleIncomesNewRawMatModalHide(this.props.toggleNewRawMatModal);
+            }
+        );
+    }
+
+    updateIncomesRowsLocally(incomes_rows, journal_rows, raw_mat_usage) {
+        raw_mat_usage = raw_mat_usage || [];
+        let new_incomes_rows = incomes_rows || {};
+
+        //Задать amount_of_raw, sum_of_raw
+        raw_mat_usage.forEach((raw_mat_obj) => {
+            let cur_amount_of_raw = raw_mat_obj.raw_mat_used_total || 0;
+            let cur_sum_of_raw = 0;
+
+            //Считаем, сколько всего потрачено на сырьё (sum_of_raw)
+            raw_mat_obj.raw_mat_used.forEach((value_obj) => {
+                const journal_row_cost_price = +journal_rows[value_obj.journal_id].cost_price;
+
+                cur_sum_of_raw += journal_row_cost_price * +value_obj.used;
+            });
+
+            if(!isEmptyObj(incomes_rows[raw_mat_obj.incomes_id])) {
+                new_incomes_rows[raw_mat_obj.incomes_id].amount_of_raw = cur_amount_of_raw;
+                new_incomes_rows[raw_mat_obj.incomes_id].sum_of_raw = cur_sum_of_raw;
+            }
+
+        });
+
+        return new_incomes_rows;
+    }
+
+    updateJournalRowsLocally(journal_rows, raw_mat_usage_for_journal) {
+        raw_mat_usage_for_journal = raw_mat_usage_for_journal || [];
+        let new_journal_rows = journal_rows || {};
+
+        for(let row_id in journal_rows) {
+            let cur_used_total = 0;
+
+            //Находим данные об использованном сырье этой строки
+            raw_mat_usage_for_journal.forEach(usage_obj => {
+                const journal_id = usage_obj.journal_id;
+                if(+journal_id !== +row_id) {
+                    return;
+                }
+
+                cur_used_total += +usage_obj.raw_mat_used_total;
+            });
+
+            new_journal_rows[row_id].amount_data.amount_used_total = cur_used_total;
+        }
+
+        return new_journal_rows;
+    }
+
     render() {
         let area_name,
             new_entry_modal,
@@ -1029,6 +1123,7 @@ class TableArea extends React.Component {
                         size={'lg'}
                         show={this.props.newRawMatModalIsOpen}
                         submitBtnDisabled={!this.isNewRawMatModalValid(this.props.isRowChecked, this.props.isRowsUsageValid)}
+                        submitHandler={() => {this.handleIncomesNewRawMatSubmit.bind(this)()}}
                         onHide={() => {
                             this.handleIncomesNewRawMatModalHide.bind(this)(this.props.toggleNewRawMatModal);
                         }}

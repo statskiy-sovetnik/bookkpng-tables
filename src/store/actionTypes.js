@@ -50,6 +50,7 @@ export default {
     //INCOMES NEW RAW MAT MODAL _________________
 
     INCOMES_NEW_RAW_MAT_MODAL_TOGGLE_OPEN: 'incomesNewRawMatModalToggleOpen',
+    INCOMES_NEW_RAW_MAT_SET_TARGET_ROW: 'incomesNewRawMatModalSetTargetRow',
     //control section
     INCOMES_NEW_RAW_MAT_MODAL_SET_SORT_NAME: 'incomesNewRawMatModalSetSortName',
     INCOMES_NEW_RAW_MAT_MODAL_SET_SORT_FROM_LEAST: 'incomesNewRawMatModalSetSortFromLeast',

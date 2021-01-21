@@ -265,6 +265,8 @@ export default function mapStateToProps(component) {
 
                     //New Raw Mat Modal ______________
                     newRawMatModalIsOpen: state.incomes_new_raw_mat_modal.modalIsOpen,
+                    targetRow: state.incomes_new_raw_mat_modal.targetRow,
+                    rowsUsageState: state.incomes_new_raw_mat_modal.rowsUsageState,
                     //validation
                     isRowChecked: state.incomes_new_raw_mat_modal.validation.isRowChecked,
                     isRowsUsageValid: state.incomes_new_raw_mat_modal.validation.isRowsUsageValid,

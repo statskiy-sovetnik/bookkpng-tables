@@ -551,6 +551,14 @@ export default function reducer(state, action) {
                     modalIsOpen: action.value,
                 }
             }
+        case actionTypes.INCOMES_NEW_RAW_MAT_SET_TARGET_ROW:
+            return {
+                ...state,
+                incomes_new_raw_mat_modal: {
+                    ...state.incomes_new_raw_mat_modal,
+                    targetRow: action.value,
+                }
+            }
         //control section
         case actionTypes.INCOMES_NEW_RAW_MAT_MODAL_SET_SORT_NAME:
             return {
@@ -633,6 +641,7 @@ export default function reducer(state, action) {
                     validation: Object.assign(incomes_raw_mat_init_form_state, initialState.incomes_new_entry_modal.validation),
                     rowsChecked: [],
                     rowsUsageState: {},
+                    targetRow: null,
                 }
             }
 

@@ -175,6 +175,7 @@ const initialState = {
 
     incomes_new_raw_mat_modal: {
         modalIsOpen: false,
+        targetRow: null,
         rowsChecked: [],
         rowsUsageState: {
             //0: 559.4,
