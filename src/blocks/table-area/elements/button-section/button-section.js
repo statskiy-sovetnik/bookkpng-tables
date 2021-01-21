@@ -627,6 +627,7 @@ class ButtonSection extends React.Component{
                 <Modal.Body>
                     <Container className={'modal-body-container'}>
                         <Form
+                            noValidate
                             className={'modal__form'}
                             id={'incomes-new-entry-form'}
                             onSubmit={event => {
@@ -659,8 +660,6 @@ class ButtonSection extends React.Component{
                                         type={'number'}
                                         required
                                         name={'amount'}
-                                        min={0}
-                                        max={999999}
                                         onInput={event => {
                                             const value = event.currentTarget.value;
                                             const is_valid = isFloat(value);
@@ -679,8 +678,6 @@ class ButtonSection extends React.Component{
                                         type={'number'}
                                         required
                                         name={'price'}
-                                        min={0}
-                                        max={9999999}
                                         onInput={event => {
                                             const value = event.currentTarget.value;
                                             const is_valid = isFloat(value);
