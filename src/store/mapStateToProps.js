@@ -149,6 +149,8 @@ export default function mapStateToProps(component) {
                     colsNames: state.incomes_new_raw_mat_modal.head_col_names,
                     colsOrder: state.incomes_new_raw_mat_modal.columns_order,
                     journalRows: state.journal.rows,
+                    rowsChecked: state.incomes_new_raw_mat_modal.rowsChecked,
+                    rowsUsageState: state.incomes_new_raw_mat_modal.rowsUsageState,
                 }
             }
         //control section
@@ -263,6 +265,9 @@ export default function mapStateToProps(component) {
 
                     //New Raw Mat Modal ______________
                     newRawMatModalIsOpen: state.incomes_new_raw_mat_modal.modalIsOpen,
+                    //validation
+                    isRowChecked: state.incomes_new_raw_mat_modal.validation.isRowChecked,
+                    isRowsUsageValid: state.incomes_new_raw_mat_modal.validation.isRowsUsageValid,
                 }
             }
 

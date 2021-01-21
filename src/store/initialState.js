@@ -185,6 +185,7 @@ const initialState = {
         sortFromLeast: false,
         entriesPack: ENTRIES_PACK,
         entriesShouldBeShown: ENTRIES_PACK,
+        //table
         columns_order: [ 'select', 'usage', 'date', 'name', 'provider_name', 'amount_data', 'price'],
         head_col_names: {
             date: 'Дата',
@@ -196,6 +197,10 @@ const initialState = {
             select: 'Выбрать',
         },
         tableWidth: 920,
+        validation: {
+            isRowsUsageValid: false,
+            isRowChecked: false,
+        }
     },
 
     raw_mat_usage: [

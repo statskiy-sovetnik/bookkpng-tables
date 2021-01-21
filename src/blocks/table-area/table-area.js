@@ -143,7 +143,7 @@ class TableArea extends React.Component {
         }
     }
 
-    handleTableCheckboxClick(row_id, rows_checked, setRowsChecked) {
+    handleTableCheckboxClick(row_id, rows_checked, setRowsChecked, setIsRowChecked, data) {
         let new_rows_checked = rows_checked.slice();
         let rows_usage = {};
         Object.assign(rows_usage, this.props.rowsUsageState);
@@ -153,14 +153,19 @@ class TableArea extends React.Component {
         const place_id = new_rows_checked.indexOf(+row_id);
 
         //Обновляем отмеченные ряды, а также состояние полей (usage) отмеченных рядов
-        if(place_id !== -1) {
+        if(place_id !== -1) { //если этот ряд отмечен
             new_rows_checked.splice(place_id, 1);
             delete new_rows_usage[row_id];
             this.props.setUsageRowsState(new_rows_usage);
         }
-        else {
+        else { //не отмечен
             new_rows_checked.push(+row_id);
             this.props.setRowsUsageValid(false);
+        }
+
+        if(data === 'incomes-new-raw-mat') {
+            //валидация не проходит, если ни один ряд не отмечен
+            setIsRowChecked(!(new_rows_checked.length === 0))
         }
 
         setRowsChecked(new_rows_checked);
@@ -187,6 +192,10 @@ class TableArea extends React.Component {
         return valid;
     }
 
+    isNewRawMatModalValid(isRowChecked, isRowsUsageValid) {
+        return isRowChecked && isRowsUsageValid;
+    }
+
     renderTableBody(data, rows, cols_order, expenses_data, body_classnames, show_how_many,
                     fromDate, toDate, sort_type, sort_from_least, another_table_rows, raw_mat_usage_for_journal, raw_mat_usage,
                     incomes_head_cols, journal_head_cols) {
@@ -197,7 +206,7 @@ class TableArea extends React.Component {
         let rows_keys = Object.keys(rows).slice();
         let rows_checked = [];
 
-        if(data === 'incomes-new-entry') {
+        if(data === 'incomes-new-entry' || data === 'incomes-new-raw-mat') {
             rows_checked = this.props.rowsChecked;
         }
 
@@ -388,7 +397,7 @@ class TableArea extends React.Component {
             const row_place_id = rows_checked.indexOf(row_id);
             const cur_row_checked = !(row_place_id === -1);
 
-            if(data === 'incomes-new-entry') {
+            if(data === 'incomes-new-entry' || data === 'incomes-new-raw-mat') {
                 trow_classnames += cur_row_checked ? ' table__checked-row' : '';
             }
 
@@ -418,7 +427,8 @@ class TableArea extends React.Component {
                         >
                             <InputGroup.Checkbox
                                 onChange={event => {
-                                    this.handleTableCheckboxClick(row_id, rows_checked, this.props.setCheckedRows);
+                                    this.handleTableCheckboxClick(row_id, rows_checked, this.props.setCheckedRows,
+                                        this.props.setRowCheckedValid, data);
                                 }}
                                 className={'modal__table-checkbox'}
                             />
@@ -927,6 +937,11 @@ class TableArea extends React.Component {
 
     handleIncomesNewRawMatModalHide(toggleModal) {
         toggleModal(false);
+        this.clearNewRawMatModal();
+    }
+
+    clearNewRawMatModal() {
+        this.props.clearNewRawMatModal();
     }
 
     render() {
@@ -1013,7 +1028,7 @@ class TableArea extends React.Component {
                         data={'incomes-new-raw-mat'}
                         size={'lg'}
                         show={this.props.newRawMatModalIsOpen}
-                        submitBtnDisabled={true}
+                        submitBtnDisabled={!this.isNewRawMatModalValid(this.props.isRowChecked, this.props.isRowsUsageValid)}
                         onHide={() => {
                             this.handleIncomesNewRawMatModalHide.bind(this)(this.props.toggleNewRawMatModal);
                         }}

@@ -55,6 +55,14 @@ export default {
     INCOMES_NEW_RAW_MAT_MODAL_SET_SORT_FROM_LEAST: 'incomesNewRawMatModalSetSortFromLeast',
     INCOMES_NEW_RAW_MAT_MODAL_SET_ENTRIES_PACK: 'incomesNewRawMatModalSetEntriesPack',
     INCOMES_NEW_RAW_MAT_MODAL_SET_ENTRIES_SHOW: 'incomesNewRawMatModalSetEntriesShow',
+    //table
+    INCOMES_NEW_RAW_MAT_MODAL_SET_CHECKED_ROWS: 'incomesNewRawMatModalSetCheckedRows',
+    INCOMES_NEW_RAW_MAT_MODAL_SET_ROWS_USAGE_STATE: 'incomesNewRawMatModalSetRowsUsageState',
+    //validation
+    INCOMES_NEW_RAW_MAT_MODAL_SET_CHECKED_ROWS_VALID: 'incomesNewRawMatModalSetCheckedRowsValid',
+    INCOMES_NEW_RAW_MAT_MODAL_SET_ROWS_USAGE_VALID: 'incomesNewRawMatModalSetRowsUsageValid',
+    INCOMES_NEW_RAW_MAT_MODAL_CLEAR_FORM: 'incomesNewRawMatModalClearForm',
+
 
     //Journal Sorts Section
     JOURNAL_SORT_TYPE_CHANGE: 'journalSortTypeChange',

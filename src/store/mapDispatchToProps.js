@@ -91,6 +91,15 @@ import incomesNewRawMatModalSetEntriesPack
     from "./actionCreators/incomes_new_raw_mat_modal/incomesNewRawMatModalSetEntriesPack";
 import incomesNewRawMatModalSetEntriesShow
     from "./actionCreators/incomes_new_raw_mat_modal/incomesNewRawMatModalSetEntriesShow";
+import incomesNewRawMatModalSetCheckedRows
+    from "./actionCreators/incomes_new_raw_mat_modal/incomesNewRawMatModalSetCheckedRows";
+import incomesNewRawMatModalSetRowsUsageState
+    from "./actionCreators/incomes_new_raw_mat_modal/incomesNewRawMatModalSetRowsUsageState";
+import incomesNewRawMatModalSetCheckedRowsValid
+    from "./actionCreators/incomes_new_raw_mat_modal/incomesNewRawMatModalSetCheckedRowsValid";
+import incomesNewRawMatModalSetRowsUsageValid
+    from "./actionCreators/incomes_new_raw_mat_modal/incomesNewRawMatModalSetRowsUsageValid";
+import incomesNewRawMatModalClearForm from "./actionCreators/incomes_new_raw_mat_modal/incomesNewRawMatModalClearForm";
 
 export default function mapDispatchToProps(component) {
     switch (component) {
@@ -235,7 +244,7 @@ export default function mapDispatchToProps(component) {
 
                     //__________ INCOMES NEW RAW MAT MODAL ____________
                     toggleNewRawMatModal: bool => dispatch(incomesNewRawMatModalToggleOpen(bool)),
-
+                    clearNewRawMatModal: () => dispatch(incomesNewRawMatModalClearForm())
                 }
             }
 
@@ -321,6 +330,12 @@ export default function mapDispatchToProps(component) {
                 return {
                     changeEntriesPack: value => dispatch(incomesNewRawMatModalSetEntriesPack(value)),
                     changeEntriesShouldBeShown: value => dispatch(incomesNewRawMatModalSetEntriesShow(value)),
+                    //table
+                    setCheckedRows: rows => dispatch(incomesNewRawMatModalSetCheckedRows(rows)),
+                    setUsageRowsState: rows => dispatch(incomesNewRawMatModalSetRowsUsageState(rows)),
+                    //validation
+                    setRowCheckedValid: bool => dispatch(incomesNewRawMatModalSetCheckedRowsValid(bool)),
+                    setRowsUsageValid: bool => dispatch(incomesNewRawMatModalSetRowsUsageValid(bool)),
                 }
             }
         case 'SortNameIncomesNewRawMat':

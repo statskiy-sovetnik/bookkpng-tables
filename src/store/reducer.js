@@ -584,6 +584,57 @@ export default function reducer(state, action) {
                     entriesShouldBeShown: action.value,
                 }
             }
+        //table
+        case actionTypes.INCOMES_NEW_RAW_MAT_MODAL_SET_CHECKED_ROWS:
+            return {
+                ...state,
+                incomes_new_raw_mat_modal: {
+                    ...state.incomes_new_raw_mat_modal,
+                    rowsChecked: action.value,
+                }
+            }
+        case actionTypes.INCOMES_NEW_RAW_MAT_MODAL_SET_ROWS_USAGE_STATE:
+            return {
+                ...state,
+                incomes_new_raw_mat_modal: {
+                    ...state.incomes_new_raw_mat_modal,
+                    rowsUsageState: action.value,
+                }
+            }
+        //validation
+        case actionTypes.INCOMES_NEW_RAW_MAT_MODAL_SET_CHECKED_ROWS_VALID:
+            return {
+                ...state,
+                incomes_new_raw_mat_modal: {
+                    ...state.incomes_new_raw_mat_modal,
+                    validation: {
+                        ...state.incomes_new_raw_mat_modal.validation,
+                        isRowChecked: action.value,
+                    }
+                }
+            }
+        case actionTypes.INCOMES_NEW_RAW_MAT_MODAL_SET_ROWS_USAGE_VALID:
+            return {
+                ...state,
+                incomes_new_raw_mat_modal: {
+                    ...state.incomes_new_raw_mat_modal,
+                    validation: {
+                        ...state.incomes_new_raw_mat_modal.validation,
+                        isRowsUsageValid: action.value,
+                    }
+                }
+            }
+        case actionTypes.INCOMES_NEW_RAW_MAT_MODAL_CLEAR_FORM:
+            let incomes_raw_mat_init_form_state = {};
+            return {
+                ...state,
+                incomes_new_raw_mat_modal: {
+                    ...state.incomes_new_raw_mat_modal,
+                    validation: Object.assign(incomes_raw_mat_init_form_state, initialState.incomes_new_entry_modal.validation),
+                    rowsChecked: [],
+                    rowsUsageState: {},
+                }
+            }
 
         //_______ Journal Sort _________
 

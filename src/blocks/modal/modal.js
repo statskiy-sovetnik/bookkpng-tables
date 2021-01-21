@@ -23,7 +23,7 @@ class CustomModal extends React.Component {
 
         switch (this.props.data) {
             case 'incomes-new-raw-mat':
-                title = 'Добавить рахсоды на сырьё';
+                title = 'Добавить расходы на сырьё';
                 table_area = (
                     <IncomesNewRawMatArea
                         className={'modal__table-area'}
