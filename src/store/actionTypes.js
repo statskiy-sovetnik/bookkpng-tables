@@ -80,6 +80,7 @@ export default {
     //Journal Table
     LOAD_DATA_BASE_JOURNAL: 'loadDataBaseJournal',
     ENTRIES_SHOWN_CHANGE_JOURNAL: 'entriesShouldBeShownChangeJournal',
+    JOURNAL_ADD_EXP_POPOVER_SET_ADDED_EXPENSES: 'journalAddExpPopoverSetAddedExpenses',
 
     // AUTH_______________
 

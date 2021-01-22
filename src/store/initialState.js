@@ -30,6 +30,7 @@ const initialState = {
         appliedToDate: '',
         entriesPack: ENTRIES_PACK,
         entriesShouldBeShown: ENTRIES_PACK,
+        //table
         rowsOpened: new Array(ENTRIES_PACK).fill(0),
         rows: { //the keys of this object are id's of rows
             /*0: {
@@ -72,6 +73,7 @@ const initialState = {
             cost_price: 'Себестоимость (руб)',
             control: 'Управление',
         },
+        popoverAddedExpenses: {},
         table_width: 1600,
     },
 

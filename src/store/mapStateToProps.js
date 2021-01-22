@@ -19,6 +19,7 @@ export default function mapStateToProps(component) {
         case 'JournalArea':
             return function (state) {
                 return {
+                    popoverAddedExpenses: state.journal.popoverAddedExpenses,
                     userKey: state.auth.userKey,
                     journalRows: state.journal.rows,
                     incomesRows: state.incomes.rows,
@@ -30,6 +31,7 @@ export default function mapStateToProps(component) {
                     journalTableWidth: state.journal.table_width,
                     expensesData: state.expenses_data,
                     rawMatData: state.raw_mat_data,
+                    //control section
                     journalEntriesPack: state.journal.entriesPack,
                     journalEntriesShown: state.journal.entriesShouldBeShown,
                     journalAppliedFromDate: state.journal.appliedFromDate,

@@ -709,6 +709,14 @@ export default function reducer(state, action) {
                 }
             }
         //________ Journal Table ___________
+        case actionTypes.JOURNAL_ADD_EXP_POPOVER_SET_ADDED_EXPENSES:
+            return {
+                ...state,
+                journal: {
+                    ...state.journal,
+                    popoverAddedExpenses: action.value,
+                }
+            }
 
         //___ INCOMES _________________
 

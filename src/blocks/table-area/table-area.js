@@ -39,6 +39,8 @@ import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from 'react-bootstrap/FormControl';
 
 import {isEmptyObj, isFloat, isGoodsNameValid, isProviderNameValid, setValidation} from "../../common";
+import Dropdown from "react-bootstrap/Dropdown";
+import Form from "react-bootstrap/Form";
 
 
 class TableArea extends React.Component {
@@ -560,6 +562,13 @@ class TableArea extends React.Component {
                             </Popover.Content>
                         </Popover>
                     );
+                    let add_expenses_popover;
+                    switch (data) {
+                        case 'journal':
+                            add_expenses_popover = this.renderAddExpenseJournalPopover(row_id, this.props.expensesData,
+                                this.props.popoverAddedExpenses, this.props.setPopoverAddedExpenses);
+                            break;
+                    }
 
                     cur_row.push(
                         <td className={cell_class}
@@ -582,14 +591,20 @@ class TableArea extends React.Component {
                                                          'table-area__expenses-icons-block__btstrap-icon'}/>
                                             </a>
                                         </OverlayTrigger>
-                                        <a className="text text_color-dark"
-                                           href={'#'}
-                                           onClick={event => {event.preventDefault()}}
+                                        <OverlayTrigger
+                                            trigger={'click'}
+                                            placement={'top'}
+                                            overlay={add_expenses_popover}
                                         >
-                                            <BtstrapIcon data={'bi-plus-circle'}
-                                                     className={'bi-plus-circle btstrap-icon_size-11 btstrap-icon_color-dark ' +
-                                                     'table-area__expenses-icons-block__btstrap-icon'}/>
+                                            <a className="text text_color-dark"
+                                               href={'#'}
+                                               onClick={event => {event.preventDefault()}}
+                                            >
+                                                <BtstrapIcon data={'bi-plus-circle'}
+                                                             className={'bi-plus-circle btstrap-icon_size-11 btstrap-icon_color-dark ' +
+                                                             'table-area__expenses-icons-block__btstrap-icon'}/>
                                         </a>
+                                        </OverlayTrigger>
                                     </div>
                                 </span>
                             </div>
@@ -878,6 +893,113 @@ class TableArea extends React.Component {
                 </Popover.Content>
             </Popover>
         );
+    }
+
+    handlePopoverExpenseInput(expense_id, value, added_expenses, setAddedExpenses, isExpensesValid) {
+        const new_added_expenses = {};
+        Object.assign(new_added_expenses, added_expenses);
+        new_added_expenses[expense_id] = value;
+        //this.props.setExpensesValid(isExpensesValid(new_added_expenses));
+        setAddedExpenses(new_added_expenses);
+    }
+
+    renderAddExpenseJournalPopover(journal_row_id, expenses_data, added_expenses, setAddedExpenses) {
+        let  expenses_links = [];
+        let added_expenses_list_items = [];
+
+        //Добавляем ссылки с расходами в выпадающий список
+        for(let expense_id in expenses_data) {
+            expenses_links.push(
+                <Dropdown.Item href={'#'}
+                               key={'dropdown-link-' + expense_id}
+                               className={'text text_size-13 modal__dropdown-item'}
+                               onClick={event => {
+                                   event.preventDefault();
+                                   let new_added_expenses = {};
+                                   Object.assign(new_added_expenses, added_expenses);
+                                   new_added_expenses[expense_id] = added_expenses[expense_id] || '';
+                                   setAddedExpenses(new_added_expenses);
+                               }}
+                >
+                    {expenses_data[expense_id].name}
+                </Dropdown.Item>
+            );
+        }
+
+        //Добавляем блок со списком добавленных расходов
+        for(let expense_id in added_expenses) {
+            added_expenses_list_items.push(
+                <li key={'-expense-list-item-' + expense_id}
+                    className={'popover__added-expense-list-item'}
+                >
+                    <a href={'#'} onClick={event => event.preventDefault()}
+                       className={'popover__added-expense-square'}
+                       style={{'backgroundColor': expenses_data[expense_id].color}}
+                    />
+                    <span className={'text text_size-13 text_color-dark popover__added-expense-text'}>
+                        {expenses_data[expense_id].name}
+                    </span>
+                    <Form.Control type={'number'} maxLength={9}
+                                  required
+                                  name={'expense-' + expense_id}
+                                  placeholder={'Сумма'}
+                                  size={'sm'}
+                                  className={'popover__added-expense-input'}
+                                  onInput={event => {
+                                      event.preventDefault();
+                                      this.handlePopoverExpenseInput(expense_id, event.currentTarget.value, added_expenses,
+                                          setAddedExpenses, this.isExpensesValid);
+                                      const value = event.currentTarget.value;
+                                      const isValid = isFloat(value);
+                                      setValidation(event.currentTarget, isValid);
+                                  }}
+                    />
+                    <Button
+                        variant={'secondary'}
+                        data-target={expense_id}
+                        className={'button button_size-small'}
+                        onClick={event => {
+                            event.preventDefault();
+                            let new_added_expenses = {};
+                            Object.assign(new_added_expenses, added_expenses);
+                            //Удаляем свойство, тем самым убирается поле из списка
+                            delete new_added_expenses[expense_id];
+                            setAddedExpenses(new_added_expenses);
+                        }}
+                    >
+                        Удалить
+                    </Button>
+                </li>
+            );
+        }
+
+        return (
+            <Popover
+                id={'journal_#{id}__add-expenses-popover'.replace('#{id}', journal_row_id)}
+            >
+                <Popover.Title as={'h5'}>Добавить расходы</Popover.Title>
+                <Popover.Content>
+                    <p className={'text text_size-12 text_color-grey popover__prompt-text'}>
+                        Чтобы свернуть окно, повторно нажмите на иконку
+                    </p>
+                    <Dropdown>
+                        <ul className={'ulist popover__added-expenses-list'}>
+                            {added_expenses_list_items}
+                        </ul>
+                        <Dropdown.Toggle
+                            size={'sm'}
+                            variant={'dark'}
+                            className={'button button_size-small'}
+                        >
+                            Добавить
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                            {expenses_links}
+                        </Dropdown.Menu>
+                    </Dropdown>
+                </Popover.Content>
+            </Popover>
+        )
     }
 
     renderTableBottomPanel(entries_left, entries_pack, entries_should_be_shown) {

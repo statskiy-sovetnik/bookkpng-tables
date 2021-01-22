@@ -53,7 +53,7 @@ class ButtonSection extends React.Component{
         const new_added_expenses = {};
         Object.assign(new_added_expenses, addedExpenses);
         new_added_expenses[expense_id] = value;
-        this.props.setExpensesValid(isExpensesValid(new_added_expenses));
+        //this.props.setExpensesValid(isExpensesValid(new_added_expenses));
         setAddedExpenses(new_added_expenses);
     }
 

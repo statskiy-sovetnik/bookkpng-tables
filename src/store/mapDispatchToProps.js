@@ -102,6 +102,7 @@ import incomesNewRawMatModalSetRowsUsageValid
 import incomesNewRawMatModalClearForm from "./actionCreators/incomes_new_raw_mat_modal/incomesNewRawMatModalClearForm";
 import incomesNewRawMatModalSetTargetRow
     from "./actionCreators/incomes_new_raw_mat_modal/incomesNewRawMatModalSetTargetRow";
+import journalAddExpPopoverSetAddedExpenses from "./actionCreators/journalAddExpPopoverSetAddedExpenses";
 
 export default function mapDispatchToProps(component) {
     switch (component) {
@@ -141,7 +142,7 @@ export default function mapDispatchToProps(component) {
             return function (dispatch) {
                 return {
                     changeEntriesShouldBeShown: (value) => dispatch(entriesShouldBeShownChangeJournal(value)),
-
+                    setPopoverAddedExpenses: (data) => dispatch(journalAddExpPopoverSetAddedExpenses(data)),
                 }
             }
 
