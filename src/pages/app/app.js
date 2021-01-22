@@ -471,6 +471,7 @@ class App extends React.Component {
                              updateRawMatDataFromDb = {this.updateRawMatDataFromDb.bind(this)}
                              updateRawMatUsageFromDb = {this.updateRawMatUsageFromDb.bind(this)}
                              updateJournalRowsFromDb = {this.updateJournalRowsFromDb.bind(this)}
+                             updateIncomesRowsFromDb = {this.updateIncomesRowsFromDb.bind(this)}
                 />
                 <IncomesArea data={'incomes'}
                              sort_names={incomes_sort_names}

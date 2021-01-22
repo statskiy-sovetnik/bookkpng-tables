@@ -182,6 +182,9 @@ ul.popover__added-expenses-list {
       width: 100px;
       margin-right: 10px; }
 
+.popover__expenses-toggle {
+  margin-bottom: 20px; }
+
 .menu__user-block {
   display: flex;
   flex-direction: row; }

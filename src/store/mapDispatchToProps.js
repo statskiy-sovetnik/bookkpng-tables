@@ -103,6 +103,10 @@ import incomesNewRawMatModalClearForm from "./actionCreators/incomes_new_raw_mat
 import incomesNewRawMatModalSetTargetRow
     from "./actionCreators/incomes_new_raw_mat_modal/incomesNewRawMatModalSetTargetRow";
 import journalAddExpPopoverSetAddedExpenses from "./actionCreators/journalAddExpPopoverSetAddedExpenses";
+import journalAddExpPopoverSetAddedExpensesValid from "./actionCreators/journalAddExpPopoverSetAddedExpensesValid";
+import incomesAddExpPopoverSetAddedExpenses from "./actionCreators/incomes/incomesAddExpPopoverSetAddedExpenses";
+import incomesAddExpPopoverSetAddedExpensesValid
+    from "./actionCreators/incomes/incomesAddExpPopoverSetAddedExpensesValid";
 
 export default function mapDispatchToProps(component) {
     switch (component) {
@@ -143,6 +147,7 @@ export default function mapDispatchToProps(component) {
                 return {
                     changeEntriesShouldBeShown: (value) => dispatch(entriesShouldBeShownChangeJournal(value)),
                     setPopoverAddedExpenses: (data) => dispatch(journalAddExpPopoverSetAddedExpenses(data)),
+                    setPopoverExpensesValid: (bool) => dispatch(journalAddExpPopoverSetAddedExpensesValid(bool)),
                 }
             }
 
@@ -250,7 +255,11 @@ export default function mapDispatchToProps(component) {
                     loadDataBaseIncomes: rows => dispatch(loadDataBaseIncomes(rows)),
                     loadDataBaseJournal: rows => dispatch(loadDataBaseJournal(rows)),
                     setNewRawMatModalTargetRow: value => dispatch(incomesNewRawMatModalSetTargetRow(value)),
-                    clearNewRawMatModal: () => dispatch(incomesNewRawMatModalClearForm())
+                    clearNewRawMatModal: () => dispatch(incomesNewRawMatModalClearForm()),
+
+                    //add expenses popover
+                    setPopoverAddedExpenses: (data) => dispatch(incomesAddExpPopoverSetAddedExpenses(data)),
+                    setPopoverExpensesValid: (bool) => dispatch(incomesAddExpPopoverSetAddedExpensesValid(bool)),
                 }
             }
 

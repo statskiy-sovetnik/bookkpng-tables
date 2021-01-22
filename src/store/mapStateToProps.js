@@ -19,7 +19,6 @@ export default function mapStateToProps(component) {
         case 'JournalArea':
             return function (state) {
                 return {
-                    popoverAddedExpenses: state.journal.popoverAddedExpenses,
                     userKey: state.auth.userKey,
                     journalRows: state.journal.rows,
                     incomesRows: state.incomes.rows,
@@ -31,6 +30,9 @@ export default function mapStateToProps(component) {
                     journalTableWidth: state.journal.table_width,
                     expensesData: state.expenses_data,
                     rawMatData: state.raw_mat_data,
+                    //table popover
+                    popoverAddedExpenses: state.journal.popoverAddedExpenses,
+                    isPopoverExpensesValid: state.journal.popoverValidation.isExpensesValid,
                     //control section
                     journalEntriesPack: state.journal.entriesPack,
                     journalEntriesShown: state.journal.entriesShouldBeShown,
@@ -264,6 +266,9 @@ export default function mapStateToProps(component) {
                     incomesAppliedToDate: state.incomes.appliedToDate,
                     incomesSortType: state.incomes.sortName,
                     incomesSortFromLeast: state.incomes.sortFromLeast,
+                    //table popover
+                    popoverAddedExpenses: state.incomes.popoverAddedExpenses,
+                    isPopoverExpensesValid: state.incomes.popoverValidation.isExpensesValid,
 
                     //New Raw Mat Modal ______________
                     newRawMatModalIsOpen: state.incomes_new_raw_mat_modal.modalIsOpen,

@@ -53,7 +53,7 @@ class ButtonSection extends React.Component{
         const new_added_expenses = {};
         Object.assign(new_added_expenses, addedExpenses);
         new_added_expenses[expense_id] = value;
-        //this.props.setExpensesValid(isExpensesValid(new_added_expenses));
+        this.props.setExpensesValid(isExpensesValid(new_added_expenses));
         setAddedExpenses(new_added_expenses);
     }
 
@@ -228,7 +228,7 @@ class ButtonSection extends React.Component{
     renderJournalNewEntryModal(modal_is_open, toggleModal, raw_mat_data, expenses_data, setRawMatName, setProviderName,
                                toggleNewRawMatInputsShow, raw_mat_name, provider_name, raw_mat_inputs_show,
                                new_raw_mat_price, setNewRawMatPrice, raw_mat_date, setRawMatDate, raw_mat_amount,
-                               setRawMatAmount, addedExpenses, setAddedExpenses) {
+                               setRawMatAmount, addedExpenses, setAddedExpenses, setExpensesValid) {
         let raw_mat_dropdown_links = [];
         let expenses_links = [];
         let added_expenses_list_items = [];
@@ -317,6 +317,8 @@ class ButtonSection extends React.Component{
                             //Удаляем свойство, тем самым убирается поле из списка
                             delete new_added_expenses[cur_expense_id];
                             setAddedExpenses(new_added_expenses);
+                            //новая валидность
+                            this.props.setExpensesValid(this.isExpensesValid(new_added_expenses));
                         }}
                     >
                         Удалить
@@ -607,6 +609,8 @@ class ButtonSection extends React.Component{
                             //Удаляем свойство, тем самым убирается поле из списка
                             delete new_added_expenses[cur_expense_id];
                             setAddedExpenses(new_added_expenses);
+                            //новая валидность
+                            this.props.setExpensesValid(this.isExpensesValid(new_added_expenses));
                         }}
                     >
                         Удалить

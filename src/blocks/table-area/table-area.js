@@ -550,6 +550,9 @@ class TableArea extends React.Component {
 
                     cur_expenses_total = +cur_expenses_total.toFixed(2);
 
+                    //Добавляем поповеры _____________
+
+                    const add_expenses_trigger_id = 'journal-add-expenses-trigger_row-' + row_id;
                     const eye_expenses_popover = (
                         <Popover id={'expenses-popover_' + data + '_row-' + row_id}>
                             <Popover.Title as="h5">
@@ -566,7 +569,15 @@ class TableArea extends React.Component {
                     switch (data) {
                         case 'journal':
                             add_expenses_popover = this.renderAddExpenseJournalPopover(row_id, this.props.expensesData,
-                                this.props.popoverAddedExpenses, this.props.setPopoverAddedExpenses);
+                                this.props.popoverAddedExpenses, this.props.setPopoverAddedExpenses,
+                                this.props.isPopoverExpensesValid, this.props.setPopoverExpensesValid,
+                                add_expenses_trigger_id);
+                            break;
+                        case 'incomes':
+                            add_expenses_popover = this.renderAddExpenseIncomesPopover(row_id, this.props.expensesData,
+                                this.props.popoverAddedExpenses, this.props.setPopoverAddedExpenses,
+                                this.props.isPopoverExpensesValid, this.props.setPopoverExpensesValid,
+                                add_expenses_trigger_id);
                             break;
                     }
 
@@ -593,11 +604,16 @@ class TableArea extends React.Component {
                                         </OverlayTrigger>
                                         <OverlayTrigger
                                             trigger={'click'}
+                                            onToggle={() => {
+                                                this.clearAddExpPopover(this.props.setPopoverAddedExpenses,
+                                                    this.props.setPopoverExpensesValid)
+                                            }}
                                             placement={'top'}
                                             overlay={add_expenses_popover}
                                         >
                                             <a className="text text_color-dark"
                                                href={'#'}
+                                               id={add_expenses_trigger_id}
                                                onClick={event => {event.preventDefault()}}
                                             >
                                                 <BtstrapIcon data={'bi-plus-circle'}
@@ -895,15 +911,79 @@ class TableArea extends React.Component {
         );
     }
 
-    handlePopoverExpenseInput(expense_id, value, added_expenses, setAddedExpenses, isExpensesValid) {
+    handlePopoverExpenseInput(expense_id, value, added_expenses, setAddedExpenses, isExpensesValid, setExpensesValid) {
         const new_added_expenses = {};
         Object.assign(new_added_expenses, added_expenses);
         new_added_expenses[expense_id] = value;
-        //this.props.setExpensesValid(isExpensesValid(new_added_expenses));
+        setExpensesValid(isExpensesValid(new_added_expenses));
         setAddedExpenses(new_added_expenses);
     }
 
-    renderAddExpenseJournalPopover(journal_row_id, expenses_data, added_expenses, setAddedExpenses) {
+    isPopoverExpensesValuesValid(addedExpenses) {
+        for(let exp_id in addedExpenses) {
+            if(!isFloat(addedExpenses[exp_id])) {
+                return false;
+            }
+        }
+        return !isEmptyObj(addedExpenses);
+    }
+
+    clearAddExpPopover(setAddedExpenses, setExpensesValid) {
+        setAddedExpenses({});
+        setExpensesValid(false);
+    }
+
+    isAddExpPopoverValid(isExpensesValid) {
+        return isExpensesValid;
+    }
+
+    handleJournalAddExpPopoverSubmit(added_expenses, user_key, row_id) {
+        let fetch_body = new FormData();
+        fetch_body.append('expenses', JSON.stringify(added_expenses));
+        fetch_body.append('key', user_key);
+        fetch_body.append('row-id', row_id);
+
+        fetch('/src/php/add_journal_expenses.php', {
+            body: fetch_body,
+            method: 'POST',
+        }).then(
+            response => {
+                if(response.status === 520) {
+                    alert('Ошибка при подключении к базе данных');
+                    return;
+                }
+                if(response.status === 500) {
+                    alert('Ошибка при отправке запроса');
+                    return;
+                }
+                if(response.status !== 200) {
+                    alert('Неизвестная ошибка при отправке запроса');
+                    return;
+                }
+
+                return response.text();
+            },
+            error => {
+                alert('Неизвестная ошибка при отправке запроса');
+                console.log('Fetch error: ', error);
+            }
+        ).then(
+            body => {
+                //Обновляем строки журнала
+                return this.props.updateJournalRowsFromDb('/src/php/get_journal_rows.php', user_key,
+                    this.props.rawMatUsageForJournal, this.props.rawMatData);
+            }
+        ).then(
+            journal_rows => {
+                //Обновляем строки Доходов
+                this.props.updateIncomesRowsFromDb('/src/php/get_incomes_rows.php', user_key, this.props.rawMatUsage,
+                    this.props.rawMatData, journal_rows);
+            }
+        );
+    }
+
+    renderAddExpenseJournalPopover(journal_row_id, expenses_data, added_expenses, setAddedExpenses, isExpensesValid,
+                                   setExpensesValid, triggerElemId) {
         let  expenses_links = [];
         let added_expenses_list_items = [];
 
@@ -919,6 +999,8 @@ class TableArea extends React.Component {
                                    Object.assign(new_added_expenses, added_expenses);
                                    new_added_expenses[expense_id] = added_expenses[expense_id] || '';
                                    setAddedExpenses(new_added_expenses);
+                                   //валидация
+                                   setExpensesValid(false);
                                }}
                 >
                     {expenses_data[expense_id].name}
@@ -948,7 +1030,9 @@ class TableArea extends React.Component {
                                   onInput={event => {
                                       event.preventDefault();
                                       this.handlePopoverExpenseInput(expense_id, event.currentTarget.value, added_expenses,
-                                          setAddedExpenses, this.isExpensesValid);
+                                          setAddedExpenses, this.isPopoverExpensesValuesValid,
+                                          this.props.setPopoverExpensesValid,
+                                      );
                                       const value = event.currentTarget.value;
                                       const isValid = isFloat(value);
                                       setValidation(event.currentTarget, isValid);
@@ -965,6 +1049,9 @@ class TableArea extends React.Component {
                             //Удаляем свойство, тем самым убирается поле из списка
                             delete new_added_expenses[expense_id];
                             setAddedExpenses(new_added_expenses);
+                            //новая валидность
+                            //проверяй сайт
+                            setExpensesValid(this.isPopoverExpensesValuesValid(new_added_expenses));
                         }}
                     >
                         Удалить
@@ -989,7 +1076,7 @@ class TableArea extends React.Component {
                         <Dropdown.Toggle
                             size={'sm'}
                             variant={'dark'}
-                            className={'button button_size-small'}
+                            className={'button button_size-small popover__expenses-toggle'}
                         >
                             Добавить
                         </Dropdown.Toggle>
@@ -997,6 +1084,185 @@ class TableArea extends React.Component {
                             {expenses_links}
                         </Dropdown.Menu>
                     </Dropdown>
+
+                    <Button
+                        block
+                        size={'sm'}
+                        variant={'success'}
+                        disabled={!this.isAddExpPopoverValid(isExpensesValid)}
+                        onClick={event => {
+                            event.preventDefault();
+                            this.handleJournalAddExpPopoverSubmit(this.props.popoverAddedExpenses, this.props.userKey,
+                                journal_row_id);
+                            //закрываем и очищаем поповер
+                            document.getElementById(triggerElemId).click();
+                        }}
+                    >
+                        Применить
+                    </Button>
+                </Popover.Content>
+            </Popover>
+        )
+    }
+
+    handleIncomesAddExpPopoverSubmit(added_expenses, user_key, row_id) {
+        let fetch_body = new FormData();
+        fetch_body.append('expenses', JSON.stringify(added_expenses));
+        fetch_body.append('key', user_key);
+        fetch_body.append('row-id', row_id);
+
+        fetch('/src/php/add_incomes_expenses.php', {
+            body: fetch_body,
+            method: 'POST',
+        }).then(
+            response => {
+                if(response.status === 520) {
+                    alert('Ошибка при подключении к базе данных');
+                    return;
+                }
+                if(response.status === 500) {
+                    alert('Ошибка при отправке запроса');
+                    return;
+                }
+                if(response.status !== 200) {
+                    alert('Неизвестная ошибка при отправке запроса');
+                    return;
+                }
+
+                console.log('Проверка пройдена&');
+                return response.text();
+            },
+            error => {
+                alert('Неизвестная ошибка при отправке запроса');
+                console.log('Fetch error: ', error);
+            }
+        ).then(
+            body => {
+                console.log(body);
+                //Обновляем строки Доходов
+                this.props.updateIncomesRowsFromDb('/src/php/get_incomes_rows.php', user_key,
+                    this.props.rawMatUsage, this.props.rawMatData, this.props.journalRows);
+            }
+        );
+    }
+
+    renderAddExpenseIncomesPopover(incomes_row_id, expenses_data, added_expenses, setAddedExpenses, isExpensesValid,
+                                   setExpensesValid, triggerElemId) {
+        let  expenses_links = [];
+        let added_expenses_list_items = [];
+
+        //Добавляем ссылки с расходами в выпадающий список
+        for(let expense_id in expenses_data) {
+            expenses_links.push(
+                <Dropdown.Item href={'#'}
+                               key={'dropdown-link-' + expense_id}
+                               className={'text text_size-13 modal__dropdown-item'}
+                               onClick={event => {
+                                   event.preventDefault();
+                                   let new_added_expenses = {};
+                                   Object.assign(new_added_expenses, added_expenses);
+                                   new_added_expenses[expense_id] = added_expenses[expense_id] || '';
+                                   setAddedExpenses(new_added_expenses);
+                                   //валидация
+                                   setExpensesValid(false);
+                               }}
+                >
+                    {expenses_data[expense_id].name}
+                </Dropdown.Item>
+            );
+        }
+
+        //Добавляем блок со списком добавленных расходов
+        for(let expense_id in added_expenses) {
+            added_expenses_list_items.push(
+                <li key={'expense-list-item-' + expense_id}
+                    className={'popover__added-expense-list-item'}
+                >
+                    <a href={'#'} onClick={event => event.preventDefault()}
+                       className={'popover__added-expense-square'}
+                       style={{'backgroundColor': expenses_data[expense_id].color}}
+                    />
+                    <span className={'text text_size-13 text_color-dark popover__added-expense-text'}>
+                        {expenses_data[expense_id].name}
+                    </span>
+                    <Form.Control type={'number'} maxLength={9}
+                                  required
+                                  name={'expense-' + expense_id}
+                                  placeholder={'Сумма'}
+                                  size={'sm'}
+                                  className={'popover__added-expense-input'}
+                                  onInput={event => {
+                                      event.preventDefault();
+                                      this.handlePopoverExpenseInput(expense_id, event.currentTarget.value, added_expenses,
+                                          setAddedExpenses, this.isPopoverExpensesValuesValid,
+                                          setExpensesValid,
+                                      );
+                                      const value = event.currentTarget.value;
+                                      const isValid = isFloat(value);
+                                      setValidation(event.currentTarget, isValid);
+                                  }}
+                    />
+                    <Button
+                        variant={'secondary'}
+                        data-target={expense_id}
+                        className={'button button_size-small'}
+                        onClick={event => {
+                            event.preventDefault();
+                            let new_added_expenses = {};
+                            Object.assign(new_added_expenses, added_expenses);
+                            //Удаляем свойство, тем самым убирается поле из списка
+                            delete new_added_expenses[expense_id];
+                            setAddedExpenses(new_added_expenses);
+                            //новая валидность
+                            setExpensesValid(this.isPopoverExpensesValuesValid(new_added_expenses));
+                        }}
+                    >
+                        Удалить
+                    </Button>
+                </li>
+            );
+        }
+
+        return (
+            <Popover
+                id={'incomes_#{id}__add-expenses-popover'.replace('#{id}', incomes_row_id)}
+            >
+                <Popover.Title as={'h5'}>Добавить расходы</Popover.Title>
+                <Popover.Content>
+                    <p className={'text text_size-12 text_color-grey popover__prompt-text'}>
+                        Чтобы свернуть окно, повторно нажмите на иконку
+                    </p>
+                    <Dropdown>
+                        <ul className={'ulist popover__added-expenses-list'}>
+                            {added_expenses_list_items}
+                        </ul>
+                        <Dropdown.Toggle
+                            size={'sm'}
+                            variant={'dark'}
+                            className={'button button_size-small popover__expenses-toggle'}
+                        >
+                            Добавить
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                            {expenses_links}
+                        </Dropdown.Menu>
+                    </Dropdown>
+
+                    <Button
+                        block
+                        size={'sm'}
+                        variant={'success'}
+                        disabled={!this.isAddExpPopoverValid(isExpensesValid)}
+                        onClick={event => {
+                            event.preventDefault();
+                            this.handleIncomesAddExpPopoverSubmit(this.props.popoverAddedExpenses, this.props.userKey,
+                                incomes_row_id);
+                            //закрываем и очищаем поповер
+                            document.getElementById(triggerElemId).click();
+                        }}
+                    >
+                        Применить
+                    </Button>
                 </Popover.Content>
             </Popover>
         )

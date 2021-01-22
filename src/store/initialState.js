@@ -73,7 +73,11 @@ const initialState = {
             cost_price: 'Себестоимость (руб)',
             control: 'Управление',
         },
+        //table popover
         popoverAddedExpenses: {},
+        popoverValidation: {
+            isExpensesValid: false,
+        },
         table_width: 1600,
     },
 
@@ -171,6 +175,11 @@ const initialState = {
             revenue: 'Прибыль (руб)',
             profitability: 'Рентабельность (%)',
             control: 'Управление',
+        },
+        //table popover
+        popoverAddedExpenses: {},
+        popoverValidation: {
+            isExpensesValid: false,
         },
         table_width: 2200,
     },

@@ -64,7 +64,6 @@ export default {
     INCOMES_NEW_RAW_MAT_MODAL_SET_ROWS_USAGE_VALID: 'incomesNewRawMatModalSetRowsUsageValid',
     INCOMES_NEW_RAW_MAT_MODAL_CLEAR_FORM: 'incomesNewRawMatModalClearForm',
 
-
     //Journal Sorts Section
     JOURNAL_SORT_TYPE_CHANGE: 'journalSortTypeChange',
     JOURNAL_SORT_DIR_CHANGE: 'journalSortDirChange',
@@ -81,6 +80,7 @@ export default {
     LOAD_DATA_BASE_JOURNAL: 'loadDataBaseJournal',
     ENTRIES_SHOWN_CHANGE_JOURNAL: 'entriesShouldBeShownChangeJournal',
     JOURNAL_ADD_EXP_POPOVER_SET_ADDED_EXPENSES: 'journalAddExpPopoverSetAddedExpenses',
+    JOURNAL_ADD_EXP_POPOVER_SET_ADDED_EXPENSES_VALID: 'journalAddExpPopoverSetAddedExpensesValid',
 
     // AUTH_______________
 
@@ -115,4 +115,6 @@ export default {
 
     LOAD_DATA_BASE_INCOMES: 'loadDataBaseIncomes',
     ENTRIES_SHOWN_CHANGE_INCOMES: 'entriesShouldBeShownChangeIncomes',
+    INCOMES_ADD_EXP_POPOVER_SET_ADDED_EXPENSES: 'incomesAddExpPopoverSetAddedExpenses',
+    INCOMES_ADD_EXP_POPOVER_SET_ADDED_EXPENSES_VALID: 'incomesAddExpPopoverSetAddedExpensesValid',
 }

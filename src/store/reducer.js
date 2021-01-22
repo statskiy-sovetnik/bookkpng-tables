@@ -717,6 +717,16 @@ export default function reducer(state, action) {
                     popoverAddedExpenses: action.value,
                 }
             }
+        case actionTypes.JOURNAL_ADD_EXP_POPOVER_SET_ADDED_EXPENSES_VALID:
+            return {
+                ...state,
+                journal: {
+                    ...state.journal,
+                    popoverValidation: {
+                        isExpensesValid: action.value,
+                    }
+                }
+            }
 
         //___ INCOMES _________________
 
@@ -790,6 +800,26 @@ export default function reducer(state, action) {
                 incomes: {
                     ...state.incomes,
                     entriesShouldBeShown: action.value,
+                }
+            }
+
+        //____ Incomes table _____
+        case actionTypes.INCOMES_ADD_EXP_POPOVER_SET_ADDED_EXPENSES:
+            return {
+                ...state,
+                incomes: {
+                    ...state.incomes,
+                    popoverAddedExpenses: action.value,
+                }
+            }
+        case actionTypes.INCOMES_ADD_EXP_POPOVER_SET_ADDED_EXPENSES_VALID:
+            return {
+                ...state,
+                incomes: {
+                    ...state.incomes,
+                    popoverValidation: {
+                        isExpensesValid: action.value,
+                    }
                 }
             }
 
