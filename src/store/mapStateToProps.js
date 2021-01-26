@@ -335,7 +335,10 @@ export default function mapStateToProps(component) {
                     tableColsNames: state.expenses.colsNames,
                     tableWidth: state.expenses.tableWidth,
                     entriesShowLimit: state.expenses.entriesShowLimit,
+                    showAllEntries: state.expenses.showAllEntries,
                     expensesData: state.expenses_data,
+                    journalRows: state.journal.rows,
+                    incomesRows: state.incomes.rows,
                 }
             }
     }

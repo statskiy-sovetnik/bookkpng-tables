@@ -725,11 +725,36 @@ class TableArea extends React.Component {
                     )
                 }
                 else if(col_name === 'sum') {
+
+                    //Считаем расходы этого типа _____________
+                    const journalRows = this.props.journalRows || {};
+                    const incomesRows = this.props.incomesRows || {};
+                    let total_exp_sum = 0;
+
+                    //проходим строки журнала
+                    for(let key in journalRows) {
+                        let cur_expenses_arr = journalRows[key].expenses || [];
+                        cur_expenses_arr.forEach((exp_obj) => {
+                            if(+exp_obj.id === +row_id) {
+                                total_exp_sum += exp_obj.amount;
+                            }
+                        });
+                    }
+                    //проходим строки Доходов
+                    for(let key in incomesRows) {
+                        let cur_expenses_arr = incomesRows[key].expenses || [];
+                        cur_expenses_arr.forEach((exp_obj) => {
+                            if(+exp_obj.id === +row_id) {
+                                total_exp_sum += exp_obj.amount;
+                            }
+                        });
+                    }
+
                     cur_row.push(
                         <td className={cell_class}
                             key={data + '-' + row_id + '-' + col_name}
                         >
-                            Пока ничего
+                            {total_exp_sum.toFixed(3)}
                         </td>
                     )
                 }
@@ -759,7 +784,6 @@ class TableArea extends React.Component {
                 </tr>
             );
         }
-
         return (
             <tbody key={data + '-tablebody'} className={body_classnames}>
                 {table_rows}
@@ -1706,6 +1730,10 @@ class TableArea extends React.Component {
                 break;
             case 'expenses':
                 area_name = 'Расходы';
+                let table_entries_limit = this.props.showAllEntries ? 99999999 : this.props.entriesShowLimit;
+                let entries_limit_control_btn_text = this.props.showAllEntries ?
+                    'Свернуть' : 'Показать всё';
+                let control_btn_icon_class = this.props.showAllEntries ? 'bi-caret-up' : 'bi-caret-down';
                 table_area_content.push(
                     <Heading className={'text_color-dark'}>{area_name}</Heading>
                 );
@@ -1713,6 +1741,7 @@ class TableArea extends React.Component {
                     <TableWrapper variant={'dark'}>
                         <ExpensesTable
                             //responsive={true}
+                            className={'expenses-table'}
                             style={{'width': this.props.tableWidth}}
                             key={'table'}
                             striped={true}
@@ -1727,11 +1756,37 @@ class TableArea extends React.Component {
                                     dark_head_classnames,
                                 ),
                                 this.renderTableBody('expenses', this.props.expensesData, this.props.tableColsOrder,
-                                null, dark_tbody_classnames, this.props.entriesShowLimit, null, null,
+                                null, dark_tbody_classnames, table_entries_limit, null, null,
                                 null, null, null, null, null,
                                 null, null),
                             ]}
                         </ExpensesTable>
+                        <div className={'expenses-table__entries-limit-control-section'}>
+                            <Button
+                                block
+                                variant={'secondary'}
+                                size={'sm'}
+                                className={'button button_size-small expenses-table__entries-limit-control-btn'}
+                                onClick={event => {
+                                    event.preventDefault();
+                                    this.props.toggleShowAllEntries(!this.props.showAllEntries);
+                                }}
+                            >
+                                {entries_limit_control_btn_text}
+                                <BtstrapIcon
+                                    data={control_btn_icon_class}
+                                    className={'expenses-table__entries-limit-control-btn-icon ' + control_btn_icon_class}
+                                />
+                            </Button>
+                        </div>
+                        <div className={'expenses-table__button-section'}>
+                            <Button
+                                size={'sm'}
+                                variant={'success'}
+                            >
+                                + Добавить тип
+                            </Button>
+                        </div>
                     </TableWrapper>
                 );
                 break;

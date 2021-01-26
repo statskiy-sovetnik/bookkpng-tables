@@ -107,6 +107,7 @@ import journalAddExpPopoverSetAddedExpensesValid from "./actionCreators/journalA
 import incomesAddExpPopoverSetAddedExpenses from "./actionCreators/incomes/incomesAddExpPopoverSetAddedExpenses";
 import incomesAddExpPopoverSetAddedExpensesValid
     from "./actionCreators/incomes/incomesAddExpPopoverSetAddedExpensesValid";
+import expensesToggleEntriesShowAll from "./actionCreators/expenses/expensesToggleEntriesShowAll";
 
 export default function mapDispatchToProps(component) {
     switch (component) {
@@ -371,6 +372,14 @@ export default function mapDispatchToProps(component) {
                 return {
                     changeEntriesPack: value => dispatch(incomesNewRawMatModalSetEntriesPack(value)),
                     changeEntriesShouldBeShown: value => dispatch(incomesNewRawMatModalSetEntriesShow(value)),
+                }
+            }
+
+        //_______ EXPENSES _______________
+        case 'ExpensesArea':
+            return function (dispatch) {
+                return {
+                    toggleShowAllEntries: bool => dispatch(expensesToggleEntriesShowAll(bool)),
                 }
             }
     }

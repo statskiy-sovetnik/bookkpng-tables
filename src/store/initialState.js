@@ -267,10 +267,11 @@ const initialState = {
         colsNames: {
             color: 'Цвет',
             name: 'Наименование',
-            sum: 'Сумма',
+            sum: 'Сумма (руб)',
             control: 'Управление',
         },
-        entriesShowLimit: 8,
+        showAllEntries: false,
+        entriesShowLimit: 7,
         tableWidth: 600,
     }
 }

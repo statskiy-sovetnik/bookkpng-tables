@@ -823,7 +823,19 @@ export default function reducer(state, action) {
                 }
             }
 
+        //__________ EXPENSES ______________
+        case actionTypes.EXPENSES_TOGGLE_ENTRIES_SHOW_ALL:
+            return {
+                ...state,
+                expenses: {
+                    ...state.expenses,
+                    showAllEntries: action.value,
+                }
+            }
+
         default:
             return state;
+
+
     }
 }

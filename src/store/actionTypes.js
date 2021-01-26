@@ -117,4 +117,8 @@ export default {
     ENTRIES_SHOWN_CHANGE_INCOMES: 'entriesShouldBeShownChangeIncomes',
     INCOMES_ADD_EXP_POPOVER_SET_ADDED_EXPENSES: 'incomesAddExpPopoverSetAddedExpenses',
     INCOMES_ADD_EXP_POPOVER_SET_ADDED_EXPENSES_VALID: 'incomesAddExpPopoverSetAddedExpensesValid',
+
+    //______ EXPENSES ____________________
+    EXPENSES_TOGGLE_ENTRIES_SHOW_ALL: 'expensesToggleEntriesShowAll',
+
 }

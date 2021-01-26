@@ -23,7 +23,7 @@ catch (PDOException $ex) {
 $expTableName = "expenses_journal_$rowId";
 foreach ($expenses as $exp_id => $sum) {
     $addExpense = "INSERT INTO $expTableName(expense_id, sum)
-                        VALUES ('$exp_id', '$sum')";
+                        VALUES ('$exp_id', '$sum') ON DUPLICATE KEY UPDATE sum=$sum";
     $keyConn->exec($addExpense);
 }
 unset($sum, $exp_id);
