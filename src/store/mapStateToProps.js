@@ -326,6 +326,18 @@ export default function mapStateToProps(component) {
                     entriesShouldBeShown: state.incomes.entriesShouldBeShown,
                 }
             }
+
+        //_________ EXPENSES __________________
+        case 'ExpensesArea':
+            return function (state) {
+                return {
+                    tableColsOrder: state.expenses.colsOrder,
+                    tableColsNames: state.expenses.colsNames,
+                    tableWidth: state.expenses.tableWidth,
+                    entriesShowLimit: state.expenses.entriesShowLimit,
+                    expensesData: state.expenses_data,
+                }
+            }
     }
 }
 

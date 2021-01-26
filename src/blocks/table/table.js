@@ -14,10 +14,14 @@ class CustomTable extends React.Component {
         const  extra_table_classes = this.props.className ? ' ' + this.props.className : '';
 
         return (
-            <Table hover={this.props.hover}
-                   responsive={this.props.responsive}
-                   style={this.props.style}
-                   className={extra_table_classes}>
+            <Table hover={this.props.hover || false}
+                   responsive={this.props.responsive || false}
+                   style={this.props.style || {}}
+                   className={extra_table_classes}
+                   variant={this.props.variant || 'light'}
+                   striped={this.props.striped || false}
+                   bordered={this.props.bordered || false}
+            >
                 {this.props.children}
             </Table>
         )
@@ -40,5 +44,9 @@ const INCOMES_NEW_RAW_MAT_TABLE = connect(
     mapStateToProps('TableIncomesNewRawMat'),
     mapDispatchToProps('TableIncomesNewRawMat'),
 )(CustomTable);
+const EXPENSES_TABLE = connect(
+    mapStateToProps('ExpensesTable'),
+    mapDispatchToProps('ExpensesTable'),
+)(CustomTable);
 
-export {JOURNAL_TABLE, INCOMES_TABLE, INCOMES_NEW_ENTRY_TABLE, INCOMES_NEW_RAW_MAT_TABLE};
+export {JOURNAL_TABLE, INCOMES_TABLE, INCOMES_NEW_ENTRY_TABLE, INCOMES_NEW_RAW_MAT_TABLE, EXPENSES_TABLE};

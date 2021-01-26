@@ -260,6 +260,18 @@ const initialState = {
             price: 74.00,
         }
         * */
+    },
+
+    expenses: {
+        colsOrder: ['color', 'name', 'sum', 'control'],
+        colsNames: {
+            color: 'Цвет',
+            name: 'Наименование',
+            sum: 'Сумма',
+            control: 'Управление',
+        },
+        entriesShowLimit: 8,
+        tableWidth: 600,
     }
 }
 

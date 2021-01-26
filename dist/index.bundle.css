@@ -107,6 +107,20 @@ tr.table__checked-row {
   background-color: #d7e1ec;
   border-left: 5px solid #99bbe4; }
 
+.expenses-table__color-square {
+  width: 9px;
+  height: 9px;
+  display: flex;
+  margin-top: 5px;
+  padding: 0;
+  background-color: grey; }
+
+.expenses-table__thead th {
+  border-top: none !important; }
+
+.table__control-btn {
+  margin-right: 7px; }
+
 .modal-content .modal-body-container {
   width: 750px; }
 
@@ -184,6 +198,14 @@ ul.popover__added-expenses-list {
 
 .popover__expenses-toggle {
   margin-bottom: 20px; }
+
+.table-wrapper {
+  padding: 6px 0;
+  border-radius: 5px;
+  display: inline-block; }
+
+.table-wrapper_color-dark {
+  background-color: #343a40; }
 
 .menu__user-block {
   display: flex;

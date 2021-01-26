@@ -7,6 +7,7 @@ import mapStateToProps from "../../store/mapStateToProps";
 import Menu from '../../blocks/menu/menu'
 import {JOURNAL_AREA_W as JournalArea,
         INCOMES_AREA_W as IncomesArea,
+        EXPENSES_AREA_W as ExpensesArea,
 } from '../../blocks/table-area/table-area'
 import {getCookieValue, isEmptyObj} from "../../common";
 
@@ -478,6 +479,9 @@ class App extends React.Component {
                              updateJournalRowsFromDb = {this.updateJournalRowsFromDb.bind(this)}
                              updateRawMatUsageFromDb = {this.updateRawMatUsageFromDb.bind(this)}
                              updateIncomesRowsFromDb = {this.updateIncomesRowsFromDb.bind(this)}
+                />
+                <ExpensesArea
+                    data={'expenses'}
                 />
             </div>
         )

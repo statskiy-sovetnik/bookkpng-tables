@@ -24,6 +24,7 @@ import {
     INCOMES_TABLE as TableIncomes,
     INCOMES_NEW_ENTRY_TABLE as TableIncomesNewEntry,
     INCOMES_NEW_RAW_MAT_TABLE as TableIncomesNewRawMat,
+    EXPENSES_TABLE as ExpensesTable,
 } from "../table/table";
 import {
     INCOMES_NEW_RAW_MAT_MODAL as IncomesNewRawMatModal,
@@ -41,6 +42,7 @@ import FormControl from 'react-bootstrap/FormControl';
 import {isEmptyObj, isFloat, isGoodsNameValid, isProviderNameValid, setValidation} from "../../common";
 import Dropdown from "react-bootstrap/Dropdown";
 import Form from "react-bootstrap/Form";
+import TableWrapper from "../table-wrapper/table-wrapper";
 
 
 class TableArea extends React.Component {
@@ -51,6 +53,10 @@ class TableArea extends React.Component {
     renderTableHead(data, head_cols, cols_order, class_names) {
         let head_row_elems = [];
         let extra_classes = (class_names ? ' ' + class_names : '');
+
+        if(data === 'expenses') {
+            extra_classes += ' expenses-table__thead';
+        }
 
         cols_order.forEach((col_name) => {
             head_row_elems.push(
@@ -405,22 +411,58 @@ class TableArea extends React.Component {
 
             cols_order.forEach((col_name) => {
                 if(col_name === 'control') {
-                    cur_row.push(
-                        <td className={cell_class}
-                            key={data + '-' + row_id + '-' + col_name}
-                        >
-                            <Button className={'button button_size-small button_inline-flex'}
-                               variant={'dark'}
-                               href={'#'}
-                               onClick={event => {
-                                   event.preventDefault();
-                                   this.removeTableRow(row_id, data, this.props.userKey, this.props.rawMatData);
-                               }}
+                    if(data === 'expenses') {
+                        cur_row.push(
+                            <td className={cell_class}
+                                key={data + '-' + row_id + '-' + col_name}
                             >
-                                <BtstrapIcon data={'bi-trash'} className={'bi-trash'}/>
-                            </Button>
-                        </td>
-                    )
+                                <Button className={'button button_size-small button_inline-flex table__control-btn'}
+                                        variant={'dark'}
+                                        href={'#'}
+                                        onClick={event => {
+                                            event.preventDefault();
+                                            //this.removeTableRow(row_id, data, this.props.userKey, this.props.rawMatData);
+                                        }}
+                                >
+                                    <BtstrapIcon
+                                        data={'bi-trash'} className={'bi-trash'}
+                                        width={14} heigth={14}
+                                    />
+                                </Button>
+                                <Button className={'button button_size-small button_inline-flex'}
+                                        variant={'dark'}
+                                        href={'#'}
+                                        onClick={event => {
+                                            event.preventDefault();
+                                            //this.removeTableRow(row_id, data, this.props.userKey, this.props.rawMatData);
+                                        }}
+                                >
+                                    <BtstrapIcon
+                                        data={'bi-plus-circle-alt'} className={'bi-plus-circle'}
+                                        width={14} heigth={14}
+                                    />
+                                </Button>
+                            </td>
+                        )
+                    }
+                    else {
+                        cur_row.push(
+                            <td className={cell_class}
+                                key={data + '-' + row_id + '-' + col_name}
+                            >
+                                <Button className={'button button_size-small button_inline-flex'}
+                                        variant={'dark'}
+                                        href={'#'}
+                                        onClick={event => {
+                                            event.preventDefault();
+                                            this.removeTableRow(row_id, data, this.props.userKey, this.props.rawMatData);
+                                        }}
+                                >
+                                    <BtstrapIcon data={'bi-trash'} className={'bi-trash'}/>
+                                </Button>
+                            </td>
+                        )
+                    }
                 }
                 else if(col_name === 'select') {
                     cur_row.push(
@@ -669,6 +711,29 @@ class TableArea extends React.Component {
                     );
                 }
                 else if(col_name === 'raw_mat_id') {/*ничего не добавляем*/}
+                //expenses rows
+                else if(col_name === 'color') {
+                    cur_row.push(
+                        <td className={cell_class}
+                            key={data + '-' + row_id + '-' + col_name}
+                        >
+                            <a href="#"
+                               className={'expenses-table__color-square'}
+                               style={{'backgroundColor': row_data[col_name]}}
+                               onClick={event => event.preventDefault()}/>
+                        </td>
+                    )
+                }
+                else if(col_name === 'sum') {
+                    cur_row.push(
+                        <td className={cell_class}
+                            key={data + '-' + row_id + '-' + col_name}
+                        >
+                            Пока ничего
+                        </td>
+                    )
+                }
+                //common
                 else {
                     let cur_value = row_data[col_name];
                     if(typeof cur_value === 'number') {
@@ -1452,7 +1517,9 @@ class TableArea extends React.Component {
         const incomes_entries_left = incomes_rows_num - this.props.incomesEntriesShown;
 
         const head_classnames = 'text text_size-13 text_color-dark thead-light';
+        const dark_head_classnames = 'text text_size-13';
         const tbody_classnames = 'text text_size-13 text_color-black';
+        const dark_tbody_classnames = 'text text_size-13';
 
         switch(this.props.data) {
             case 'journal':
@@ -1637,6 +1704,37 @@ class TableArea extends React.Component {
                         this.props.entriesShouldBeShown)
                 );
                 break;
+            case 'expenses':
+                area_name = 'Расходы';
+                table_area_content.push(
+                    <Heading className={'text_color-dark'}>{area_name}</Heading>
+                );
+                table_area_content.push(
+                    <TableWrapper variant={'dark'}>
+                        <ExpensesTable
+                            //responsive={true}
+                            style={{'width': this.props.tableWidth}}
+                            key={'table'}
+                            striped={true}
+                            bordered={false}
+                            variant={'dark'}
+                        >
+                            {[
+                                this.renderTableHead(
+                                    'expenses',
+                                    this.props.tableColsNames,
+                                    this.props.tableColsOrder,
+                                    dark_head_classnames,
+                                ),
+                                this.renderTableBody('expenses', this.props.expensesData, this.props.tableColsOrder,
+                                null, dark_tbody_classnames, this.props.entriesShowLimit, null, null,
+                                null, null, null, null, null,
+                                null, null),
+                            ]}
+                        </ExpensesTable>
+                    </TableWrapper>
+                );
+                break;
             default:
                 area_name = 'Журнал';
         }
@@ -1663,5 +1761,9 @@ const INCOMES_NEW_RAW_MAT_AREA_W = connect(
     mapStateToProps('IncomesNewRawMatArea'),
     mapDispatchToProps('IncomesNewRawMatArea')
 )(TableArea);
-export {JOURNAL_AREA_W, INCOMES_AREA_W, INCOMES_NEW_ENTRY_AREA_W, INCOMES_NEW_RAW_MAT_AREA_W};
+const EXPENSES_AREA_W = connect(
+    mapStateToProps('ExpensesArea'),
+    mapDispatchToProps('ExpensesArea')
+)(TableArea);
+export {JOURNAL_AREA_W, INCOMES_AREA_W, INCOMES_NEW_ENTRY_AREA_W, INCOMES_NEW_RAW_MAT_AREA_W, EXPENSES_AREA_W};
 

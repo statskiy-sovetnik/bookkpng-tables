@@ -3,6 +3,10 @@ import React from 'react';
 export default function BtstrapIcon(props) {
     let classes = 'bi btstrap-icon' + (props.className ? ' ' + props.className : '');
     let fill = new Array(4);
+    let viewboxX = props.width || "16";
+    let viewboxY = props.heigth || "16";
+    let sizeX = props.width || '1em';
+    let sizeY = props.heigth || '1em';
 
     switch(props.data) {
         case 'bi-bookmark-plus':
@@ -32,11 +36,22 @@ export default function BtstrapIcon(props) {
         case 'bi-plus-circle':
             fill = <path fillRule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>;
             break;
+        case 'bi-plus-circle-alt':
+            fill[0] = <path key={'fill-0'} d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>;
+            fill[1] = <path key={'fill-1'} d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>;
+            break;
+        case 'bi-plus':
+            fill = <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>;
+            break;
 
     }
 
     return (
-        <svg width="1em" height="1em" viewBox="0 0 16 16" className={classes} fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <svg width={sizeX} height={sizeY}
+             viewBox={"0 0 16 16"}
+             //viewBox={"0 0 #{x} #{y}".replace("#{x}", viewboxX).replace("#{y}", viewboxY)}
+             className={classes} fill="currentColor" xmlns="http://www.w3.org/2000/svg"
+        >
             {fill}
         </svg>
     )
