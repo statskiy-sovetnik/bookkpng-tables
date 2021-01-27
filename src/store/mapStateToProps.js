@@ -15,6 +15,13 @@ export default function mapStateToProps(component) {
                 }
             }
 
+        case 'UserKeyBlock':
+            return function (state) {
+                return {
+                    userKey: state.auth.userKey,
+                }
+            }
+
         //_____ JOURNAL ______________
         case 'JournalArea':
             return function (state) {

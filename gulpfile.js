@@ -5,6 +5,8 @@ const browserify = require('browserify');
 const source = require('vinyl-source-stream');
 const rename = require('gulp-rename');
 const prefix = require('gulp-autoprefixer');
+const cssMin = require('gulp-cssnano');
+const uglifyJs = require('gulp-uglify');
 
 gulp.task('bundle-js', () => {
     return browserify({entries: "src/index.js", extensions: ['.js'], debug: true})
@@ -48,6 +50,13 @@ gulp.task("watch", () => {
         "src/*.sass",
     ],
         gulp.series('build', 'gulp-sass'))
+});
+
+gulp.task('min-js-bundles', () => {
+    return gulp.src('dist/*.js')
+        .pipe(uglifyJs())
+        .pipe(rename({suffix: '.min'}))
+        .pipe(gulp.dest('dist/'));
 });
 
 gulp.task('default', gulp.series('bundle-js', 'gulp-sass', 'build', 'watch'));
