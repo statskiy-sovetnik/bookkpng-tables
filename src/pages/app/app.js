@@ -144,7 +144,6 @@ class App extends React.Component {
             }
         ).then(
             body => {
-                console.log(body);
                 const journal_rows_upd = getUpdatedJournalRows(body, raw_mat_usage_for_journal, raw_mat_data);
                 this.props.loadDataBaseJournal(journal_rows_upd);
 

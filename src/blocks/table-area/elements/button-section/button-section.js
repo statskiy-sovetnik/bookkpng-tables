@@ -140,11 +140,15 @@ class ButtonSection extends React.Component{
         }
 
         //Посылаем запрос
-        const formObj = new FormData(form);
+        const formObj = new FormData();
         formObj.set('raw-mat-id', this.props.rawMatId);
         formObj.set('raw_mat_date', convertDateToMysqlDate(this.props.rawMatDate));
         formObj.set('user-key', this.props.userKey);
         formObj.set('expenses', JSON.stringify(this.props.addedExpensesData));
+        formObj.set('new-provider-name', this.props.rawMatProviderName);
+        formObj.set('new-raw-mat-name', this.props.rawMatName);
+        formObj.set('new-raw-mat-price', this.props.newRawMatPrice);
+        formObj.set('raw-mat-amount', this.props.rawMatAmount);
 
         fetch('/src/php/add_journal_entry.php', {
             method: 'POST',

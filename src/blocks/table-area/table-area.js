@@ -115,7 +115,8 @@ class TableArea extends React.Component {
                 switch (data) {
                     case 'journal':
                         handleJournalRowRemoval(user_key, raw_mat_data, this.props.updateRawMatDataFromDb,
-                            this.props.updateRawMatUsageFromDb, this.props.updateJournalRowsFromDb);
+                            this.props.updateRawMatUsageFromDb, this.props.updateJournalRowsFromDb,
+                            this.props.updateIncomesRowsFromDb);
                         break;
                     case 'incomes':
                         handleIncomesRowRemoval(user_key, raw_mat_data, this.props.journalRows,
@@ -126,7 +127,9 @@ class TableArea extends React.Component {
         );
 
         function handleJournalRowRemoval(user_key, raw_mat_data, updateRawMatDataFromDb, updateRawMatUsageFromDb,
-                                         updateJournalRowsFromDb) {
+                                         updateJournalRowsFromDb, updateIncomesRowsFromDb) {
+            let raw_mat_usage = {};
+
             //Обновляем данные о сырье
             updateRawMatDataFromDb('/src/php/get_raw_mat_data.php', user_key).then(
 
@@ -139,11 +142,16 @@ class TableArea extends React.Component {
                 //Обновляем строки журнала
                 all_raw_mat_usage => {
                     const raw_mat_usage_for_journal = all_raw_mat_usage.raw_mat_usage_for_journal;
+                    raw_mat_usage = all_raw_mat_usage.raw_mat_usage.slice();
                     return updateJournalRowsFromDb('/src/php/get_journal_rows.php', user_key,
                         raw_mat_usage_for_journal, raw_mat_data);
                 }
             ).then(
-                journal_rows_upd => {}
+                journal_rows_upd => {
+                    //Обновляем строки Доходов
+                    updateIncomesRowsFromDb('/src/php/get_incomes_rows.php', user_key, raw_mat_usage, raw_mat_data,
+                        journal_rows_upd);
+                }
             );
         }
 
@@ -485,19 +493,6 @@ class TableArea extends React.Component {
                                         width={14} heigth={14}
                                     />
                                 </Button>
-                                <Button className={'button button_size-small button_inline-flex'}
-                                        variant={'dark'}
-                                        href={'#'}
-                                        onClick={event => {
-                                            event.preventDefault();
-                                            //this.removeTableRow(row_id, data, this.props.userKey, this.props.rawMatData);
-                                        }}
-                                >
-                                    <BtstrapIcon
-                                        data={'bi-plus-circle-alt'} className={'bi-plus-circle'}
-                                        width={14} heigth={14}
-                                    />
-                                </Button>
                             </td>
                         )
                     }
@@ -717,7 +712,7 @@ class TableArea extends React.Component {
                                                 <BtstrapIcon data={'bi-plus-circle'}
                                                              className={'bi-plus-circle btstrap-icon_size-11 btstrap-icon_color-dark ' +
                                                              'table-area__expenses-icons-block__btstrap-icon'}/>
-                                        </a>
+                                            </a>
                                         </OverlayTrigger>
                                     </div>
                                 </span>
@@ -782,37 +777,49 @@ class TableArea extends React.Component {
                 }
                 else if(col_name === 'sum') {
 
-                    //Считаем расходы этого типа _____________
-                    const journalRows = this.props.journalRows || {};
-                    const incomesRows = this.props.incomesRows || {};
-                    let total_exp_sum = 0;
+                    if(data === 'expenses') {
+                        //Считаем расходы этого типа _____________
+                        const journalRows = this.props.journalRows || {};
+                        const incomesRows = this.props.incomesRows || {};
+                        let total_exp_sum = 0;
 
-                    //проходим строки журнала
-                    for(let key in journalRows) {
-                        let cur_expenses_arr = journalRows[key].expenses || [];
-                        cur_expenses_arr.forEach((exp_obj) => {
-                            if(+exp_obj.id === +row_id) {
-                                total_exp_sum += exp_obj.amount;
-                            }
-                        });
-                    }
-                    //проходим строки Доходов
-                    for(let key in incomesRows) {
-                        let cur_expenses_arr = incomesRows[key].expenses || [];
-                        cur_expenses_arr.forEach((exp_obj) => {
-                            if(+exp_obj.id === +row_id) {
-                                total_exp_sum += exp_obj.amount;
-                            }
-                        });
-                    }
+                        //проходим строки журнала
+                        for(let key in journalRows) {
+                            let cur_expenses_arr = journalRows[key].expenses || [];
+                            cur_expenses_arr.forEach((exp_obj) => {
+                                if(+exp_obj.id === +row_id) {
+                                    total_exp_sum += exp_obj.amount;
+                                }
+                            });
+                        }
+                        //проходим строки Доходов
+                        for(let key in incomesRows) {
+                            let cur_expenses_arr = incomesRows[key].expenses || [];
+                            cur_expenses_arr.forEach((exp_obj) => {
+                                if(+exp_obj.id === +row_id) {
+                                    total_exp_sum += exp_obj.amount;
+                                }
+                            });
+                        }
 
-                    cur_row.push(
-                        <td className={cell_class}
-                            key={data + '-' + row_id + '-' + col_name}
-                        >
-                            {total_exp_sum.toFixed(3)}
-                        </td>
-                    )
+                        cur_row.push(
+                            <td className={cell_class}
+                                key={data + '-' + row_id + '-' + col_name}
+                            >
+                                {total_exp_sum.toFixed(3)}
+                            </td>
+                        )
+                    }
+                    else {
+                        let cur_value = row_data[col_name].toFixed(3);
+                        cur_row.push(
+                            <td className={cell_class}
+                                key={data + '-' + row_id + '-' + col_name}
+                            >
+                                {cur_value}
+                            </td>
+                        )
+                    }
                 }
                 //common
                 else {
@@ -1274,7 +1281,6 @@ class TableArea extends React.Component {
                     return;
                 }
 
-                console.log('Проверка пройдена&');
                 return response.text();
             },
             error => {
@@ -1600,7 +1606,6 @@ class TableArea extends React.Component {
                     return;
                 }
 
-                console.log('Проверкаэ');
                 return response.text();
             },
             error => {
@@ -1668,7 +1673,7 @@ class TableArea extends React.Component {
                                     variant={'light'}
                                     className={'expenses-table__color-tab'}
                                 >
-                                    <a href={'#'} onClick={event => event.preventDefault()}
+                                    <span
                                        className={'expenses-table__color-circle'}
                                        style={{'backgroundColor': basic_colors[selected_color] || 'grey'}}
                                     />
