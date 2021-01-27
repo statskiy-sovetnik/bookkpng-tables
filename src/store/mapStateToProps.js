@@ -331,15 +331,20 @@ export default function mapStateToProps(component) {
         case 'ExpensesArea':
             return function (state) {
                 return {
+                    //common
                     userKey: state.auth.userKey,
+                    journalRows: state.journal.rows,
+                    incomesRows: state.incomes.rows,
+                    expensesData: state.expenses_data,
+                    rawMatUsageForJournal: state.raw_mat_usage_for_journal,
+                    rawMatUsage: state.raw_mat_usage,
+                    rawMatData: state.raw_mat_data,
+                    //table
                     tableColsOrder: state.expenses.colsOrder,
                     tableColsNames: state.expenses.colsNames,
                     tableWidth: state.expenses.tableWidth,
                     entriesShowLimit: state.expenses.entriesShowLimit,
                     showAllEntries: state.expenses.showAllEntries,
-                    expensesData: state.expenses_data,
-                    journalRows: state.journal.rows,
-                    incomesRows: state.incomes.rows,
                     basicColors: state.expenses.basicColors,
                     basicColorsNames: state.expenses.basicColorsNames,
                     //popover

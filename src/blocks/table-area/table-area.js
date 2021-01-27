@@ -160,6 +160,52 @@ class TableArea extends React.Component {
         }
     }
 
+    removeExpenseType(id) {
+        let fetch_body = new FormData();
+        fetch_body.append('expense_id', id);
+        fetch_body.append('key', this.props.userKey);
+
+        fetch('/src/php/remove_expense_type.php', {
+            method: 'POST',
+            body: fetch_body,
+        }).then(
+            response => {
+                if(response.status === 520) {
+                    alert('Ошибка при подключении к базе данных');
+                    return;
+                }
+                if(response.status === 500) {
+                    alert('Ошибка mysql-запроса');
+                    return;
+                }
+                if(response.status !== 200) {
+                    alert('Неизвестная ошибка при обработке запроса');
+                    return;
+                }
+
+                return response.text();
+            }
+        ).then(
+            body => {
+
+                //Обновляем строки Журнала
+                return this.props.updateJournalRowsFromDb('/src/php/get_journal_rows.php', this.props.userKey,
+                    this.props.rawMatUsageForJournal, this.props.rawMatData);
+            }
+        ).then(
+            journal_rows_upd => {
+                //Обновляем строки Доходов
+                return this.props.updateIncomesRowsFromDb('/src/php/get_incomes_rows.php', this.props.userKey,
+                    this.props.rawMatUsage, this.props.rawMatData, journal_rows_upd);
+            }
+        ).then(
+            incomes_rows_upd => {
+                //Обновляем информацию о расходах
+                this.props.updateExpensesDataFromDb('/src/php/get_expenses_data.php', this.props.userKey);
+            }
+        );
+    }
+
     handleTableCheckboxClick(row_id, rows_checked, setRowsChecked, setIsRowChecked, data) {
         let new_rows_checked = rows_checked.slice();
         let rows_usage = {};
@@ -430,7 +476,8 @@ class TableArea extends React.Component {
                                         href={'#'}
                                         onClick={event => {
                                             event.preventDefault();
-                                            //this.removeTableRow(row_id, data, this.props.userKey, this.props.rawMatData);
+                                            event.currentTarget.setAttribute('disabled', true);
+                                            this.removeExpenseType(row_id);
                                         }}
                                 >
                                     <BtstrapIcon
