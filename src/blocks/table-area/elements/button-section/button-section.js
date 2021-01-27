@@ -450,6 +450,7 @@ class ButtonSection extends React.Component{
                                                 onClick={event => {
                                                     event.preventDefault();
                                                     toggleNewRawMatInputsShow(true);
+                                                    this.props.setModalRawMatId(null);
                                                     this.props.setRawMatValid(false);
                                                     this.props.setProviderNameValid(false);
                                                     this.props.setPriceValid(false);
