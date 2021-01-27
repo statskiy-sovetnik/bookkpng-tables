@@ -832,6 +832,39 @@ export default function reducer(state, action) {
                     showAllEntries: action.value,
                 }
             }
+        case actionTypes.EXPENSES_SET_SELECTED_COLOR:
+            return {
+                ...state,
+                expenses: {
+                    ...state.expenses,
+                    addExpPopover: {
+                        ...state.expenses.addExpPopover,
+                        currentColor: action.value,
+                    }
+                }
+            }
+        case actionTypes.EXPENSES_SET_EXPENSE_NAME:
+            return {
+                ...state,
+                expenses: {
+                    ...state.expenses,
+                    addExpPopover: {
+                        ...state.expenses.addExpPopover,
+                        expenseName: action.value,
+                    }
+                }
+            }
+        case actionTypes.EXPENSES_SET_EXPENSE_NAME_VALID:
+            return {
+                ...state,
+                expenses: {
+                    ...state.expenses,
+                    addExpPopover: {
+                        ...state.expenses.addExpPopover,
+                        expenseNameValid: action.value,
+                    }
+                }
+            }
 
         default:
             return state;

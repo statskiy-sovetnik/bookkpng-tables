@@ -19,9 +19,11 @@ ______________
 
 expenses_red: #e06c5d
 expenses_purple: #826de0
-expenses_blue: #69ade0
+expenses_light_blue: #69ade0
 expenses_green: #43e093
 expenses_yellow: #d7e049
 expenses_pink: #e060b4
 expenses_acid_green: #90e049
 expenses_orange: #e09c4b
+expenses_blue: #6061F0
+expenses_mareen: #4CF0E0

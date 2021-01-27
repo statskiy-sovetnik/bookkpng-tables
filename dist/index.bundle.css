@@ -11,6 +11,12 @@ html, body {
   display: flex !important;
   flex-direction: row !important; }
 
+.vertical-row-flex-align {
+  align-items: center !important; }
+
+.inline-block-elem {
+  display: inline-block !important; }
+
 .text_color-grey {
   color: #949494; }
 
@@ -133,6 +139,27 @@ tr.table__checked-row {
   justify-content: center;
   margin-bottom: 20px; }
 
+.expenses-table__color-circle {
+  display: flex;
+  margin-right: 7px;
+  width: 10px;
+  height: 10px;
+  border-radius: 100%;
+  background-color: grey; }
+
+.expenses-table__color-tab {
+  display: inline-flex !important;
+  flex-direction: row  !important;
+  align-items: center !important;
+  background-color: #dde6ef !important;
+  border: 1px solid #cedae6 !important;
+  padding: 5px 12px !important;
+  border-radius: 15px !important;
+  transition: all 0.1s linear; }
+  .expenses-table__color-tab:hover, .expenses-table__color-tab:focus {
+    background-color: #cedbea !important;
+    border: 1px solid #b3c5d0 !important; }
+
 .table__control-btn {
   margin-right: 7px; }
 
@@ -191,6 +218,9 @@ tr.table__checked-row {
 
 .popover__prompt-text {
   margin-bottom: 15px; }
+
+.popover__prompt-row-text {
+  margin-right: 10px; }
 
 ul.popover__added-expenses-list {
   margin-top: 5px;

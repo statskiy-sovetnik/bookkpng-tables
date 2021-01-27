@@ -108,6 +108,9 @@ import incomesAddExpPopoverSetAddedExpenses from "./actionCreators/incomes/incom
 import incomesAddExpPopoverSetAddedExpensesValid
     from "./actionCreators/incomes/incomesAddExpPopoverSetAddedExpensesValid";
 import expensesToggleEntriesShowAll from "./actionCreators/expenses/expensesToggleEntriesShowAll";
+import expensesSetSelectedColor from "./actionCreators/expenses/expensesSetSelectedColor";
+import expensesSetExpenseName from "./actionCreators/expenses/expensesSetExpenseName";
+import expensesSetExpenseNameValid from "./actionCreators/expenses/expensesSetExpenseNameValid";
 
 export default function mapDispatchToProps(component) {
     switch (component) {
@@ -380,6 +383,9 @@ export default function mapDispatchToProps(component) {
             return function (dispatch) {
                 return {
                     toggleShowAllEntries: bool => dispatch(expensesToggleEntriesShowAll(bool)),
+                    setSelectedColor: value => dispatch(expensesSetSelectedColor(value)),
+                    setExpenseName: value => dispatch(expensesSetExpenseName(value)),
+                    setExpenseNameValid: value => dispatch(expensesSetExpenseNameValid(value)),
                 }
             }
     }

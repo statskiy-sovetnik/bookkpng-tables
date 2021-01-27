@@ -120,5 +120,8 @@ export default {
 
     //______ EXPENSES ____________________
     EXPENSES_TOGGLE_ENTRIES_SHOW_ALL: 'expensesToggleEntriesShowAll',
+    EXPENSES_SET_SELECTED_COLOR: 'expensesSetSelectedColor',
+    EXPENSES_SET_EXPENSE_NAME: 'expensesSetExpenseName',
+    EXPENSES_SET_EXPENSE_NAME_VALID: 'expensesSetExpenseNameValid',
 
 }

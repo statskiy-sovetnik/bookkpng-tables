@@ -39,10 +39,19 @@ import Table from "react-bootstrap/Table";
 import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from 'react-bootstrap/FormControl';
 
-import {isEmptyObj, isFloat, isGoodsNameValid, isProviderNameValid, setValidation} from "../../common";
+import {
+    isEmptyObj,
+    isExpenseNameValid,
+    isFloat,
+    isGoodsNameValid,
+    isProviderNameValid,
+    setValidation
+} from "../../common";
 import Dropdown from "react-bootstrap/Dropdown";
 import Form from "react-bootstrap/Form";
 import TableWrapper from "../table-wrapper/table-wrapper";
+import Row from "react-bootstrap/Row";
+import Col from 'react-bootstrap/Col';
 
 
 class TableArea extends React.Component {
@@ -1515,6 +1524,153 @@ class TableArea extends React.Component {
         return new_journal_rows;
     }
 
+    isExpensesAddExpensePopoverValid(is_expense_name_valid) {
+        return is_expense_name_valid;
+    }
+
+    handleExpensesAddExpenseSubmit() {
+        let fetch_body = new FormData();
+        let selected_color = this.props.selectedColor;
+        fetch_body.append('exp-color', this.props.basicColors[selected_color]);
+        fetch_body.append('key', this.props.userKey);
+        fetch_body.append('exp-name', this.props.expenseName);
+
+        fetch('/src/php/add_expense_type.php', {
+            body: fetch_body,
+            method: 'POST',
+        }).then(
+            response => {
+                if(response.status === 520) {
+                    alert('Ошибка при подключении к базе данных');
+                    return;
+                }
+                if(response.status === 500) {
+                    alert('Ошибка при отправке запроса mysql');
+                    return;
+                }
+                if(response.status !== 200) {
+                    alert('Неизвестная ошибка при отправке запроса');
+                    return;
+                }
+
+                console.log('Проверкаэ');
+                return response.text();
+            },
+            error => {
+                alert('Неизвестная ошибка при отправке запроса');
+                console.log('Fetch error: ', error);
+            }
+        ).then(
+            body => {
+                //Обновляем информацию о расходах
+                this.props.updateExpensesDataFromDb('/src/php/get_expenses_data.php', this.props.userKey);
+            }
+        );
+    }
+
+    clearExpensesAddExpPopover() {
+        this.props.setExpenseName('');
+        this.props.setExpenseNameValid(false);
+    }
+
+    renderAddExpensesTypePopover(basic_colors, basic_colors_names, selected_color, trigger_btn_id) {
+        let colors_list_items = [];
+
+        //Добавляем ссылки в дропдаун
+        for(let color in basic_colors) {
+            colors_list_items.push(
+                <Dropdown.Item
+                    key={'dropdown-' + color}
+                    onClick={event => {
+                        event.preventDefault();
+                        this.props.setSelectedColor(color);
+                    }}
+                >
+                    <div className={'flex-row-wrapper vertical-row-flex-align'}>
+                        <a href={'#'}
+                           onClick={event => {
+                               event.preventDefault();
+                           }}
+                           style={{'backgroundColor': basic_colors[color]}}
+                           className={'expenses-table__color-circle'}
+                        />
+                        <span className={'text text_size-13'}>
+                            {basic_colors_names[color]}
+                        </span>
+                    </div>
+                </Dropdown.Item>
+            )
+        }
+
+        return (
+            <Popover
+                id={'new-expenses-type-popover'}
+            >
+                <Popover.Title as={'h5'}>Новый тип расходов</Popover.Title>
+                <Popover.Content>
+                    <p className={'text text_size-12 text_color-grey popover__prompt-text'}>
+                        Чтобы свернуть окно, повторно нажмите на кнопку
+                    </p>
+                    <Form.Group as={Row}>
+                        <Col>
+                            <span className={'text text_size-14 popover__prompt-row-text'}>
+                                Цвет:
+                            </span>
+                            <Dropdown className={'inline-block-elem'}>
+                                <Dropdown.Toggle
+                                    variant={'light'}
+                                    className={'expenses-table__color-tab'}
+                                >
+                                    <a href={'#'} onClick={event => event.preventDefault()}
+                                       className={'expenses-table__color-circle'}
+                                       style={{'backgroundColor': basic_colors[selected_color] || 'grey'}}
+                                    />
+                                    <span className={'text text_size-13 text_color-black'}>
+                                        {basic_colors_names[selected_color]}
+                                    </span>
+                                </Dropdown.Toggle>
+                                <Dropdown.Menu>
+                                    {colors_list_items}
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        </Col>
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Label className={'text text_size-14'}>
+                            Наименование:
+                        </Form.Label>
+                        <Form.Control
+                            type={'text'}
+                            size={'sm'}
+                            onInput={event => {
+                                const value = event.currentTarget.value;
+                                const isValid = isExpenseNameValid(value);
+                                this.props.setExpenseName(value);
+                                this.props.setExpenseNameValid(isValid);
+                            }}
+                        />
+                    </Form.Group>
+                    <Form.Group>
+                        <Button
+                            block
+                            variant={'success'}
+                            size={'sm'}
+                            disabled={!this.isExpensesAddExpensePopoverValid(this.props.expenseNameValid)}
+                            onClick={event => {
+                                this.handleExpensesAddExpenseSubmit();
+                                this.clearExpensesAddExpPopover();
+                                //закрываем поповер
+                                document.getElementById(trigger_btn_id).click();
+                            }}
+                        >
+                            Добавить
+                        </Button>
+                    </Form.Group>
+                </Popover.Content>
+            </Popover>
+        );
+    }
+
     render() {
         let area_name,
             new_entry_modal,
@@ -1734,6 +1890,10 @@ class TableArea extends React.Component {
                 let entries_limit_control_btn_text = this.props.showAllEntries ?
                     'Свернуть' : 'Показать всё';
                 let control_btn_icon_class = this.props.showAllEntries ? 'bi-caret-up' : 'bi-caret-down';
+                const trigger_btn_id = 'expenses_add_exp_btn';
+                const new_expenses_type_popover = this.renderAddExpensesTypePopover(this.props.basicColors,
+                    this.props.basicColorsNames, this.props.selectedColor, trigger_btn_id);
+
                 table_area_content.push(
                     <Heading className={'text_color-dark'}>{area_name}</Heading>
                 );
@@ -1780,12 +1940,19 @@ class TableArea extends React.Component {
                             </Button>
                         </div>
                         <div className={'expenses-table__button-section'}>
-                            <Button
-                                size={'sm'}
-                                variant={'success'}
+                            <OverlayTrigger
+                                trigger={'click'}
+                                placement={'top'}
+                                overlay={new_expenses_type_popover}
                             >
-                                + Добавить тип
-                            </Button>
+                                <Button
+                                    size={'sm'}
+                                    variant={'success'}
+                                    id={trigger_btn_id}
+                                >
+                                    + Добавить тип
+                                </Button>
+                            </OverlayTrigger>
                         </div>
                     </TableWrapper>
                 );

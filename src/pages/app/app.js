@@ -481,6 +481,7 @@ class App extends React.Component {
                              updateIncomesRowsFromDb = {this.updateIncomesRowsFromDb.bind(this)}
                 />
                 <ExpensesArea
+                    updateExpensesDataFromDb = {this.updateExpensesDataFromDb.bind(this)}
                     data={'expenses'}
                 />
             </div>

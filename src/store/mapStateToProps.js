@@ -331,6 +331,7 @@ export default function mapStateToProps(component) {
         case 'ExpensesArea':
             return function (state) {
                 return {
+                    userKey: state.auth.userKey,
                     tableColsOrder: state.expenses.colsOrder,
                     tableColsNames: state.expenses.colsNames,
                     tableWidth: state.expenses.tableWidth,
@@ -339,6 +340,12 @@ export default function mapStateToProps(component) {
                     expensesData: state.expenses_data,
                     journalRows: state.journal.rows,
                     incomesRows: state.incomes.rows,
+                    basicColors: state.expenses.basicColors,
+                    basicColorsNames: state.expenses.basicColorsNames,
+                    //popover
+                    selectedColor: state.expenses.addExpPopover.currentColor,
+                    expenseName: state.expenses.addExpPopover.expenseName,
+                    expenseNameValid: state.expenses.addExpPopover.expenseNameValid,
                 }
             }
     }
