@@ -6,6 +6,7 @@ import mapDispatchToProps from "../../store/mapDispatchToProps";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Button from "react-bootstrap/Button";
 import Form from 'react-bootstrap/Form';
+import {SERVER_ROOT, SIGN_IN_SCRIPT_PATH, SIGN_UP_SCRIPT_PATH} from "../../common";
 
 class Auth extends React.Component {
     constructor(props) {
@@ -25,7 +26,7 @@ class Auth extends React.Component {
             return;
         }
 
-        fetch('/src/php/sign_in.php', {
+        fetch(SERVER_ROOT + SIGN_IN_SCRIPT_PATH, {
             method: 'POST',
             body: data,
         }).then(
@@ -80,7 +81,7 @@ class Auth extends React.Component {
             return;
         }
 
-        fetch('/src/php/sign_up.php', {
+        fetch(SERVER_ROOT + SIGN_UP_SCRIPT_PATH, {
             method: 'POST',
             body: data,
         }).then(
@@ -121,7 +122,7 @@ class Auth extends React.Component {
     validateSignInKey(input) {
         const input_value = input.value;
 
-        if(input_value.length < 6 || input_value.length > 12 || !/^[a-zа-я\d]+$/i.test(input_value)) {
+        if(input_value.length < 6 || input_value.length > 40 || !/^[\w-a-zа-я\d]+$/i.test(input_value)) {
             this.props.changeSignInKeyCorrect(false);
         }
         else {
@@ -132,7 +133,7 @@ class Auth extends React.Component {
     validateSignUpKey(input) {
         const input_value = input.value;
 
-        if(input_value.length < 6 || input_value.length > 12 || !/^[a-zа-я\d]+$/i.test(input_value)) {
+        if(input_value.length < 6 || input_value.length > 40 || !/^[\w-a-zа-я\d]+$/i.test(input_value)) {
             this.props.changeSignUpKeyCorrect(false);
         }
         else {

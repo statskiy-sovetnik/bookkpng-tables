@@ -19,10 +19,10 @@ import Container from "react-bootstrap/Container";
 
 //Common _________
 import {
-    convertDateToMysqlDate,
+    convertDateToMysqlDate, GET_JOURNAL_ROWS_PATH,
     isFloat, isGoodsNameValid,
     isProviderNameValid,
-    isRawMatNameValid,
+    isRawMatNameValid, SERVER_ROOT,
     setValidation
 } from "../../../../common";
 import journalModalSetShowValidation
@@ -67,13 +67,21 @@ class ButtonSection extends React.Component{
     }
 
     handleIncomesNewEntrySubmit(event, form) {
-        let raw_mat_usage_for_journal = {};
+        let raw_mat_usage = {};
 
         let fetch_body = new FormData(form);
         fetch_body.append('rows_usage', JSON.stringify(this.props.rowsUsageState));
         fetch_body.append('user_key', this.props.userKey);
         fetch_body.append('expenses', JSON.stringify(this.props.addedExpenses));
         fetch_body.append('date', convertDateToMysqlDate(this.props.formStateDate));
+
+        const rows_usage_state = {};
+        Object.assign(rows_usage_state, this.props.rowsUsageState);
+        let raw_mat_used_total = 0;
+        for(let journal_id in rows_usage_state) {
+            raw_mat_used_total += +rows_usage_state[journal_id];
+        }
+        fetch_body.append('raw-mat-used-total', ""+raw_mat_used_total);
 
         fetch('/src/php/add_incomes_entry.php', {
             method: 'POST',
@@ -106,15 +114,15 @@ class ButtonSection extends React.Component{
             }
         ).then(
             all_raw_mat_usage => {
-                const raw_mat_usage = all_raw_mat_usage.raw_mat_usage;
-                this.props.updateIncomesRowsFromDb('/src/php/get_incomes_rows.php', this.props.userKey, raw_mat_usage,
-                    this.props.rawMatData, this.props.journalRows);
-                return raw_mat_usage_for_journal = all_raw_mat_usage.raw_mat_usage_for_journal;
+                const raw_mat_usage_for_journal = all_raw_mat_usage.raw_mat_usage_for_journal;
+                raw_mat_usage = all_raw_mat_usage.raw_mat_usage;
+                return this.props.updateJournalRowsFromDb(SERVER_ROOT + GET_JOURNAL_ROWS_PATH, this.props.userKey,
+                    raw_mat_usage_for_journal, this.props.rawMatData);
             }
         ).then(
-            raw_mat_usage_for_journal => {
-                const upd_journal_rows = this.updateJournalRowsLocally(this.props.journalRows, raw_mat_usage_for_journal);
-                this.props.loadDataBaseJournal(upd_journal_rows);
+            journal_rows_upd => {
+                this.props.updateIncomesRowsFromDb('/src/php/get_incomes_rows.php', this.props.userKey, raw_mat_usage,
+                    this.props.rawMatData, journal_rows_upd);
             }
         );
 
@@ -234,7 +242,7 @@ class ButtonSection extends React.Component{
                                new_raw_mat_price, setNewRawMatPrice, raw_mat_date, setRawMatDate, raw_mat_amount,
                                setRawMatAmount, addedExpenses, setAddedExpenses, setExpensesValid) {
         let raw_mat_dropdown_links = [];
-        let expenses_links = [];
+        //let expenses_links = [];
         let added_expenses_list_items = [];
 
         //Добавляем ссылки с сырьём в выпадающий список
@@ -261,7 +269,7 @@ class ButtonSection extends React.Component{
             );
         }
 
-        //Добавляем ссылки с расходами в выпадающий список
+        /*//Добавляем ссылки с расходами в выпадающий список
         for(let expense_id in expenses_data) {
             expenses_links.push(
                 <Dropdown.Item href={'#'}
@@ -279,9 +287,9 @@ class ButtonSection extends React.Component{
                     {expenses_data[expense_id].name}
                 </Dropdown.Item>
             );
-        }
+        }*/
 
-        //Добавляем блок со списком добавленных расходов
+        /*//Добавляем блок со списком добавленных расходов
         for(let expense_id in addedExpenses) {
             added_expenses_list_items.push(
                 <li key={'journal-modal-added-expense-list-item-' + expense_id}
@@ -329,7 +337,7 @@ class ButtonSection extends React.Component{
                     </Button>
                 </li>
             );
-        }
+        }*/
 
         //Добавляем поля для создания нового типа сырья
         const new_raw_mat_group = raw_mat_inputs_show ? (
@@ -505,7 +513,7 @@ class ButtonSection extends React.Component{
                                     </Form.Group>
                                 </Col>
                             </Form.Group>
-                            <Form.Group>
+                            {/*<Form.Group>
                                 <Form.Label className={'text text_size-14'}>
                                     Дополнительные расходы (необязательно)
                                 </Form.Label>
@@ -523,7 +531,7 @@ class ButtonSection extends React.Component{
                                 <Form.Text className={'text text_color-grey'}>
                                     Вы сможете добавить их в свою таблицу в любое время
                                 </Form.Text>
-                            </Form.Group>
+                            </Form.Group>*/}
                         </Form>
                     </Container>
                 </Modal.Body>

@@ -4,7 +4,7 @@ include './globals.php';
 use globals\Globals;
 
 $serverName = Globals::$serverName;
-$initialDb = 'origindb';
+$initialDb = Globals::$initDb;
 $adminName = Globals::$adminName;
 $adminPassword = Globals::$pass;
 $passwordAlgo = 'sha256';

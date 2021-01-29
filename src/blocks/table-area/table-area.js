@@ -40,11 +40,13 @@ import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from 'react-bootstrap/FormControl';
 
 import {
+    GET_INCOMES_ROWS_PATH,
+    GET_JOURNAL_ROWS_PATH,
     isEmptyObj,
     isExpenseNameValid,
     isFloat,
     isGoodsNameValid,
-    isProviderNameValid,
+    isProviderNameValid, SERVER_ROOT,
     setValidation
 } from "../../common";
 import Dropdown from "react-bootstrap/Dropdown";
@@ -112,6 +114,7 @@ class TableArea extends React.Component {
             }
         ).then(
             body => {
+                console.log(body);
                 switch (data) {
                     case 'journal':
                         handleJournalRowRemoval(user_key, raw_mat_data, this.props.updateRawMatDataFromDb,
@@ -120,7 +123,8 @@ class TableArea extends React.Component {
                         break;
                     case 'incomes':
                         handleIncomesRowRemoval(user_key, raw_mat_data, this.props.journalRows,
-                            this.props.updateRawMatUsageFromDb, this.props.updateIncomesRowsFromDb);
+                            this.props.updateRawMatUsageFromDb, this.props.updateIncomesRowsFromDb,
+                            this.props.updateJournalRowsFromDb);
                         break;
                 }
             }
@@ -155,10 +159,19 @@ class TableArea extends React.Component {
             );
         }
 
-        function handleIncomesRowRemoval(user_key, raw_mat_data, journal_rows, updateRawMatUsageFromDb, updateIncomesRowsFromDb) {
+        function handleIncomesRowRemoval(user_key, raw_mat_data, journal_rows, updateRawMatUsageFromDb, updateIncomesRowsFromDb,
+                                         updateJournalRowsFromDb) {
+            let raw_mat_usage = [];
+            let raw_mat_usage_for_journal = [];
             updateRawMatUsageFromDb('/src/php/get_raw_mat_usage.php', user_key).then(
                 all_raw_mat_usage => {
-                    const raw_mat_usage = all_raw_mat_usage.raw_mat_usage;
+                    raw_mat_usage = all_raw_mat_usage.raw_mat_usage;
+                    raw_mat_usage_for_journal = all_raw_mat_usage.raw_mat_usage_for_journal;
+                    return updateJournalRowsFromDb(SERVER_ROOT + GET_JOURNAL_ROWS_PATH, user_key, raw_mat_usage_for_journal,
+                        raw_mat_data);
+                }
+            ).then(
+                journal_rows => {
                     return updateIncomesRowsFromDb('/src/php/get_incomes_rows.php', user_key, raw_mat_usage, raw_mat_data,
                         journal_rows);
                 }
@@ -659,18 +672,38 @@ class TableArea extends React.Component {
                         </Popover>
                     );
                     let add_expenses_popover;
+                    let add_expenses_trigger;
                     switch (data) {
                         case 'journal':
-                            add_expenses_popover = this.renderAddExpenseJournalPopover(row_id, this.props.expensesData,
-                                this.props.popoverAddedExpenses, this.props.setPopoverAddedExpenses,
-                                this.props.isPopoverExpensesValid, this.props.setPopoverExpensesValid,
-                                add_expenses_trigger_id);
+                            add_expenses_popover = '';
+                            add_expenses_trigger = '';
                             break;
                         case 'incomes':
                             add_expenses_popover = this.renderAddExpenseIncomesPopover(row_id, this.props.expensesData,
                                 this.props.popoverAddedExpenses, this.props.setPopoverAddedExpenses,
                                 this.props.isPopoverExpensesValid, this.props.setPopoverExpensesValid,
                                 add_expenses_trigger_id);
+                            add_expenses_trigger = (
+                                <OverlayTrigger
+                                    trigger={'click'}
+                                    onToggle={() => {
+                                        this.clearAddExpPopover(this.props.setPopoverAddedExpenses,
+                                            this.props.setPopoverExpensesValid)
+                                    }}
+                                    placement={'top'}
+                                    overlay={add_expenses_popover}
+                                >
+                                    <a className="text text_color-dark"
+                                       href={'#'}
+                                       id={add_expenses_trigger_id}
+                                       onClick={event => {event.preventDefault()}}
+                                    >
+                                        <BtstrapIcon data={'bi-plus-circle'}
+                                                     className={'bi-plus-circle btstrap-icon_size-11 btstrap-icon_color-dark ' +
+                                                     'table-area__expenses-icons-block__btstrap-icon'}/>
+                                    </a>
+                                </OverlayTrigger>
+                            );
                             break;
                     }
 
@@ -695,25 +728,7 @@ class TableArea extends React.Component {
                                                          'table-area__expenses-icons-block__btstrap-icon'}/>
                                             </a>
                                         </OverlayTrigger>
-                                        <OverlayTrigger
-                                            trigger={'click'}
-                                            onToggle={() => {
-                                                this.clearAddExpPopover(this.props.setPopoverAddedExpenses,
-                                                    this.props.setPopoverExpensesValid)
-                                            }}
-                                            placement={'top'}
-                                            overlay={add_expenses_popover}
-                                        >
-                                            <a className="text text_color-dark"
-                                               href={'#'}
-                                               id={add_expenses_trigger_id}
-                                               onClick={event => {event.preventDefault()}}
-                                            >
-                                                <BtstrapIcon data={'bi-plus-circle'}
-                                                             className={'bi-plus-circle btstrap-icon_size-11 btstrap-icon_color-dark ' +
-                                                             'table-area__expenses-icons-block__btstrap-icon'}/>
-                                            </a>
-                                        </OverlayTrigger>
+                                        {add_expenses_trigger}
                                     </div>
                                 </span>
                             </div>
@@ -783,7 +798,7 @@ class TableArea extends React.Component {
                         const incomesRows = this.props.incomesRows || {};
                         let total_exp_sum = 0;
 
-                        //проходим строки журнала
+                        /*//проходим строки журнала
                         for(let key in journalRows) {
                             let cur_expenses_arr = journalRows[key].expenses || [];
                             cur_expenses_arr.forEach((exp_obj) => {
@@ -791,7 +806,7 @@ class TableArea extends React.Component {
                                     total_exp_sum += exp_obj.amount;
                                 }
                             });
-                        }
+                        }*/
                         //проходим строки Доходов
                         for(let key in incomesRows) {
                             let cur_expenses_arr = incomesRows[key].expenses || [];
@@ -1259,9 +1274,19 @@ class TableArea extends React.Component {
 
     handleIncomesAddExpPopoverSubmit(added_expenses, user_key, row_id) {
         let fetch_body = new FormData();
+        let raw_mat_usage_obj = {};
         fetch_body.append('expenses', JSON.stringify(added_expenses));
         fetch_body.append('key', user_key);
         fetch_body.append('row-id', row_id);
+
+        //Педерадём соответсвующуу инфу об использовании сырья
+        const raw_mat_usage = this.props.rawMatUsage.slice();
+        raw_mat_usage.forEach((incomes_obj) => {
+            if(+incomes_obj.incomes_id === +row_id) {
+                raw_mat_usage_obj = incomes_obj;
+            }
+        });
+        fetch_body.append('raw-mat-usage-obj', JSON.stringify(raw_mat_usage_obj));
 
         fetch('/src/php/add_incomes_expenses.php', {
             body: fetch_body,
@@ -1290,9 +1315,14 @@ class TableArea extends React.Component {
         ).then(
             body => {
                 console.log(body);
+                return this.props.updateJournalRowsFromDb(SERVER_ROOT + GET_JOURNAL_ROWS_PATH, user_key,
+                    this.props.rawMatUsageForJournal, this.props.rawMatData);
+            }
+        ).then(
+            journal_rows => {
                 //Обновляем строки Доходов
-                this.props.updateIncomesRowsFromDb('/src/php/get_incomes_rows.php', user_key,
-                    this.props.rawMatUsage, this.props.rawMatData, this.props.journalRows);
+                this.props.updateIncomesRowsFromDb(SERVER_ROOT + GET_INCOMES_ROWS_PATH, user_key,
+                    this.props.rawMatUsage, this.props.rawMatData, journal_rows);
             }
         );
     }
@@ -1544,9 +1574,12 @@ class TableArea extends React.Component {
                 cur_sum_of_raw += journal_row_cost_price * +value_obj.used;
             });
 
+            let cur_sum = new_incomes_rows[raw_mat_obj.incomes_id].sum;
             if(!isEmptyObj(incomes_rows[raw_mat_obj.incomes_id])) {
                 new_incomes_rows[raw_mat_obj.incomes_id].amount_of_raw = cur_amount_of_raw;
                 new_incomes_rows[raw_mat_obj.incomes_id].sum_of_raw = cur_sum_of_raw;
+                new_incomes_rows[raw_mat_obj.incomes_id].profitability = (cur_sum - cur_sum_of_raw) / cur_sum * 100;
+                new_incomes_rows[raw_mat_obj.incomes_id].revenue = cur_sum - cur_sum_of_raw;
             }
 
         });

@@ -158,7 +158,7 @@ const initialState = {
         rowsOpened: new Array(ENTRIES_PACK).fill(0),
         rows: {},
         columns_order: ['control', 'date', 'name', 'customer_name', 'amount', 'amount_of_raw', 'blockage_perc',
-        'price', 'sum', 'cost_price', 'sum_of_raw', 'expenses', 'expenses_total', 'revenue', 'profitability'],
+        'price', 'sum', 'cost_price', 'sum_of_raw', 'expenses', 'revenue', 'profitability'],
         head_col_names: {
             date: 'Дата',
             name: 'Наименование',

@@ -3,7 +3,7 @@
 include './globals.php';
 use globals\Globals;
 
-$initDatabase = 'origindb';
+$initDatabase = Globals::$initDb;
 $serverName = Globals::$serverName;
 $adminName = Globals::$adminName;
 $adminPassword = Globals::$pass;
@@ -42,6 +42,63 @@ try {
     $keyConn->exec($removeRow);
 
     //Удаляем таблицу с расходами этой строки
+    //но если мы удаляем строку Доходов, то сначала почистим расходы в Журнале
+    if($tableData === 'incomes') {
+        $getExpenses = "SELECT * FROM $expensesTableName";
+        $expensesRes = $keyConn->query($getExpenses);
+        if($expensesRes) {
+            $expensesIdsCount = $expensesRes->rowCount();
+            $c = 0;
+            $usedRawMatTotal = 0;
+            //берём соответсвующий raw_mat_usage
+            $rawMatUsageTable = "raw_mat_usage_$rowId";
+            //берём id строк журнала, из которых будем чистить расходы
+            $getUsageIncomesData = "SELECT * FROM $rawMatUsageTable";
+            $usageIncomesDataRes = $keyConn->query($getUsageIncomesData);
+            if($usageIncomesDataRes) {
+                $usageIncomesRowsNum = $usageIncomesDataRes->rowCount();
+                //заполним массив id используемых строк журнала
+                $usageIncomesDataAssoc = [];
+                $i = 0;
+                while($i < $usageIncomesRowsNum) {
+                    $curUsageRow = $usageIncomesDataRes->fetch();
+                    $curJournalId = $curUsageRow['journal_id'];
+                    $usageIncomesDataAssoc[$curJournalId] = $curUsageRow['used'];
+                    $usedRawMatTotal += $curUsageRow['used'];
+                    $i++;
+                }
+                unset($i);
+
+                //проходим по расходам и чистим их в журнале
+                while($c < $expensesIdsCount) {
+                    $curExpenseRow = $expensesRes->fetch();
+                    $curExpenseId = $curExpenseRow['expense_id'];
+                    $curExpenseSum = $curExpenseRow['sum'];
+
+                    //вычесть из нужных строк журнала суммы расходов _______________
+                    foreach ($usageIncomesDataAssoc as $journal_id => $used) {
+                        $curUsageCoef = $used / $usedRawMatTotal;
+                        $curExpenseSumPart = $curExpenseSum * $curUsageCoef;
+                        echo "$curExpenseSumPart\n";
+                        //вычитаем эту сумму из соответствующих расходов журнала
+                        $journalExpensesTable = "expenses_journal_$journal_id";
+                        $substractFromJournalExp = "UPDATE $journalExpensesTable
+                                                    SET sum=sum-$curExpenseSumPart 
+                                                    WHERE expense_id=$curExpenseId";
+                        $keyConn->exec($substractFromJournalExp);
+                    }
+                    unset($journal_id, $used);
+
+                    $c++;
+                }
+            }
+            else {
+                echo "I lost the table\n";
+            }
+
+        }
+    }
+
     $removeExpenses = "DROP TABLE $expensesTableName";
     $keyConn->exec($removeExpenses);
 

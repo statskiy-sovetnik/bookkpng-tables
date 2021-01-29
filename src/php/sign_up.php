@@ -4,7 +4,7 @@
     use globals\Globals;
 
     $serverName = Globals::$serverName;
-    $initialDb = 'origindb';
+    $initialDb = Globals::$initDb;
     $adminName = Globals::$adminName;
     $adminPassword = Globals::$pass;
     $passwordAlgo = 'sha256';
@@ -17,15 +17,15 @@
         $initConn = new PDO("mysql:host=$serverName;dbname=$initialDb", $adminName, $adminPassword);
     }
     catch (PDOException $ex) {
-        header('HTTP/1.1 520 Server Connection Error', true, 520);
+        header("HTTP/1.1 520 Sorry cannot connect to $initialDb \n $adminName \n $adminPassword",
+            true, 520);
         die();
     }
 
     //Проверка существования БД с указанным ключом
 
     $userKeyDbNames = $initConn->query("SHOW DATABASES LIKE '$userKey'");
-    $dbNamesRow = $userKeyDbNames->fetch();
-    if($userKeyDbNames->rowCount() == 0) {
+    if(!$userKeyDbNames || $userKeyDbNames->rowCount() == 0) {
         $initConn->exec("CREATE DATABASE $userKey");
     }
     else {

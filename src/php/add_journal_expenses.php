@@ -19,11 +19,22 @@ catch (PDOException $ex) {
     die();
 }
 
-//Добавляем расходы:
+//Добавляем расходы в журнал:
 $expTableName = "expenses_journal_$rowId";
 foreach ($expenses as $exp_id => $sum) {
     $addExpense = "INSERT INTO $expTableName(expense_id, sum)
                         VALUES ('$exp_id', '$sum') ON DUPLICATE KEY UPDATE sum=$sum";
     $keyConn->exec($addExpense);
 }
-unset($sum, $exp_id);
+unset($sum, $expid);
+
+//Добавляем расходы в Доходы
+/*$expTableName = "expenses_incomes_$rowId";
+foreach ($expenses as $exp_id => $sum) {
+    $addExpense = "INSERT INTO $expTableName(expense_id, sum)
+                        VALUES ('$exp_id', '$sum') ON DUPLICATE KEY UPDATE sum=$sum";
+    $keyConn->exec($addExpense);
+}
+unset($sum, $expid);*/
+
+$keyConn = null;

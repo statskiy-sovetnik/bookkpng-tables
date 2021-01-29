@@ -7,6 +7,7 @@ const rename = require('gulp-rename');
 const prefix = require('gulp-autoprefixer');
 const cssMin = require('gulp-cssnano');
 const uglifyJs = require('gulp-uglify');
+const terserJs = require('gulp-terser');
 
 gulp.task('bundle-js', () => {
     return browserify({entries: "src/index.js", extensions: ['.js'], debug: true})
@@ -31,7 +32,7 @@ gulp.task('gulp-sass', () => {
 
 gulp.task('build', () => {
     return gulp.src('src/*.html')
-        .pipe(gulp.dest('dist/'));
+        .pipe(gulp.dest('./'));
 });
 
 gulp.task("watch", () => {
@@ -54,9 +55,11 @@ gulp.task("watch", () => {
 
 gulp.task('min-js-bundles', () => {
     return gulp.src('dist/*.js')
-        .pipe(uglifyJs())
+        .pipe(terserJs())
         .pipe(rename({suffix: '.min'}))
         .pipe(gulp.dest('dist/'));
 });
+
+gulp.task('prod-build', gulp.series('bundle-js', 'gulp-sass', 'build', 'min-js-bundles'));
 
 gulp.task('default', gulp.series('bundle-js', 'gulp-sass', 'build', 'watch'));

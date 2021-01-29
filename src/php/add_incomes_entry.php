@@ -3,7 +3,7 @@
 include './globals.php';
 use globals\Globals;
 
-$initDatabase = 'origindb';
+$initDatabase = Globals::$initDb;
 $serverName = Globals::$serverName;
 $adminName = Globals::$adminName;
 $adminPassword = Globals::$pass;
@@ -16,6 +16,8 @@ $price = $_POST['price'];
 $goodsName = $_POST['goods-name'];
 $customerName = $_POST['customer-name'];
 $date = $_POST['date'];
+//
+$rawMatUsedTotal = $_POST['raw-mat-used-total'];
 
 try {
     $keyConn = new PDO("mysql:host=$serverName;dbname=$userKey", $adminName, $adminPassword);
@@ -61,6 +63,19 @@ try {
         $addExpense = "INSERT INTO $expTableName(expense_id, sum)
                         VALUES ('$exp_id', '$sum')";
         $keyConn->exec($addExpense);
+
+        //Теперь добавим в строки журнала
+        $sumForKg = $sum / $rawMatUsedTotal;
+
+        foreach ($rowsUsage as $journal_id => $used) {
+            $curExpTableName = "expenses_journal_$journal_id";
+            $curRawMatExpense = $used * $sumForKg;
+            $addJournalExpenses = "INSERT INTO $curExpTableName(expense_id, sum)
+                                VALUES ('$exp_id', '$curRawMatExpense') 
+                                ON DUPLICATE KEY UPDATE sum=sum+$curRawMatExpense";
+            $keyConn->exec($addJournalExpenses);
+        }
+        unset($i, $raw_mat_obj);
     }
     unset($sum, $exp_id);
 }

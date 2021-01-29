@@ -258,7 +258,6 @@ class App extends React.Component {
             for(let id in rows_data) {
                 const cur_amount = rows_data[id].amount || 0;
                 let cur_sum = cur_amount * rows_data[id].price || 0;
-                let cur_expenses_total = 0;
                 let cur_amount_of_raw = 0;
                 let cur_sum_of_raw = 0;
 
@@ -266,7 +265,6 @@ class App extends React.Component {
                 if(rows_data[id].expenses) {
                     rows_data[id].expenses.forEach((expense, i) => {
                         expense.amount = +expense.amount;
-                        cur_expenses_total += expense.amount;
                     });
                 }
 
@@ -300,11 +298,11 @@ class App extends React.Component {
                     date: formated_date_str,
                     amount_of_raw: cur_amount_of_raw,
                     sum_of_raw: cur_sum_of_raw,
-                    cost_price: (cur_expenses_total + cur_sum_of_raw) / cur_amount,
+                    cost_price: (cur_sum_of_raw) / cur_amount,
                     blockage_perc: blockage_perc,
-                    expenses_total: cur_sum_of_raw + cur_expenses_total,
-                    revenue: cur_sum - cur_expenses_total - cur_sum_of_raw,
-                    profitability: (cur_sum - cur_expenses_total - cur_sum_of_raw) / cur_sum * 100,
+                    //expenses_total: cur_sum_of_raw + cur_expenses_total,
+                    revenue: cur_sum - cur_sum_of_raw,
+                    profitability: (cur_sum - cur_sum_of_raw) / cur_sum * 100,
                 }
             }
 

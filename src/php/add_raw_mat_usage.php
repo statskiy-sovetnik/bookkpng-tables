@@ -3,7 +3,7 @@
 include './globals.php';
 use globals\Globals;
 
-$initDatabase = 'origindb';
+$initDatabase = Globals::$initDb;
 $serverName = Globals::$serverName;
 $adminName = Globals::$adminName;
 $adminPassword = Globals::$pass;

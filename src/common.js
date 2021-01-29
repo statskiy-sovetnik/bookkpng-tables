@@ -86,5 +86,28 @@ function formatDay(day) {
     return (new_day.length === 1) ? '0' + new_day : new_day;
 }
 
+/*_____________*/
+
+const SERVER_ROOT = '..';
+const SIGN_IN_SCRIPT_PATH = '/src/php/sign_in.php';
+const SIGN_UP_SCRIPT_PATH = '/src/php/sign_up.php';
+const ADD_EXPENSE_TYPE_PATH = '/src/php/add_expense_type.php';
+const ADD_INCOMES_ENTRY_PATH = '/src/php/add_incomes_entry.php';
+const ADD_INCOMES_EXPENSES_PATH = '/src/php/add_incomes_expenses.php';
+const ADD_JOURNAL_ENTRY_PATH = '/src/php/add_journal_entry.php';
+const ADD_JOURNAL_EXPENSES_PATH = '/src/php/add_journal_expenses.php';
+const ADD_RAW_MAT_USAGE_PATH = '/src/php/add_raw_mat_usage.php';
+const ADD_EXPENSES_DATA_PATH = '/src/php/add_expenses_data.php';
+const GET_INCOMES_ROWS_PATH = '/src/php/get_incomes_rows.php';
+const GET_JOURNAL_ROWS_PATH = '/src/php/get_journal_rows.php';
+const GET_RAW_MAT_DATA_PATH = '/src/php/get_raw_mat_data.php';
+const GET_RAW_MAT_USAGE_PATH = '/src/php/get_raw_mat_usage.php';
+const REMOVE_EXPENSE_TYPE_PATH = '/src/php/remove_expense_type.php';
+const REMOVE_ROW_PATH = '/src/php/remove_row.php';
+
 export {getCookieValue, removeCookie, isRawMatNameValid, isProviderNameValid, convertDateToMysqlDate, isEmptyObj, formatDay,
-        isFloat, setValidation, isGoodsNameValid, isExpenseNameValid};
+        isFloat, setValidation, isGoodsNameValid, isExpenseNameValid, SERVER_ROOT, SIGN_IN_SCRIPT_PATH, SIGN_UP_SCRIPT_PATH,
+    ADD_EXPENSE_TYPE_PATH, ADD_EXPENSES_DATA_PATH, ADD_INCOMES_ENTRY_PATH, ADD_INCOMES_EXPENSES_PATH, ADD_JOURNAL_ENTRY_PATH,
+    ADD_JOURNAL_EXPENSES_PATH, ADD_RAW_MAT_USAGE_PATH, GET_INCOMES_ROWS_PATH, GET_JOURNAL_ROWS_PATH, GET_RAW_MAT_DATA_PATH,
+    GET_RAW_MAT_USAGE_PATH, REMOVE_EXPENSE_TYPE_PATH, REMOVE_ROW_PATH
+};
