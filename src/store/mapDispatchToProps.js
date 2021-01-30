@@ -107,10 +107,17 @@ import journalAddExpPopoverSetAddedExpensesValid from "./actionCreators/journalA
 import incomesAddExpPopoverSetAddedExpenses from "./actionCreators/incomes/incomesAddExpPopoverSetAddedExpenses";
 import incomesAddExpPopoverSetAddedExpensesValid
     from "./actionCreators/incomes/incomesAddExpPopoverSetAddedExpensesValid";
-import expensesToggleEntriesShowAll from "./actionCreators/expenses/expensesToggleEntriesShowAll";
 import expensesSetSelectedColor from "./actionCreators/expenses/expensesSetSelectedColor";
 import expensesSetExpenseName from "./actionCreators/expenses/expensesSetExpenseName";
 import expensesSetExpenseNameValid from "./actionCreators/expenses/expensesSetExpenseNameValid";
+import expensesSetSortName from "./actionCreators/expenses/expensesSetSortName";
+import expensesSetSortFromLeast from "./actionCreators/expenses/expensesSetSortFromLeast";
+import expensesChangeLocalFromDate from "./actionCreators/expenses/expensesChangeLocalFromDate";
+import expensesChangeLocalToDate from "./actionCreators/expenses/expensesChangeLocalToDate";
+import {setDefaultLocale} from "react-datepicker";
+import expensesSetAppliedDates from "./actionCreators/expenses/expensesSetAppliedDates";
+import expensesSetEntriesPack from "./actionCreators/expenses/expensesSetEntriesPack";
+import expensesSetEntriesShowNum from "./actionCreators/expenses/expensesSetEntriesShowNum";
 
 export default function mapDispatchToProps(component) {
     switch (component) {
@@ -382,10 +389,46 @@ export default function mapDispatchToProps(component) {
         case 'ExpensesArea':
             return function (dispatch) {
                 return {
-                    toggleShowAllEntries: bool => dispatch(expensesToggleEntriesShowAll(bool)),
                     setSelectedColor: value => dispatch(expensesSetSelectedColor(value)),
                     setExpenseName: value => dispatch(expensesSetExpenseName(value)),
                     setExpenseNameValid: value => dispatch(expensesSetExpenseNameValid(value)),
+                }
+            }
+        case 'SortNameExpenses':
+            return function (dispatch) {
+                return {
+                    changeSortType: value => dispatch(expensesSetSortName(value)),
+                }
+            }
+        case 'SortDirExpenses':
+            return function (dispatch) {
+                return {
+                    changeSortDirection: bool => dispatch(expensesSetSortFromLeast(bool)),
+                }
+            }
+        case 'ExpensesPeriodSort':
+            return function (dispatch) {
+                return {
+                    changeAppliedDates: (date1, date2) => dispatch(expensesSetAppliedDates(+date1, +date2)),
+                }
+            }
+        case 'PrependInputFromExpenses':
+            return function (dispatch) {
+                return {
+                    changeLocalFromDate: value => dispatch(expensesChangeLocalFromDate(value)),
+                }
+            }
+        case 'PrependInputToExpenses':
+            return function (dispatch) {
+                return {
+                    changeLocalToDate: value => dispatch(expensesChangeLocalToDate(value)),
+                }
+            }
+        case 'EntrySwitchLengthSectionExpenses':
+            return function (dispatch) {
+                return {
+                    changeEntriesPack: value => dispatch(expensesSetEntriesPack(value)),
+                    changeEntriesShouldBeShown: value => dispatch(expensesSetEntriesShowNum(value)),
                 }
             }
     }

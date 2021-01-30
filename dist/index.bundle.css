@@ -14,6 +14,9 @@ html, body {
 .vertical-row-flex-align {
   align-items: center !important; }
 
+.horizontal-row-flex-align {
+  justify-content: center !important; }
+
 .inline-block-elem {
   display: inline-block !important; }
 
@@ -251,6 +254,9 @@ ul.popover__added-expenses-list {
 
 .table-wrapper_color-dark {
   background-color: #343a40; }
+
+.expenses-table__table-wrapper {
+  margin: 0 auto; }
 
 .menu__user-block {
   display: flex;

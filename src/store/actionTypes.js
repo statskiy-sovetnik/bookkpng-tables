@@ -119,9 +119,15 @@ export default {
     INCOMES_ADD_EXP_POPOVER_SET_ADDED_EXPENSES_VALID: 'incomesAddExpPopoverSetAddedExpensesValid',
 
     //______ EXPENSES ____________________
-    EXPENSES_TOGGLE_ENTRIES_SHOW_ALL: 'expensesToggleEntriesShowAll',
     EXPENSES_SET_SELECTED_COLOR: 'expensesSetSelectedColor',
     EXPENSES_SET_EXPENSE_NAME: 'expensesSetExpenseName',
     EXPENSES_SET_EXPENSE_NAME_VALID: 'expensesSetExpenseNameValid',
-
+    //control section
+    EXPENSES_SET_SORT_NAME: 'expensesSetSortName',
+    EXPENSES_SET_SORT_DIR: 'expensesSetSortFromLeast',
+    EXPENSES_SET_APPLIED_DATES: 'expensesSetAppliedDates',
+    EXPENSES_CHANGE_LOCAL_FROM_DATE: 'expensesChangeLocalFromDate',
+    EXPENSES_CHANGE_LOCAL_TO_DATE: 'expensesChangeLocalToDate',
+    EXPENSES_SET_ENTRIES_PACK: 'expensesSetEntriesPack',
+    EXPENSES_SET_ENTRIES_SHOW_NUM: 'expensesSetEntriesShowNum',
 }

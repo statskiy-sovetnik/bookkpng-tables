@@ -76,5 +76,14 @@ const PREPEND_INPUT_TO_INCOMES = connect(
     mapStateToProps('PrependInputToIncomes'),
     mapDispatchToProps('PrependInputToIncomes')
 )(PrependInput);
+const PREPEND_INPUT_FROM_EXPENSES = connect(
+    mapStateToProps('PrependInputFromExpenses'),
+    mapDispatchToProps('PrependInputFromExpenses')
+)(PrependInput);
+const PREPEND_INPUT_TO_EXPENSES = connect(
+    mapStateToProps('PrependInputToExpenses'),
+    mapDispatchToProps('PrependInputToExpenses')
+)(PrependInput);
 
-export {PREPEND_INPUT_FROM_JOURNAL, PREPEND_INPUT_TO_JOURNAL, PREPEND_INPUT_FROM_INCOMES, PREPEND_INPUT_TO_INCOMES};
+export {PREPEND_INPUT_FROM_JOURNAL, PREPEND_INPUT_TO_JOURNAL, PREPEND_INPUT_FROM_INCOMES, PREPEND_INPUT_TO_INCOMES,
+PREPEND_INPUT_FROM_EXPENSES, PREPEND_INPUT_TO_EXPENSES};

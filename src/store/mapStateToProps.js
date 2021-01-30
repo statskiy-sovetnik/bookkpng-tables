@@ -346,18 +346,64 @@ export default function mapStateToProps(component) {
                     rawMatUsageForJournal: state.raw_mat_usage_for_journal,
                     rawMatUsage: state.raw_mat_usage,
                     rawMatData: state.raw_mat_data,
+                    //control section
+                    entriesPack: state.expenses.entriesPack,
+                    entriesShouldBeShown: state.expenses.entriesShowNum,
                     //table
                     tableColsOrder: state.expenses.colsOrder,
                     tableColsNames: state.expenses.colsNames,
                     tableWidth: state.expenses.tableWidth,
-                    entriesShowLimit: state.expenses.entriesShowLimit,
-                    showAllEntries: state.expenses.showAllEntries,
                     basicColors: state.expenses.basicColors,
                     basicColorsNames: state.expenses.basicColorsNames,
+                    rows: state.expenses.rows,
                     //popover
                     selectedColor: state.expenses.addExpPopover.currentColor,
                     expenseName: state.expenses.addExpPopover.expenseName,
                     expenseNameValid: state.expenses.addExpPopover.expenseNameValid,
+                }
+            }
+        case 'ExpensesControlSection':
+            return function (state) {
+                return {
+                    sort_names: state.expenses.sort_names,
+                }
+            }
+        case 'SortNameExpenses':
+            return function (state) {
+                return {
+                    sortName: state.expenses.sortType,
+                }
+            }
+        case 'SortDirExpenses':
+            return function (state) {
+                return {
+                    sortFromLeast: state.expenses.sortFromLeast,
+                }
+            }
+        case 'ExpensesPeriodSort':
+            return function (state) {
+                return {
+                    appliedFromDate: state.expenses.appliedFromDate,
+                    appliedToDate: state.expenses.appliedToDate,
+                }
+            }
+        case 'PrependInputFromExpenses':
+            return function (state) {
+                return {
+                    localFromDate: state.expenses.localFromDate,
+                }
+            }
+        case 'PrependInputToExpenses':
+            return function (state) {
+                return {
+                    localToDate: state.expenses.localToDate,
+                }
+            }
+        case 'EntrySwitchLengthSectionExpenses':
+            return function (state) {
+                return {
+                    entriesPack: state.expenses.entriesPack,
+                    entriesShouldBeShown: state.expenses.entriesShowNum,
                 }
             }
     }

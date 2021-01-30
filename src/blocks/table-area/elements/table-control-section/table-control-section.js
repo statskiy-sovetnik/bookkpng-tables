@@ -6,13 +6,15 @@ import mapDispatchToProps from "../../../../store/mapDispatchToProps";
 //Blocks______
 import {
     JOURNAL_PERIOD_SORT_SECTION_W as PeriodSortSectionJournal,
-    INCOMES_PERIOD_SORT_SECTION_W as PeriodSortSectionIncomes
+    INCOMES_PERIOD_SORT_SECTION_W as PeriodSortSectionIncomes,
+    EXPENSES_PERIOD_SORT_SECTION_W as PeriodSortSectionExpenses,
 } from "../period-sort-section/period-sort-section";
 import {
     JOURNAL_ENTRY_LENGTH_SWITCH as EntryLengthSwitchJournal,
     INCOMES_ENTRY_LENGTH_SWITCH as EntryLengthSwitchIncomes,
     INCOMES_NEW_ENTRY_LENGTH_SWITCH as EntryLengthSwitchIncomesNewEntry,
     INCOMES_NEW_RAW_MAT_LENGTH_SWITCH as EntryLengthSwitchIncomesNewRawMat,
+    EXPENSES_ENTRY_LENGTH_SWITCH as EntryLengthSwitchExpenses,
 } from "../entry-length-switch-section/entry-length-switch-section";
 import SortSection from "../sort-section/sort-section";
 
@@ -79,6 +81,17 @@ class TableControlSection extends React.Component {
                     />
                 );
                 break;
+            case 'expenses':
+                sort_section = (
+                    <SortSection key={'sort-section'} data={'expenses'} sort_names={this.props.sort_names}/>
+                );
+                period_sort_section = (
+                    <PeriodSortSectionExpenses size={'sm'} data={'expenses'} key={'period-sort'}/>
+                );
+                entry_length_switch_section = (
+                    <EntryLengthSwitchExpenses key={'entry-length-switch'}/>
+                );
+                break;
         }
 
         return (
@@ -111,6 +124,10 @@ const INCOMES_NEW_RAW_MAT_CONTROL_SECTION_W = connect(
     mapStateToProps('IncomesNewRawMatControlSection'),
     mapDispatchToProps('IncomesNewRawMatControlSection'),
 )(TableControlSection);
+const EXPENSES_CONTROL_SECTION_W = connect(
+    mapStateToProps('ExpensesControlSection'),
+    mapDispatchToProps('ExpensesControlSection')
+)(TableControlSection);
 
 export {JOURNAL_CONTROL_SECTION_W, INCOMES_CONTROL_SECTION_W, INCOMES_NEW_ENTRY_CONTROL_SECTION_W,
-INCOMES_NEW_RAW_MAT_CONTROL_SECTION_W}
+INCOMES_NEW_RAW_MAT_CONTROL_SECTION_W, EXPENSES_CONTROL_SECTION_W}

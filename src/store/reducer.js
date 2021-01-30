@@ -1,5 +1,6 @@
 import actionTypes from './actionTypes'
 import initialState from "./initialState";
+import {whenMapStateToPropsIsMissing} from "react-redux/lib/connect/mapStateToProps";
 
 export default function reducer(state, action) {
     switch(action.type) {
@@ -824,14 +825,6 @@ export default function reducer(state, action) {
             }
 
         //__________ EXPENSES ______________
-        case actionTypes.EXPENSES_TOGGLE_ENTRIES_SHOW_ALL:
-            return {
-                ...state,
-                expenses: {
-                    ...state.expenses,
-                    showAllEntries: action.value,
-                }
-            }
         case actionTypes.EXPENSES_SET_SELECTED_COLOR:
             return {
                 ...state,
@@ -863,6 +856,63 @@ export default function reducer(state, action) {
                         ...state.expenses.addExpPopover,
                         expenseNameValid: action.value,
                     }
+                }
+            }
+        case actionTypes.EXPENSES_SET_SORT_NAME:
+            return {
+                ...state,
+                expenses: {
+                    ...state.expenses,
+                    sortType: action.value,
+                }
+            }
+        case actionTypes.EXPENSES_SET_SORT_DIR:
+            return {
+                ...state,
+                expenses: {
+                    ...state.expenses,
+                    sortFromLeast: action.value,
+                }
+            }
+        case actionTypes.EXPENSES_SET_APPLIED_DATES:
+            return {
+                ...state,
+                expenses: {
+                    ...state.expenses,
+                    appliedFromDate: action.value[0],
+                    appliedToDate: action.value[1],
+                }
+            }
+        case actionTypes.EXPENSES_CHANGE_LOCAL_FROM_DATE:
+            return {
+                ...state,
+                expenses: {
+                    ...state.expenses,
+                    localFromDate: action.value,
+                }
+            }
+        case actionTypes.EXPENSES_CHANGE_LOCAL_TO_DATE:
+            return {
+                ...state,
+                expenses: {
+                    ...state.expenses,
+                    localToDate: action.value,
+                }
+            }
+        case actionTypes.EXPENSES_SET_ENTRIES_PACK:
+            return {
+                ...state,
+                expenses: {
+                    ...state.expenses,
+                    entriesPack: action.value,
+                }
+            }
+        case actionTypes.EXPENSES_SET_ENTRIES_SHOW_NUM:
+            return {
+                ...state,
+                expenses: {
+                    ...state.expenses,
+                    entriesShowNum: action.value,
                 }
             }
 

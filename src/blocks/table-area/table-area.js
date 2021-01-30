@@ -11,6 +11,7 @@ import Heading from "../heading/heading";
 import {
     JOURNAL_BUTTON_SECTION_W as JournalButtonSection,
     INCOMES_BUTTON_SECTION_W as IncomesButtonSection,
+    EXPENSES_BUTTON_SECTION_W as ButtonSectionExpenses,
 } from "./elements/button-section/button-section";
 import BtstrapIcon from "../btstrap-icon/btstrap-icon";
 import {
@@ -18,6 +19,7 @@ import {
     INCOMES_CONTROL_SECTION_W as IncomesControlSection,
     INCOMES_NEW_ENTRY_CONTROL_SECTION_W as IncomesNewEntryControlSection,
     INCOMES_NEW_RAW_MAT_CONTROL_SECTION_W as IncomesNewRawMatControlSection,
+    EXPENSES_CONTROL_SECTION_W as ControlSectionExpenses,
 } from "./elements/table-control-section/table-control-section";
 import {
     JOURNAL_TABLE as TableJournal,
@@ -1456,7 +1458,7 @@ class TableArea extends React.Component {
                     Ещё записей: {entries_left}
                 </span>
                 <Button className={'button button_size-small table-area__bottom-panel__button'}
-                        variant={'dark'}
+                        variant={'secondary'}
                         size={'sm'}
                         onClick={event => {
                             event.preventDefault();
@@ -1469,7 +1471,7 @@ class TableArea extends React.Component {
                     Показать ещё {entries_pack}
                 </Button>
                 <Button className={'button button_size-small table-area__bottom-panel__button'}
-                        variant={'dark'}
+                        variant={'secondary'}
                         size={'sm'}
                         onClick={event => {
                             event.preventDefault();
@@ -1971,75 +1973,55 @@ class TableArea extends React.Component {
                 break;
             case 'expenses':
                 area_name = 'Расходы';
-                let table_entries_limit = this.props.showAllEntries ? 99999999 : this.props.entriesShowLimit;
-                let entries_limit_control_btn_text = this.props.showAllEntries ?
-                    'Свернуть' : 'Показать всё';
-                let control_btn_icon_class = this.props.showAllEntries ? 'bi-caret-up' : 'bi-caret-down';
-                const trigger_btn_id = 'expenses_add_exp_btn';
-                const new_expenses_type_popover = this.renderAddExpensesTypePopover(this.props.basicColors,
-                    this.props.basicColorsNames, this.props.selectedColor, trigger_btn_id);
+                const expenses_rows_num = Object.keys(this.props.rows).length;
+                const expenses_entries_left = expenses_rows_num - this.props.entriesShouldBeShown;
 
                 table_area_content.push(
                     <Heading className={'text_color-dark'}>{area_name}</Heading>
                 );
                 table_area_content.push(
-                    <TableWrapper variant={'dark'}>
-                        <ExpensesTable
-                            //responsive={true}
-                            className={'expenses-table'}
-                            style={{'width': this.props.tableWidth}}
-                            key={'table'}
-                            striped={true}
-                            bordered={false}
-                            variant={'dark'}
-                        >
-                            {[
-                                this.renderTableHead(
-                                    'expenses',
-                                    this.props.tableColsNames,
-                                    this.props.tableColsOrder,
-                                    dark_head_classnames,
-                                ),
-                                this.renderTableBody('expenses', this.props.expensesData, this.props.tableColsOrder,
-                                null, dark_tbody_classnames, table_entries_limit, null, null,
-                                null, null, null, null, null,
-                                null, null),
-                            ]}
-                        </ExpensesTable>
-                        <div className={'expenses-table__entries-limit-control-section'}>
-                            <Button
-                                block
-                                variant={'secondary'}
-                                size={'sm'}
-                                className={'button button_size-small expenses-table__entries-limit-control-btn'}
-                                onClick={event => {
-                                    event.preventDefault();
-                                    this.props.toggleShowAllEntries(!this.props.showAllEntries);
-                                }}
+                    <ButtonSectionExpenses
+                        data={'expenses'}
+                    />
+                );
+                table_area_content.push(
+                    <ControlSectionExpenses
+                        data={'expenses'}
+                    />
+                );
+
+                table_area_content.push(
+                    <div className={'flex-row-wrapper horizontal-row-flex-align'}>
+                        <TableWrapper variant={'dark'}>
+                            <ExpensesTable
+                                responsive={true}
+                                className={'expenses-table'}
+                                style={{'width': this.props.tableWidth}}
+                                key={'table'}
+                                striped={true}
+                                bordered={false}
+                                variant={'dark'}
                             >
-                                {entries_limit_control_btn_text}
-                                <BtstrapIcon
-                                    data={control_btn_icon_class}
-                                    className={'expenses-table__entries-limit-control-btn-icon ' + control_btn_icon_class}
-                                />
-                            </Button>
-                        </div>
-                        <div className={'expenses-table__button-section'}>
-                            <OverlayTrigger
-                                trigger={'click'}
-                                placement={'top'}
-                                overlay={new_expenses_type_popover}
-                            >
-                                <Button
-                                    size={'sm'}
-                                    variant={'success'}
-                                    id={trigger_btn_id}
-                                >
-                                    + Добавить тип
-                                </Button>
-                            </OverlayTrigger>
-                        </div>
-                    </TableWrapper>
+                                {[
+                                    this.renderTableHead(
+                                        'expenses',
+                                        this.props.tableColsNames,
+                                        this.props.tableColsOrder,
+                                        dark_head_classnames,
+                                    ),
+                                    this.renderTableBody('expenses', this.props.expensesData, this.props.tableColsOrder,
+                                        null, dark_tbody_classnames, this.props.entriesShouldBeShown,
+                                        null, null, null, null,
+                                        null, null, null,
+                                        null, null),
+                                ]}
+                            </ExpensesTable>
+                            {
+                                this.renderTableBottomPanel(expenses_entries_left, this.props.entriesPack,
+                                    this.props.entriesShouldBeShown)
+                            }
+                        </TableWrapper>
+                    </div>
                 );
                 break;
             default:

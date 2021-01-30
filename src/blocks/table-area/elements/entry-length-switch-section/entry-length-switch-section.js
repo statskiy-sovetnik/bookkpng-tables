@@ -77,6 +77,10 @@ const INCOMES_NEW_RAW_MAT_LENGTH_SWITCH = connect(
     mapStateToProps('EntrySwitchLengthSectionIncomesNewRawMat'),
     mapDispatchToProps('EntrySwitchLengthSectionIncomesNewRawMat')
 )(EntryLengthSwitchSection);
+const EXPENSES_ENTRY_LENGTH_SWITCH = connect(
+    mapStateToProps('EntrySwitchLengthSectionExpenses'),
+    mapDispatchToProps('EntrySwitchLengthSectionExpenses')
+)(EntryLengthSwitchSection);
 
 export {JOURNAL_ENTRY_LENGTH_SWITCH, INCOMES_ENTRY_LENGTH_SWITCH, INCOMES_NEW_ENTRY_LENGTH_SWITCH,
-INCOMES_NEW_RAW_MAT_LENGTH_SWITCH};
+INCOMES_NEW_RAW_MAT_LENGTH_SWITCH, EXPENSES_ENTRY_LENGTH_SWITCH};

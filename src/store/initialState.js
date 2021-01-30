@@ -263,15 +263,14 @@ const initialState = {
     },
 
     expenses: {
-        colsOrder: ['color', 'name', 'sum', 'control'],
+        colsOrder: ['color', 'date', 'name', 'sum', 'control'],
         colsNames: {
             color: 'Цвет',
+            date: 'Дата',
             name: 'Наименование',
             sum: 'Сумма (руб)',
             control: 'Управление',
         },
-        showAllEntries: false,
-        entriesShowLimit: 7,
         basicColorsNames: {
             red: 'Красный',
             purple: 'Фиолетовый',
@@ -301,7 +300,18 @@ const initialState = {
             expenseName: '',
             expenseNameValid: false,
         },
-        tableWidth: 600,
+        rows: {},
+        tableWidth: 800,
+        //control section
+        entriesPack: ENTRIES_PACK,
+        entriesShowNum: ENTRIES_PACK,
+        sort_names: ['Дате', 'Наименованию', 'Сумме', 'Поставщику'],
+        sortType: 'Дате',
+        sortFromLeast: false,
+        localFromDate: +new Date(),
+        localToDate: +new Date(),
+        appliedFromDate: +new Date(),
+        appliedToDate: +new Date(),
     }
 }
 

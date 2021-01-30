@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import {
     JOURNAL_PERIOD_SORT_W as JournalPeriodSort,
     INCOMES_PERIOD_SORT_W as IncomesPeriodSort,
+    EXPENSES_PERIOD_SORT_W as ExpensesPeriodSort,
 } from "../period-sort/period-sort";
 import mapStateToProps from "../../../../store/mapStateToProps";
 import mapDispatchToProps from "../../../../store/mapDispatchToProps";
@@ -21,6 +22,11 @@ function PeriodSortSection(props) {
         case 'incomes':
             period_sort_form = (
                 <IncomesPeriodSort data={'incomes'}/>
+            );
+            break;
+        case 'expenses':
+            period_sort_form = (
+                <ExpensesPeriodSort data={'expenses'}/>
             );
             break;
     }
@@ -41,5 +47,9 @@ const INCOMES_PERIOD_SORT_SECTION_W = connect(
     mapStateToProps('IncomesPeriodSortSection'),
     mapDispatchToProps('IncomesPeriodSortSection')
 )(PeriodSortSection);
+const EXPENSES_PERIOD_SORT_SECTION_W = connect(
+    mapStateToProps('ExpensesPeriodSortSection'),
+    mapDispatchToProps('ExpensesPeriodSortSection')
+)(PeriodSortSection);
 
-export {JOURNAL_PERIOD_SORT_SECTION_W, INCOMES_PERIOD_SORT_SECTION_W}
+export {JOURNAL_PERIOD_SORT_SECTION_W, INCOMES_PERIOD_SORT_SECTION_W, EXPENSES_PERIOD_SORT_SECTION_W}

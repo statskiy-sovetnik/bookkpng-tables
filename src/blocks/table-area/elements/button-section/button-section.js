@@ -845,6 +845,13 @@ class ButtonSection extends React.Component{
                 addEntryBtnClickHandler = this.handleIncomesNewEntryBtnClick;
                 toggleNewEntryModalIsOpen = this.props.toggleNewEntryModal;
                 break;
+            case 'expenses':
+                add_entry_button_icon = (
+                    <BtstrapIcon
+                        data={'bi-plus'}
+                        className={'bi-plus button__btstrap-icon btstrap-icon_size-14 btstrap-icon_color-white'}
+                    />
+                );
         }
 
         return (
@@ -876,5 +883,9 @@ const INCOMES_BUTTON_SECTION_W = connect(
     mapStateToProps('IncomesButtonSection'),
     mapDispatchToProps('IncomesButtonSection')
 )(ButtonSection);
+const EXPENSES_BUTTON_SECTION_W = connect(
+    mapStateToProps('ExpensesButtonSection'),
+    mapDispatchToProps('ExpensesButtonSection')
+)(ButtonSection);
 
-export {JOURNAL_BUTTON_SECTION_W, INCOMES_BUTTON_SECTION_W}
+export {JOURNAL_BUTTON_SECTION_W, INCOMES_BUTTON_SECTION_W, EXPENSES_BUTTON_SECTION_W}
