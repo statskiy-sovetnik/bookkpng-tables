@@ -48,5 +48,10 @@ const EXPENSES_TABLE = connect(
     mapStateToProps('ExpensesTable'),
     mapDispatchToProps('ExpensesTable'),
 )(CustomTable);
+const EXPENSES_NEW_ENTRY_TABLE = connect(
+    mapStateToProps('ExpensesNewEntryTable'),
+    mapDispatchToProps('ExpensesNewEntryTable'),
+)(CustomTable);
 
-export {JOURNAL_TABLE, INCOMES_TABLE, INCOMES_NEW_ENTRY_TABLE, INCOMES_NEW_RAW_MAT_TABLE, EXPENSES_TABLE};
+export {JOURNAL_TABLE, INCOMES_TABLE, INCOMES_NEW_ENTRY_TABLE, INCOMES_NEW_RAW_MAT_TABLE, EXPENSES_TABLE,
+EXPENSES_NEW_ENTRY_TABLE};

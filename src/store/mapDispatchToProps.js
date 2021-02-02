@@ -118,6 +118,11 @@ import {setDefaultLocale} from "react-datepicker";
 import expensesSetAppliedDates from "./actionCreators/expenses/expensesSetAppliedDates";
 import expensesSetEntriesPack from "./actionCreators/expenses/expensesSetEntriesPack";
 import expensesSetEntriesShowNum from "./actionCreators/expenses/expensesSetEntriesShowNum";
+import expensesNewEntryModalToggleOpen from "./actionCreators/expenses/expensesNewEntryModalToggleOpen";
+import expensesNewEntrySetSortName from "./actionCreators/expenses/expensesNewEntrySetSortName";
+import expensesNewEntrySetSortFromLeast from "./actionCreators/expenses/expensesNewEntrySetSortFromLeast";
+import expensesNewEntrySetEntriesPack from "./actionCreators/expenses/expensesNewEntrySetEntriesPack";
+import expensesNewEntrySetEntriesShowNum from "./actionCreators/expenses/expensesNewEntrySetEntriesShowNum";
 
 export default function mapDispatchToProps(component) {
     switch (component) {
@@ -392,6 +397,16 @@ export default function mapDispatchToProps(component) {
                     setSelectedColor: value => dispatch(expensesSetSelectedColor(value)),
                     setExpenseName: value => dispatch(expensesSetExpenseName(value)),
                     setExpenseNameValid: value => dispatch(expensesSetExpenseNameValid(value)),
+                    toggleNewEntryModal: bool => dispatch(expensesNewEntryModalToggleOpen(bool)),
+                    changeEntriesPack: value => dispatch(expensesSetEntriesPack(value)),
+                    changeEntriesShouldBeShown: value => dispatch(expensesSetEntriesShowNum(value)),
+                }
+            }
+        case 'ExpensesButtonSection':
+            return function (dispatch) {
+                return {
+                    //new entry modal
+                    toggleNewEntryModal: bool => dispatch(expensesNewEntryModalToggleOpen(bool)),
                 }
             }
         case 'SortNameExpenses':
@@ -429,6 +444,34 @@ export default function mapDispatchToProps(component) {
                 return {
                     changeEntriesPack: value => dispatch(expensesSetEntriesPack(value)),
                     changeEntriesShouldBeShown: value => dispatch(expensesSetEntriesShowNum(value)),
+                }
+            }
+
+        //__________ EXPENSES NEW ENTRY MODAL _____________
+        case 'ExpensesNewEntryArea':
+            return function (dispatch) {
+                return {
+                    changeEntriesPack: value => dispatch(expensesNewEntrySetEntriesPack(value)),
+                    changeEntriesShouldBeShown: value => dispatch(expensesNewEntrySetEntriesShowNum(value)),
+                }
+            }
+        case 'SortNameExpensesNewEntry':
+            return function (dispatch) {
+                return {
+                    changeSortType: value => dispatch(expensesNewEntrySetSortName(value)),
+                }
+            }
+        case 'SortDirExpensesNewEntry':
+            return function (dispatch) {
+                return {
+                    changeSortDirection: bool => dispatch(expensesNewEntrySetSortFromLeast(bool)),
+                }
+            }
+        case 'NewEntrySwitchLengthSectionExpenses':
+            return function (dispatch) {
+                return {
+                    changeEntriesPack: value => dispatch(expensesNewEntrySetEntriesPack(value)),
+                    changeEntriesShouldBeShown: value => dispatch(expensesNewEntrySetEntriesShowNum(value)),
                 }
             }
     }

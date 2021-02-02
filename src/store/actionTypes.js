@@ -130,4 +130,12 @@ export default {
     EXPENSES_CHANGE_LOCAL_TO_DATE: 'expensesChangeLocalToDate',
     EXPENSES_SET_ENTRIES_PACK: 'expensesSetEntriesPack',
     EXPENSES_SET_ENTRIES_SHOW_NUM: 'expensesSetEntriesShowNum',
+
+    //_________ EXPENSES NEW ENTRY MODAL ______________
+    EXPENSES_NEW_ENTRY_MODAL_TOGGLE_OPEN: 'expensesNewEntryModalToggleOpen',
+    //control section
+    EXPENSES_NEW_ENTRY_SET_SORT_NAME: 'expensesNewEntrySetSortName',
+    EXPENSES_NEW_ENTRY_SET_SORT_DIR: 'expensesNewEntrySetSortFromLeast',
+    EXPENSES_NEW_ENTRY_SET_ENTRIES_PACK: 'expensesNewEntrySetEntriesPack',
+    EXPENSES_NEW_ENTRY_SET_ENTRIES_SHOW_NUM: 'expensesNewEntrySetEntriesShowNum',
 }

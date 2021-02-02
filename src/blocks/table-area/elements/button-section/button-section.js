@@ -807,6 +807,10 @@ class ButtonSection extends React.Component{
         )
     }
 
+    handleExpensesNewEntryBtnClick(toggleModal) {
+        toggleModal(true);
+    }
+
     render() {
         let addEntryBtnClickHandler;
         let add_entry_button_icon;
@@ -846,6 +850,8 @@ class ButtonSection extends React.Component{
                 toggleNewEntryModalIsOpen = this.props.toggleNewEntryModal;
                 break;
             case 'expenses':
+                addEntryBtnClickHandler = this.handleExpensesNewEntryBtnClick;
+                toggleNewEntryModalIsOpen = this.props.toggleNewEntryModal;
                 add_entry_button_icon = (
                     <BtstrapIcon
                         data={'bi-plus'}

@@ -137,6 +137,12 @@ export default function mapStateToProps(component) {
                     sortName: state.incomes_new_entry_modal.sortName,
                 }
             }
+        case 'SortDirIncomesNewEntry':
+            return function (state) {
+                return {
+                    sortFromLeast: state.incomes_new_entry_modal.sortFromLeast,
+                }
+            }
 
         //_______ INCOMES NEW RAW MAT MODAL __________
         //modal
@@ -360,6 +366,8 @@ export default function mapStateToProps(component) {
                     selectedColor: state.expenses.addExpPopover.currentColor,
                     expenseName: state.expenses.addExpPopover.expenseName,
                     expenseNameValid: state.expenses.addExpPopover.expenseNameValid,
+                    //new entry modal
+                    newEntryModalIsOpen: state.expenses.newEntryModalIsOpen,
                 }
             }
         case 'ExpensesControlSection':
@@ -404,6 +412,50 @@ export default function mapStateToProps(component) {
                 return {
                     entriesPack: state.expenses.entriesPack,
                     entriesShouldBeShown: state.expenses.entriesShowNum,
+                }
+            }
+        //______ EXPENSES NEW ENTRY MODAL __________
+        case 'ExpensesNewEntryArea':
+            return function (state) {
+                return {
+                    sortName: state.expenses.modalSortType,
+                    sortFromLeast: state.expenses.modalSortFromLeast,
+                    entriesPack: state.expenses.modalEntriesPack,
+                    entriesShouldBeShown: state.expenses.modalEntriesShouldBeShown,
+                    //table
+                    tableWidth: state.expenses.modalTableWidth,
+                    colsOrder: state.expenses.modalColumnsOrder,
+                    colsNames: state.expenses.modalHeadColsNames,
+                    incomesRows: state.incomes.rows,
+                    journalRows: state.journal.rows,
+                    rawMatUsage: state.raw_mat_usage,
+                    journalHeadCols: state.journal.head_col_names,
+                }
+            }
+        //control section
+        case 'ExpensesNewEntryControlSection':
+            return function (state) {
+                return {
+                    sort_names: state.expenses.modalSortNames,
+                }
+            }
+        case 'SortNameExpensesNewEntry':
+            return function (state) {
+                return {
+                    sortName: state.expenses.modalSortType,
+                }
+            }
+        case 'SortDirExpensesNewEntry':
+            return function (state) {
+                return {
+                    sortFromLeast: state.expenses.modalSortFromLeast,
+                }
+            }
+        case 'NewEntrySwitchLengthSectionExpenses':
+            return function (state) {
+                return {
+                    entriesPack: state.expenses.modalEntriesPack,
+                    entriesShouldBeShown: state.expenses.modalEntriesShouldBeShown,
                 }
             }
     }

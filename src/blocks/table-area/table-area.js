@@ -20,6 +20,7 @@ import {
     INCOMES_NEW_ENTRY_CONTROL_SECTION_W as IncomesNewEntryControlSection,
     INCOMES_NEW_RAW_MAT_CONTROL_SECTION_W as IncomesNewRawMatControlSection,
     EXPENSES_CONTROL_SECTION_W as ControlSectionExpenses,
+    EXPENSES_NEW_ENTRY_CONTROL_SECTION_W as ControlSectionExpensesNewEntry,
 } from "./elements/table-control-section/table-control-section";
 import {
     JOURNAL_TABLE as TableJournal,
@@ -27,9 +28,11 @@ import {
     INCOMES_NEW_ENTRY_TABLE as TableIncomesNewEntry,
     INCOMES_NEW_RAW_MAT_TABLE as TableIncomesNewRawMat,
     EXPENSES_TABLE as ExpensesTable,
+    EXPENSES_NEW_ENTRY_TABLE as ExpensesNewEntryTable,
 } from "../table/table";
 import {
     INCOMES_NEW_RAW_MAT_MODAL as IncomesNewRawMatModal,
+    EXPENSES_NEW_ENTRY_MODAL as ExpensesNewEntryModal,
 } from "../modal/modal";
 
 /*___ Bootstrap _________________*/
@@ -365,8 +368,8 @@ class TableArea extends React.Component {
                 break;
             case 'Покупателю':
                 rows_keys_sorted.sort((row_id_1, row_id_2) => {
-                    const name_1 = rows[row_id_1].provider_name;
-                    const name_2 = rows[row_id_2].provider_name;
+                    const name_1 = rows[row_id_1].provider_name || rows[row_id_1].customer_name;
+                    const name_2 = rows[row_id_2].provider_name || rows[row_id_2].customer_name;
                     let sort_from_least_coef = sort_from_least ? 1 : -1;
 
                     if(name_1 < name_2) {
@@ -746,6 +749,25 @@ class TableArea extends React.Component {
                     const journal_cut_col_order = ['date', 'name', 'provider_name', 'total'];
                     const raw_mat_popover = this.renderRawMatIncomesPopover(row_id, another_table_rows, journal_cut_col_order,
                         journal_head_cols, raw_mat_usage);
+                    let plus_icon = (
+                        <a className="text text_color-dark body-cell__icon-wrapper_right-icon"
+                           href={'#'}
+                           onClick={event => {
+                               event.preventDefault();
+                               //Открываем модальное окно добавления расходов на сырьё
+                               this.props.setNewRawMatModalTargetRow(row_id);
+                               this.props.toggleNewRawMatModal(true);
+                           }}
+                        >
+                            <BtstrapIcon data={'bi-plus-circle'}
+                                         className={'bi-plus-circle btstrap-icon_size-11 btstrap-icon_color-dark '}/>
+                        </a>
+                    );
+                    switch(data) {
+                        case 'expenses-new-entry':
+                            plus_icon = '';
+                            break;
+                    }
 
                     cur_row.push(
                         <td className={cell_class}
@@ -763,18 +785,7 @@ class TableArea extends React.Component {
                                     />
                                 </a>
                             </OverlayTrigger>
-                            <a className="text text_color-dark body-cell__icon-wrapper_right-icon"
-                               href={'#'}
-                               onClick={event => {
-                                   event.preventDefault();
-                                   //Открываем модальное окно добавления расходов на сырьё
-                                   this.props.setNewRawMatModalTargetRow(row_id);
-                                   this.props.toggleNewRawMatModal(true);
-                               }}
-                            >
-                                <BtstrapIcon data={'bi-plus-circle'}
-                                             className={'bi-plus-circle btstrap-icon_size-11 btstrap-icon_color-dark '}/>
-                            </a>
+                            {plus_icon}
                         </td>
                     );
                 }
@@ -1504,6 +1515,11 @@ class TableArea extends React.Component {
         this.clearNewRawMatModal();
     }
 
+    handleExpensesNewEntryModalHide(toggleModal) {
+        toggleModal(false);
+        //this.clearNewRawMatModal();
+    }
+
     clearNewRawMatModal() {
         this.props.clearNewRawMatModal();
     }
@@ -1653,6 +1669,10 @@ class TableArea extends React.Component {
                 this.props.updateExpensesDataFromDb('/src/php/get_expenses_data.php', this.props.userKey);
             }
         );
+    }
+
+    handleExpensesAddEntryBtnClick(toggleModal) {
+        toggleModal(true);
     }
 
     clearExpensesAddExpPopover() {
@@ -1971,11 +1991,62 @@ class TableArea extends React.Component {
                         this.props.entriesShouldBeShown)
                 );
                 break;
+            case 'expenses-new-entry':
+                let exp_new_entry_rows_num = Object.keys(this.props.incomesRows).length;
+                let exp_entries_left = exp_new_entry_rows_num - this.props.entriesShouldBeShown;
+
+                table_area_content.push(
+                    <ControlSectionExpensesNewEntry
+                        data={'expenses-new-entry'}
+                    />
+                );
+                table_area_content.push(
+                    <ExpensesNewEntryTable
+                        responsive={true}
+                        style={{'width': this.props.tableWidth}}
+                        key={'table'}
+                    >
+                        {[
+                            this.renderTableHead(
+                                'expenses-new-entry',
+                                this.props.colsNames,
+                                this.props.colsOrder,
+                                head_classnames,
+                            ),
+                            this.renderTableBody(
+                                'expenses-new-entry',
+                                this.props.incomesRows || {}, this.props.colsOrder,
+                                [], tbody_classnames, this.props.entriesShouldBeShown, null,
+                                null, this.props.sortName, this.props.sortFromLeast, this.props.journalRows,
+                                null, this.props.rawMatUsage,
+                                {}, this.props.journalHeadCols
+                            )
+                        ]}
+                    </ExpensesNewEntryTable>
+                );
+                table_area_content.push(
+                    this.renderTableBottomPanel(exp_entries_left, this.props.entriesPack,
+                        this.props.entriesShouldBeShown)
+                );
+                break;
             case 'expenses':
                 area_name = 'Расходы';
                 const expenses_rows_num = Object.keys(this.props.rows).length;
                 const expenses_entries_left = expenses_rows_num - this.props.entriesShouldBeShown;
 
+                //Модальное окно добавления расходов
+                table_area_content.push(
+                    <ExpensesNewEntryModal
+                        data={'expenses-new-entry'}
+                        size={'lg'}
+                        show={this.props.newEntryModalIsOpen}
+                        submitBtnDisabled={true}
+                        submitHandler={() => {this.handleIncomesNewRawMatSubmit.bind(this)()}}
+                        onHide={() => {
+                            this.handleExpensesNewEntryModalHide.bind(this)(this.props.toggleNewEntryModal);
+                        }}
+                    />
+                );
                 table_area_content.push(
                     <Heading className={'text_color-dark'}>{area_name}</Heading>
                 );
@@ -2054,5 +2125,10 @@ const EXPENSES_AREA_W = connect(
     mapStateToProps('ExpensesArea'),
     mapDispatchToProps('ExpensesArea')
 )(TableArea);
-export {JOURNAL_AREA_W, INCOMES_AREA_W, INCOMES_NEW_ENTRY_AREA_W, INCOMES_NEW_RAW_MAT_AREA_W, EXPENSES_AREA_W};
+const EXPENSES_NEW_ENTRY_AREA_W = connect(
+    mapStateToProps('ExpensesNewEntryArea'),
+    mapDispatchToProps('ExpensesNewEntryArea'),
+)(TableArea);
+export {JOURNAL_AREA_W, INCOMES_AREA_W, INCOMES_NEW_ENTRY_AREA_W, INCOMES_NEW_RAW_MAT_AREA_W, EXPENSES_AREA_W,
+EXPENSES_NEW_ENTRY_AREA_W};
 

@@ -11,6 +11,8 @@ import {
     SORT_INCOMES_NEW_RAW_MAT_NAME as SortNameIncomesNewRawMat,
     SORT_EXPENSES_DIR_W as SortDirExpenses,
     SORT_EXPENSES_NAME_W as SortNameExpenses,
+    SORT_EXPENSES_NEW_ENTRY_DIR_W as SortDirExpensesNewEntry,
+    SORT_EXPENSES_NEW_ENTRY_NAME_W as SortNameExpensesNewEntry,
 } from "../sort/sort";
 
 export default function SortSection(props) {
@@ -66,6 +68,14 @@ export default function SortSection(props) {
                 <span className={'table-area__sorts-wrapper'}>
                     <SortNameExpenses data={'expenses-name'}  sort_names={props.sort_names} key={'sort-name'}/>
                     <SortDirExpenses data={'expenses-direction'} key={'sort-dir'}/>
+                </span>
+            );
+            break;
+        case 'expenses-new-entry':
+            sort = (
+                <span className={'table-area__sorts-wrapper'}>
+                    <SortNameExpensesNewEntry data={'expenses-new-entry-name'}  sort_names={props.sort_names} key={'sort-name'}/>
+                    <SortDirExpensesNewEntry data={'expenses-new-entry-direction'} key={'sort-dir'}/>
                 </span>
             );
             break;

@@ -15,6 +15,7 @@ import {
     INCOMES_NEW_ENTRY_LENGTH_SWITCH as EntryLengthSwitchIncomesNewEntry,
     INCOMES_NEW_RAW_MAT_LENGTH_SWITCH as EntryLengthSwitchIncomesNewRawMat,
     EXPENSES_ENTRY_LENGTH_SWITCH as EntryLengthSwitchExpenses,
+    EXPENSES_NEW_ENTRY_LENGTH_SWITCH as NewEntryLengthSwitchExpenses,
 } from "../entry-length-switch-section/entry-length-switch-section";
 import SortSection from "../sort-section/sort-section";
 
@@ -92,6 +93,15 @@ class TableControlSection extends React.Component {
                     <EntryLengthSwitchExpenses key={'entry-length-switch'}/>
                 );
                 break;
+            case 'expenses-new-entry':
+                sort_section = (
+                    <SortSection key={'sort-section'} data={'expenses-new-entry'} sort_names={this.props.sort_names}/>
+                );
+                period_sort_section = '';
+                entry_length_switch_section = (
+                    <NewEntryLengthSwitchExpenses key={'new-entry-length-switch'}/>
+                );
+                break;
         }
 
         return (
@@ -128,6 +138,10 @@ const EXPENSES_CONTROL_SECTION_W = connect(
     mapStateToProps('ExpensesControlSection'),
     mapDispatchToProps('ExpensesControlSection')
 )(TableControlSection);
+const EXPENSES_NEW_ENTRY_CONTROL_SECTION_W = connect(
+    mapStateToProps('ExpensesNewEntryControlSection'),
+    mapDispatchToProps('ExpensesNewEntryControlSection')
+)(TableControlSection);
 
 export {JOURNAL_CONTROL_SECTION_W, INCOMES_CONTROL_SECTION_W, INCOMES_NEW_ENTRY_CONTROL_SECTION_W,
-INCOMES_NEW_RAW_MAT_CONTROL_SECTION_W, EXPENSES_CONTROL_SECTION_W}
+INCOMES_NEW_RAW_MAT_CONTROL_SECTION_W, EXPENSES_CONTROL_SECTION_W, EXPENSES_NEW_ENTRY_CONTROL_SECTION_W}

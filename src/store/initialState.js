@@ -312,6 +312,25 @@ const initialState = {
         localToDate: +new Date(),
         appliedFromDate: +new Date(),
         appliedToDate: +new Date(),
+        //new entry modal
+        newEntryModalIsOpen: false,
+        //modal control section
+        modalSortNames: ['Дате', 'Наименованию', 'Покупателю'],
+        modalSortType: 'Дате',
+        modalSortFromLeast: false,
+        modalEntriesPack: ENTRIES_PACK,
+        modalEntriesShouldBeShown: ENTRIES_PACK,
+        //modal table
+        modalTableWidth: 1000,
+        modalColumnsOrder: ['select', 'date', 'name', 'customer_name', 'amount', 'sum_of_raw'],
+        modalHeadColsNames: {
+            select: 'Выбрать',
+            date: 'Дата',
+            name: 'Наименование',
+            customer_name: 'Покупатель',
+            amount: 'Кол-во (кг)',
+            sum_of_raw: 'Расходы на сырьё (руб)',
+        },
     }
 }
 

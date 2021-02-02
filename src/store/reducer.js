@@ -916,6 +916,49 @@ export default function reducer(state, action) {
                 }
             }
 
+        //_________ EXPENSES NEW ENTRY MODAL _____________
+        case actionTypes.EXPENSES_NEW_ENTRY_MODAL_TOGGLE_OPEN:
+            return {
+                ...state,
+                expenses: {
+                    ...state.expenses,
+                    newEntryModalIsOpen: action.value,
+                }
+            }
+        //control section
+        case actionTypes.EXPENSES_NEW_ENTRY_SET_SORT_NAME:
+            return {
+                ...state,
+                expenses: {
+                    ...state.expenses,
+                    modalSortType: action.value,
+                }
+            }
+        case actionTypes.EXPENSES_NEW_ENTRY_SET_SORT_DIR:
+            return {
+                ...state,
+                expenses: {
+                    ...state.expenses,
+                    modalSortFromLeast: action.value,
+                }
+            }
+        case actionTypes.EXPENSES_NEW_ENTRY_SET_ENTRIES_PACK:
+            return {
+                ...state,
+                expenses: {
+                    ...state.expenses,
+                    modalEntriesPack: action.value,
+                }
+            }
+        case actionTypes.EXPENSES_NEW_ENTRY_SET_ENTRIES_SHOW_NUM:
+            return {
+                ...state,
+                expenses: {
+                    ...state.expenses,
+                    modalEntriesShouldBeShown: action.value,
+                }
+            }
+
         default:
             return state;
 
