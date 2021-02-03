@@ -958,6 +958,97 @@ export default function reducer(state, action) {
                     modalEntriesShouldBeShown: action.value,
                 }
             }
+        //table
+        case actionTypes.EXPENSES_NEW_ENTRY_SET_CHECKED_ROWS:
+            return {
+                ...state,
+                expenses: {
+                    ...state.expenses,
+                    modalFormState: {
+                        ...state.expenses.modalFormState,
+                        rowsChecked: action.value,
+                    }
+                }
+            }
+        //form
+        case actionTypes.EXPENSES_NEW_ENTRY_SET_SELECTED_EXP_ID:
+            return {
+                ...state,
+                expenses: {
+                    ...state.expenses,
+                    modalFormState: {
+                        ...state.expenses.modalFormState,
+                        expenseId: action.value,
+                    }
+                }
+            }
+        case actionTypes.EXPENSES_NEW_ENTRY_SET_SHOW_NEW_EXP_INPUTS:
+            return {
+                ...state,
+                expenses: {
+                    ...state.expenses,
+                    modalFormState: {
+                        ...state.expenses.modalFormState,
+                        showNewExpenseInputs: action.value,
+                    }
+                }
+            }
+        case actionTypes.EXPENSES_NEW_ENTRY_SET_NEW_EXP_COLOR:
+            return {
+                ...state,
+                expenses: {
+                    ...state.expenses,
+                    modalFormState: {
+                        ...state.expenses.modalFormState,
+                        newExpColor: action.value,
+                    }
+                }
+            }
+        case actionTypes.EXPENSES_NEW_ENTRY_SET_NEW_EXP_NAME:
+            return {
+                ...state,
+                expenses: {
+                    ...state.expenses,
+                    modalFormState: {
+                        ...state.expenses.modalFormState,
+                        newExpName: action.value,
+                    }
+                }
+            }
+        //validation
+        case actionTypes.EXPENSES_NEW_ENTRY_SET_CHECKED_ROWS_VALID:
+            return {
+                ...state,
+                expenses: {
+                    ...state.expenses,
+                    modalValidation: {
+                        ...state.expenses.modalValidation,
+                        isRowsChecked: action.value,
+                    }
+                }
+            }
+        case actionTypes.EXPENSES_NEW_ENTRY_SET_NEW_EXP_NAME_VALID:
+            return {
+                ...state,
+                expenses: {
+                    ...state.expenses,
+                    modalValidation: {
+                        ...state.expenses.modalValidation,
+                        newExpNameValid: action.value,
+                    }
+                }
+            }
+        case actionTypes.EXPENSES_NEW_ENTRY_SET_NEW_EXP_COLOR_VALID:
+            return {
+                ...state,
+                expenses: {
+                    ...state.expenses,
+                    modalValidation: {
+                        ...state.expenses.modalValidation,
+                        newExpColorValid: action.value,
+                    }
+                }
+            }
 
         default:
             return state;

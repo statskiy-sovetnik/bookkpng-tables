@@ -331,6 +331,19 @@ const initialState = {
             amount: 'Кол-во (кг)',
             sum_of_raw: 'Расходы на сырьё (руб)',
         },
+        //modal form
+        modalFormState: {
+            showNewExpenseInputs: false,
+            rowsChecked: [],
+            expenseId: null,
+            newExpColor: null,
+            newExpName: '',
+        },
+        modalValidation: {
+            newExpNameValid: true,
+            newExpColorValid: true,
+            isRowsChecked: false,
+        },
     }
 }
 

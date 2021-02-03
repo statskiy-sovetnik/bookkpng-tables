@@ -260,6 +260,21 @@ class TableArea extends React.Component {
         setRowsChecked(new_rows_checked);
     }
 
+    handleExpensesNewEntryTableCheckboxClick(row_id, rows_checked, setRowsChecked, setIsRowChecked) {
+        let new_rows_checked = rows_checked.slice();
+        const place_id = new_rows_checked.indexOf(+row_id);
+
+        //Обновляем отмеченные ряды, а также состояние полей (usage) отмеченных рядов
+        if(place_id !== -1) { //если этот ряд отмечен
+            new_rows_checked.splice(place_id, 1);
+        }
+        else { //не отмечен
+            new_rows_checked.push(+row_id);
+        }
+        setIsRowChecked(!(new_rows_checked.length === 0))
+        setRowsChecked(new_rows_checked);
+    }
+
     handleTableUsageInput(usage_rows, row_id, value) {
         let new_usage_rows = {};
         Object.assign(new_usage_rows, usage_rows);
@@ -295,7 +310,7 @@ class TableArea extends React.Component {
         let rows_keys = Object.keys(rows).slice();
         let rows_checked = [];
 
-        if(data === 'incomes-new-entry' || data === 'incomes-new-raw-mat') {
+        if(data === 'incomes-new-entry' || data === 'incomes-new-raw-mat' || data === 'expenses-new-entry') {
             rows_checked = this.props.rowsChecked;
         }
 
@@ -486,7 +501,7 @@ class TableArea extends React.Component {
             const row_place_id = rows_checked.indexOf(row_id);
             const cur_row_checked = !(row_place_id === -1);
 
-            if(data === 'incomes-new-entry' || data === 'incomes-new-raw-mat') {
+            if(data === 'incomes-new-entry' || data === 'incomes-new-raw-mat' || data === 'expenses-new-entry') {
                 trow_classnames += cur_row_checked ? ' table__checked-row' : '';
             }
 
@@ -534,13 +549,22 @@ class TableArea extends React.Component {
                     }
                 }
                 else if(col_name === 'select') {
+                    let checkboxClickHandler;
+                    switch(data) {
+                        case 'expenses-new-entry':
+                            checkboxClickHandler = this.handleExpensesNewEntryTableCheckboxClick.bind(this);
+                            break;
+                        default:
+                            checkboxClickHandler = this.handleTableCheckboxClick.bind(this);
+                    }
+
                     cur_row.push(
                         <td className={cell_class}
                             key={data + '-' + row_id + '-' + col_name}
                         >
                             <InputGroup.Checkbox
                                 onChange={event => {
-                                    this.handleTableCheckboxClick(row_id, rows_checked, this.props.setCheckedRows,
+                                    checkboxClickHandler(row_id, rows_checked, this.props.setCheckedRows,
                                         this.props.setRowCheckedValid, data);
                                 }}
                                 className={'modal__table-checkbox'}
@@ -1680,6 +1704,12 @@ class TableArea extends React.Component {
         this.props.setExpenseNameValid(false);
     }
 
+    isExpensesNewEntryFormValid(isRowsChecked, expense_id, new_exp_name_valid, new_exp_color_valid) {
+        const new_exp_data_valid = expense_id ? true : new_exp_name_valid && new_exp_color_valid;
+
+        return isRowsChecked && new_exp_data_valid;
+    }
+
     renderAddExpensesTypePopover(basic_colors, basic_colors_names, selected_color, trigger_btn_id) {
         let colors_list_items = [];
 
@@ -2040,7 +2070,9 @@ class TableArea extends React.Component {
                         data={'expenses-new-entry'}
                         size={'lg'}
                         show={this.props.newEntryModalIsOpen}
-                        submitBtnDisabled={true}
+                        submitBtnDisabled={!this.isExpensesNewEntryFormValid(this.props.isRowsChecked,
+                            this.props.selectedExpenseId, this.props.newExpNameValid, this.props.newExpColorValid)
+                        }
                         submitHandler={() => {this.handleIncomesNewRawMatSubmit.bind(this)()}}
                         onHide={() => {
                             this.handleExpensesNewEntryModalHide.bind(this)(this.props.toggleNewEntryModal);

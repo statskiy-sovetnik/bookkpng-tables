@@ -368,6 +368,12 @@ export default function mapStateToProps(component) {
                     expenseNameValid: state.expenses.addExpPopover.expenseNameValid,
                     //new entry modal
                     newEntryModalIsOpen: state.expenses.newEntryModalIsOpen,
+                    isRowsChecked: state.expenses.modalValidation.isRowsChecked,
+                    selectedExpenseId: state.expenses.modalFormState.expenseId,
+                    newExpColor: state.expenses.modalFormState.newExpColor,
+                    newExpName: state.expenses.modalFormState.newExpName,
+                    newExpNameValid: state.expenses.modalValidation.newExpNameValid,
+                    newExpColorValid: state.expenses.modalValidation.newExpColorValid,
                 }
             }
         case 'ExpensesControlSection':
@@ -430,6 +436,7 @@ export default function mapStateToProps(component) {
                     journalRows: state.journal.rows,
                     rawMatUsage: state.raw_mat_usage,
                     journalHeadCols: state.journal.head_col_names,
+                    rowsChecked: state.expenses.modalFormState.rowsChecked,
                 }
             }
         //control section
@@ -456,6 +463,18 @@ export default function mapStateToProps(component) {
                 return {
                     entriesPack: state.expenses.modalEntriesPack,
                     entriesShouldBeShown: state.expenses.modalEntriesShouldBeShown,
+                }
+            }
+        case 'ExpensesNewEntryModal':
+            return function (state) {
+                return {
+                    showNewExpenseInputs: state.expenses.modalFormState.showNewExpenseInputs,
+                    expensesData: state.expenses_data,
+                    selectedExpenseId: state.expenses.modalFormState.expenseId,
+                    newExpColor: state.expenses.modalFormState.newExpColor,
+                    newExpName: state.expenses.modalFormState.newExpName,
+                    basicColors: state.expenses.basicColors,
+                    basicColorsNames: state.expenses.basicColorsNames,
                 }
             }
     }

@@ -162,6 +162,9 @@ tr.table__checked-row {
   .expenses-table__color-tab:hover, .expenses-table__color-tab:focus {
     background-color: #cedbea !important;
     border: 1px solid #b3c5d0 !important; }
+  .expenses-table__color-tab.color-tab_theme-dark {
+    background-color: #343a40 !important;
+    border: 1px solid #474c53 !important; }
 
 .table__control-btn {
   margin-right: 7px; }

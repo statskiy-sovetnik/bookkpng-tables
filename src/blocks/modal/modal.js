@@ -10,20 +10,239 @@ import {
 } from "../table-area/table-area";
 import mapStateToProps from "../../store/mapStateToProps";
 import mapDispatchToProps from "../../store/mapDispatchToProps";
+import Form from "react-bootstrap/Form";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import {isExpenseNameValid, isFloat, isProviderNameValid, isRawMatNameValid, setValidation} from "../../common";
+import Dropdown from "react-bootstrap/Dropdown";
 
 class CustomModal extends React.Component {
     constructor(props) {
         super(props);
     }
 
+    handleExpensesNewEntryModalDropdownItemClick(expense_id) {
+        this.props.setSelectedExpId(expense_id);
+        this.props.setShowNewExpInputs(false);
+        this.props.setNewExpColor(null);
+        this.props.setNewExpName('');
+        this.props.setNewExpNameValid(true);
+        this.props.setNewExpColorValid(true);
+    }
+
+    handleExpNewEntryNewExpenseBtnClick() {
+        let sho_inputs = this.props.showNewExpenseInputs;
+        this.props.setSelectedExpId(null);
+        this.props.setShowNewExpInputs(!sho_inputs);
+        this.props.setNewExpColor(null);
+        this.props.setNewExpName('');
+        //val
+        this.props.setNewExpNameValid(sho_inputs);
+        this.props.setNewExpColorValid(sho_inputs);
+    }
+
+    handleExpNewEntryColorItemClick(color) { //элемент списка дропдауна цветов
+        this.props.setNewExpColor(color);
+        this.props.setNewExpColorValid(true);
+    }
+
+    handleExpNewEntryNewExpNameInput(event) {
+        const value = event.currentTarget.value;
+        const is_valid = isExpenseNameValid(value);
+
+        this.props.setNewExpName(value);
+        this.props.setNewExpNameValid(is_valid);
+    }
+
     renderExpensesNewEntryModalBody(table_area) {
+        const basic_colors = this.props.basicColors;
+        const basic_colors_names = this.props.basicColorsNames;
+        const expenses_data = this.props.expensesData;
+        const no_expenses = expenses_data.length === 0;
+        const new_exp_btn_text = this.props.showNewExpenseInputs ? 'Отмена' : '+ Новый';
+        const selected_expense_id = this.props.selectedExpenseId || Object.keys(expenses_data)[0];
+        let selected_exp_data = expenses_data[selected_expense_id] || {};
+        let selected_exp_color = selected_exp_data.color;
+        let selected_exp_name = selected_exp_data.name;
+        let expenses_links = [];
+        const new_exp_selected_color = this.props.newExpColor;
+        const new_exp_color_tab_text = new_exp_selected_color ? basic_colors_names[new_exp_selected_color] : 'Выбрать';
+        const new_exp_color_tab_color_circle = new_exp_selected_color ? (
+            <span
+                className={'expenses-table__color-circle'}
+                style={{'backgroundColor': basic_colors[new_exp_selected_color] || 'grey'}}
+            />
+        ) : (
+            ''
+        );
+        let colors_list_items = [];
+
+        //Если создаётся новый тип расходов, то меняем текст и цвет в кнопке типа
+        if(this.props.showNewExpenseInputs) {
+            selected_exp_color = basic_colors[this.props.newExpColor];
+            selected_exp_name = this.props.newExpName;
+        }
+
+        //Добавляем ссылки с расходами в выпадающий список
+        for(let expense_id in expenses_data) {
+            expenses_links.push(
+                <Dropdown.Item href={'#'}
+                               key={'dropdown-link-' + expense_id}
+                               className={'text text_size-13 modal__dropdown-item'}
+                               onClick={event => {
+                                   event.preventDefault();
+                                   this.handleExpensesNewEntryModalDropdownItemClick(expense_id);
+                               }}
+                >
+                    {expenses_data[expense_id].name}
+                </Dropdown.Item>
+            );
+        }
+
+        //Добавляем ссылки с цветами в дропдаун
+        for(let color in basic_colors) {
+            colors_list_items.push(
+                <Dropdown.Item
+                    key={'dropdown-' + color}
+                    onClick={event => {
+                        event.preventDefault();
+                        this.handleExpNewEntryColorItemClick(color);
+                    }}
+                >
+                    <div className={'flex-row-wrapper vertical-row-flex-align'}>
+                        <span
+                           style={{'backgroundColor': basic_colors[color]}}
+                           className={'expenses-table__color-circle'}
+                        />
+                        <span className={'text text_size-13'}>
+                            {basic_colors_names[color]}
+                        </span>
+                    </div>
+                </Dropdown.Item>
+            )
+        }
+
+        //Добавляем поля для создания нового типа расходов
+        const new_expense_group = this.props.showNewExpenseInputs ? (
+            <Form.Group as={Row}>
+                <Col xs={3}>
+                    <Form.Label className={'text text_size-14'}>
+                        Наименование
+                    </Form.Label>
+                    <Form.Control type={'text'} size={'sm'}
+                                  name={'new-expense-name'}
+                                  maxLength={40}
+                                  minLength={1}
+                                  required
+                                  onInput={event => {
+                                      this.handleExpNewEntryNewExpNameInput(event);
+                                      const is_valid = isExpenseNameValid(event.currentTarget.value);
+                                      setValidation(event.currentTarget, is_valid);
+                                  }}
+                    />
+                </Col>
+                <Col xs={3}>
+                    <Form.Label className={'text text_size-14'}>Цвет</Form.Label>
+                    <Dropdown>
+                        <Dropdown.Toggle
+                            variant={'light'}
+                            className={'expenses-table__color-tab'}
+                        >
+                            {new_exp_color_tab_color_circle}
+                            <span className={'text text_size-13 text_color-black'}>
+                                {new_exp_color_tab_text}
+                            </span>
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                            {colors_list_items}
+                        </Dropdown.Menu>
+                    </Dropdown>
+                </Col>
+                {/*<Col xs={3}>
+                    <Form.Label className={'text text_size-14'}>Цена</Form.Label>
+                    <Form.Control
+                        min={0}
+                        max={2147483646}
+                        name={'new-raw-mat-price'}
+                        required
+                        maxLength={9}
+                        type={'number'} size={'sm'}
+                        onInput={event => {
+                            const value = event.currentTarget.value;
+                            setNewRawMatPrice(value);
+                            const isValid = isFloat(value);
+                            this.props.setPriceValid(isValid);
+                            setValidation(event.currentTarget, isValid);
+                        }}
+                    />
+                </Col>*/}
+            </Form.Group>
+        ) : null;
+
+        //Если нет расходов
+        const btn_section = no_expenses ? (
+            ''
+        ) : (
+            <Dropdown className={'inline-block-elem modal__input-group__side-margin-button'}>
+                <Dropdown.Toggle
+                    variant={'dark'}
+                    className={'expenses-table__color-tab color-tab_theme-dark'}
+                >
+                    <span
+                        className={'expenses-table__color-circle'}
+                        style={{'backgroundColor': selected_exp_color || 'grey'}}
+                    />
+                    <span className={'text text_size-13'}>
+                        {selected_exp_name}
+                    </span>
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                    {expenses_links}
+                </Dropdown.Menu>
+            </Dropdown>
+        );
+
         return (
             <Container className={'modal-body-container'}>
+                <Form
+                    id={'expenses-new-entry-form'}
+                    name={'add-entry-form'}
+                    className={'modal__form'}
+                    noValidate
+                    onSubmit={event => {
+                        event.preventDefault();
+                        /*this.handleJournalNewEntryFormSubmit(event, event.currentTarget, this.props.rawMatNameValid,
+                            this.props.providerNameValid, this.props.priceValid, this.props.amountValid,
+                            this.props.expensesValid);
+                        return false;*/
+                    }}
+                >
+                    <Form.Group as={Row}>
+                        <Col xs={2}>
+                            <Form.Label className={'text text_size-14'}>Тип расходов:</Form.Label>
+                        </Col>
+                        <Col xs={5}>
+                            <div className={'flex-row-wrapper'}>
+                                {btn_section}
+                                <Button size={'sm'} variant={'dark'} className={'button'}
+                                        onClick={event => {
+                                            event.preventDefault();
+                                            this.handleExpNewEntryNewExpenseBtnClick();
+                                        }}
+                                >
+                                    {new_exp_btn_text}
+                                </Button>
+                            </div>
+                        </Col>
+                    </Form.Group>
+                    {new_expense_group}
+                </Form>
+
                 <p className={'modal__column-label text text_color-black text_size-14'}>
-                    Выберите сырьё
+                    Выберите записи Доходов
                 </p>
                 <p className={'modal__column-prompt-text text text_size-12 text_color-grey'}>
-                    Выбранные записи включатся в список расходов текущей строки
+                    На выбранные записи пропорционально весу распределятся новые расходы
                 </p>
                 {table_area}
             </Container>
@@ -48,7 +267,17 @@ class CustomModal extends React.Component {
                 );
 
                 //Body __________
-                modal_body = this.renderExpensesNewEntryModalBody(table_area);
+                modal_body = (
+                    <Container>
+                        <p className={'modal__column-label text text_color-black text_size-14'}>
+                            Выберите сырьё
+                        </p>
+                        <p className={'modal__column-prompt-text text text_size-12 text_color-grey'}>
+                            Выбранное сырьё добавится в список расходов текущей записи
+                        </p>
+                        {table_area}
+                    </Container>
+                );
 
                 //Footer___________
                 modal_footer = (
@@ -85,17 +314,7 @@ class CustomModal extends React.Component {
                 );
 
                 //Body __________
-                modal_body = (
-                    <Container className={'modal-body-container'}>
-                        <p className={'modal__column-label text text_color-black text_size-14'}>
-                            Выберите записи Доходов
-                        </p>
-                        <p className={'modal__column-prompt-text text text_size-12 text_color-grey'}>
-                            На выбранные записи пропорционально весу распределятся новые расходы
-                        </p>
-                        {table_area}
-                    </Container>
-                );
+                modal_body = this.renderExpensesNewEntryModalBody(table_area);
 
                 //Footer___________
                 modal_footer = (

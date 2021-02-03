@@ -123,6 +123,14 @@ import expensesNewEntrySetSortName from "./actionCreators/expenses/expensesNewEn
 import expensesNewEntrySetSortFromLeast from "./actionCreators/expenses/expensesNewEntrySetSortFromLeast";
 import expensesNewEntrySetEntriesPack from "./actionCreators/expenses/expensesNewEntrySetEntriesPack";
 import expensesNewEntrySetEntriesShowNum from "./actionCreators/expenses/expensesNewEntrySetEntriesShowNum";
+import expensesNewEntrySetCheckedRows from "./actionCreators/expenses/expensesNewEntrySetCheckedRows";
+import expensesNewEntrySetCheckedRowsValid from "./actionCreators/expenses/expensesNewEntrySetCheckedRowsValid";
+import expensesNewEntrySetSelectedExpId from "./actionCreators/expenses/expensesNewEntrySetSelectedExpId";
+import expensesNewEntrySetShowNewExpInputs from "./actionCreators/expenses/expensesNewEntrySetShowNewExpInputs";
+import expensesNewEntrySetNewExpColor from "./actionCreators/expenses/expensesNewEntrySetNewExpColor";
+import expensesNewEntrySetNewExpName from "./actionCreators/expenses/expensesNewEntrySetNewExpName";
+import expensesNewEntrySetNewExpNameValid from "./actionCreators/expenses/expensesNewEntrySetNewExpNameValid";
+import expensesNewEntrySetNewExpColorValid from "./actionCreators/expenses/expensesNewEntrySetNewExpColorValid";
 
 export default function mapDispatchToProps(component) {
     switch (component) {
@@ -453,6 +461,10 @@ export default function mapDispatchToProps(component) {
                 return {
                     changeEntriesPack: value => dispatch(expensesNewEntrySetEntriesPack(value)),
                     changeEntriesShouldBeShown: value => dispatch(expensesNewEntrySetEntriesShowNum(value)),
+                    //table
+                    setCheckedRows: rows => dispatch(expensesNewEntrySetCheckedRows(rows)),
+                    //validation
+                    setRowCheckedValid: bool => dispatch(expensesNewEntrySetCheckedRowsValid(bool)),
                 }
             }
         case 'SortNameExpensesNewEntry':
@@ -472,6 +484,17 @@ export default function mapDispatchToProps(component) {
                 return {
                     changeEntriesPack: value => dispatch(expensesNewEntrySetEntriesPack(value)),
                     changeEntriesShouldBeShown: value => dispatch(expensesNewEntrySetEntriesShowNum(value)),
+                }
+            }
+        case 'ExpensesNewEntryModal':
+            return function (dispatch) {
+                return {
+                    setSelectedExpId: value => dispatch(expensesNewEntrySetSelectedExpId(value)),
+                    setShowNewExpInputs: bool => dispatch(expensesNewEntrySetShowNewExpInputs(bool)),
+                    setNewExpColor: value => dispatch(expensesNewEntrySetNewExpColor(value)),
+                    setNewExpName: value => dispatch(expensesNewEntrySetNewExpName(value)),
+                    setNewExpNameValid: bool => dispatch(expensesNewEntrySetNewExpNameValid(bool)),
+                    setNewExpColorValid: bool => dispatch(expensesNewEntrySetNewExpColorValid(bool)),
                 }
             }
     }

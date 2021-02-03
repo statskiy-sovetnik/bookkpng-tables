@@ -138,4 +138,15 @@ export default {
     EXPENSES_NEW_ENTRY_SET_SORT_DIR: 'expensesNewEntrySetSortFromLeast',
     EXPENSES_NEW_ENTRY_SET_ENTRIES_PACK: 'expensesNewEntrySetEntriesPack',
     EXPENSES_NEW_ENTRY_SET_ENTRIES_SHOW_NUM: 'expensesNewEntrySetEntriesShowNum',
+    //table
+    EXPENSES_NEW_ENTRY_SET_CHECKED_ROWS: 'expensesNewEntrySetCheckedRows',
+    //form
+    EXPENSES_NEW_ENTRY_SET_SELECTED_EXP_ID: 'expensesNewEntrySetSelectedExpId',
+    EXPENSES_NEW_ENTRY_SET_SHOW_NEW_EXP_INPUTS: 'expensesNewEntrySetShowNewExpInputs',
+    EXPENSES_NEW_ENTRY_SET_NEW_EXP_COLOR: 'expensesNewEntrySetNewExpColor',
+    EXPENSES_NEW_ENTRY_SET_NEW_EXP_NAME: 'expensesNewEntrySetNewExpName',
+    //validation
+    EXPENSES_NEW_ENTRY_SET_CHECKED_ROWS_VALID: 'expensesNewEntrySetCheckedRowsValid',
+    EXPENSES_NEW_ENTRY_SET_NEW_EXP_NAME_VALID: 'expensesNewEntrySetNewExpNameValid',
+    EXPENSES_NEW_ENTRY_SET_NEW_EXP_COLOR_VALID: 'expensesNewEntrySetNewExpColorValid',
 }
