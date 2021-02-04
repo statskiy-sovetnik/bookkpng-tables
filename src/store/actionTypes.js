@@ -145,8 +145,10 @@ export default {
     EXPENSES_NEW_ENTRY_SET_SHOW_NEW_EXP_INPUTS: 'expensesNewEntrySetShowNewExpInputs',
     EXPENSES_NEW_ENTRY_SET_NEW_EXP_COLOR: 'expensesNewEntrySetNewExpColor',
     EXPENSES_NEW_ENTRY_SET_NEW_EXP_NAME: 'expensesNewEntrySetNewExpName',
+    EXPENSES_NEW_ENTRY_SET_EXPENSE_SUM: 'expensesNewEntrySetExpenseSum',
     //validation
     EXPENSES_NEW_ENTRY_SET_CHECKED_ROWS_VALID: 'expensesNewEntrySetCheckedRowsValid',
     EXPENSES_NEW_ENTRY_SET_NEW_EXP_NAME_VALID: 'expensesNewEntrySetNewExpNameValid',
     EXPENSES_NEW_ENTRY_SET_NEW_EXP_COLOR_VALID: 'expensesNewEntrySetNewExpColorValid',
+    EXPENSES_NEW_ENTRY_SET_EXPENSE_SUM_VALID: 'expensesNewEntrySetExpenseSumValid',
 }

@@ -131,6 +131,8 @@ import expensesNewEntrySetNewExpColor from "./actionCreators/expenses/expensesNe
 import expensesNewEntrySetNewExpName from "./actionCreators/expenses/expensesNewEntrySetNewExpName";
 import expensesNewEntrySetNewExpNameValid from "./actionCreators/expenses/expensesNewEntrySetNewExpNameValid";
 import expensesNewEntrySetNewExpColorValid from "./actionCreators/expenses/expensesNewEntrySetNewExpColorValid";
+import expensesNewEntrySetExpenseSumValid from "./actionCreators/expenses/expensesNewEntrySetExpenseSumValid";
+import expensesNewEntrySetExpenseSum from "./actionCreators/expenses/expensesNewEntrySetExpenseSum";
 
 export default function mapDispatchToProps(component) {
     switch (component) {
@@ -493,8 +495,10 @@ export default function mapDispatchToProps(component) {
                     setShowNewExpInputs: bool => dispatch(expensesNewEntrySetShowNewExpInputs(bool)),
                     setNewExpColor: value => dispatch(expensesNewEntrySetNewExpColor(value)),
                     setNewExpName: value => dispatch(expensesNewEntrySetNewExpName(value)),
+                    setExpenseSum: value => dispatch(expensesNewEntrySetExpenseSum(value)),
                     setNewExpNameValid: bool => dispatch(expensesNewEntrySetNewExpNameValid(bool)),
                     setNewExpColorValid: bool => dispatch(expensesNewEntrySetNewExpColorValid(bool)),
+                    setExpenseSumValid: bool => dispatch(expensesNewEntrySetExpenseSumValid(bool)),
                 }
             }
     }

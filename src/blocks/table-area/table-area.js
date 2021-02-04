@@ -1656,12 +1656,11 @@ class TableArea extends React.Component {
         return is_expense_name_valid;
     }
 
-    handleExpensesAddExpenseSubmit() {
+    handleExpensesAddExpenseSubmit(selected_color, expense_name) {
         let fetch_body = new FormData();
-        let selected_color = this.props.selectedColor;
         fetch_body.append('exp-color', this.props.basicColors[selected_color]);
         fetch_body.append('key', this.props.userKey);
-        fetch_body.append('exp-name', this.props.expenseName);
+        fetch_body.append('exp-name', expense_name);
 
         fetch('/src/php/add_expense_type.php', {
             body: fetch_body,
@@ -1704,107 +1703,108 @@ class TableArea extends React.Component {
         this.props.setExpenseNameValid(false);
     }
 
-    isExpensesNewEntryFormValid(isRowsChecked, expense_id, new_exp_name_valid, new_exp_color_valid) {
+    isExpensesNewEntryFormValid(isRowsChecked, expense_id, new_exp_name_valid, new_exp_color_valid, exp_sum_valid) {
         const new_exp_data_valid = expense_id ? true : new_exp_name_valid && new_exp_color_valid;
 
-        return isRowsChecked && new_exp_data_valid;
+        return isRowsChecked && new_exp_data_valid && exp_sum_valid;
     }
 
-    renderAddExpensesTypePopover(basic_colors, basic_colors_names, selected_color, trigger_btn_id) {
-        let colors_list_items = [];
+    handleNewExpenseEntryModalSubmit() {
+        let expense_id = this.props.selectedExpenseId;
+        const selected_color = this.props.newExpColor;
+        const expense_name = this.props.newExpName;
+        const checked_rows = this.props.checkedRows;
+        let new_exp_type;
+        let add_new_exp_type_promise;
 
-        //Добавляем ссылки в дропдаун
-        for(let color in basic_colors) {
-            colors_list_items.push(
-                <Dropdown.Item
-                    key={'dropdown-' + color}
-                    onClick={event => {
-                        event.preventDefault();
-                        this.props.setSelectedColor(color);
-                    }}
-                >
-                    <div className={'flex-row-wrapper vertical-row-flex-align'}>
-                        <a href={'#'}
-                           onClick={event => {
-                               event.preventDefault();
-                           }}
-                           style={{'backgroundColor': basic_colors[color]}}
-                           className={'expenses-table__color-circle'}
-                        />
-                        <span className={'text text_size-13'}>
-                            {basic_colors_names[color]}
-                        </span>
-                    </div>
-                </Dropdown.Item>
-            )
+        //Создаём новый тип расходов, если требуется
+        if(expense_id !== null) { //если уже имеющийся тип расходов
+            new_exp_type = false;
+            add_new_exp_type_promise = new Promise((resolve, reject) => {
+                resolve();
+            }) ;
+        }
+        else { //создаём новый
+            new_exp_type = true;
+            let fetch_body = new FormData();
+            fetch_body.append('exp-color', this.props.basicColors[selected_color]);
+            fetch_body.append('key', this.props.userKey);
+            fetch_body.append('exp-name', expense_name);
+
+            add_new_exp_type_promise = fetch('/src/php/add_expense_type.php', {
+                body: fetch_body,
+                method: 'POST',
+            }).then(
+                response => {
+                    if(response.status === 520) {
+                        alert('Ошибка при подключении к базе данных');
+                        return;
+                    }
+                    if(response.status === 500) {
+                        alert('Ошибка при отправке запроса mysql');
+                        return;
+                    }
+                    if(response.status !== 200) {
+                        alert('Неизвестная ошибка при отправке запроса');
+                        return;
+                    }
+
+                    return response.text();
+                },
+                error => {
+                    alert('Неизвестная ошибка при отправке запроса');
+                    console.log('Fetch error: ', error);
+                }
+            );
         }
 
-        return (
-            <Popover
-                id={'new-expenses-type-popover'}
-            >
-                <Popover.Title as={'h5'}>Новый тип расходов</Popover.Title>
-                <Popover.Content>
-                    <p className={'text text_size-12 text_color-grey popover__prompt-text'}>
-                        Чтобы свернуть окно, повторно нажмите на кнопку
-                    </p>
-                    <Form.Group as={Row}>
-                        <Col>
-                            <span className={'text text_size-14 popover__prompt-row-text'}>
-                                Цвет:
-                            </span>
-                            <Dropdown className={'inline-block-elem'}>
-                                <Dropdown.Toggle
-                                    variant={'light'}
-                                    className={'expenses-table__color-tab'}
-                                >
-                                    <span
-                                       className={'expenses-table__color-circle'}
-                                       style={{'backgroundColor': basic_colors[selected_color] || 'grey'}}
-                                    />
-                                    <span className={'text text_size-13 text_color-black'}>
-                                        {basic_colors_names[selected_color]}
-                                    </span>
-                                </Dropdown.Toggle>
-                                <Dropdown.Menu>
-                                    {colors_list_items}
-                                </Dropdown.Menu>
-                            </Dropdown>
-                        </Col>
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label className={'text text_size-14'}>
-                            Наименование:
-                        </Form.Label>
-                        <Form.Control
-                            type={'text'}
-                            size={'sm'}
-                            onInput={event => {
-                                const value = event.currentTarget.value;
-                                const isValid = isExpenseNameValid(value);
-                                this.props.setExpenseName(value);
-                                this.props.setExpenseNameValid(isValid);
-                            }}
-                        />
-                    </Form.Group>
-                    <Form.Group>
-                        <Button
-                            block
-                            variant={'success'}
-                            size={'sm'}
-                            disabled={!this.isExpensesAddExpensePopoverValid(this.props.expenseNameValid)}
-                            onClick={event => {
-                                this.handleExpensesAddExpenseSubmit();
-                                this.clearExpensesAddExpPopover();
-                                //закрываем поповер
-                                document.getElementById(trigger_btn_id).click();
-                            }}
-                        >
-                            Добавить
-                        </Button>
-                    </Form.Group>
-                </Popover.Content>
-            </Popover>
+        //Распределяем расходы
+        add_new_exp_type_promise.then(
+            body => {
+                expense_id = new_exp_type ? +body : expense_id;
+
+
+                /*let fetch_body = new FormData();
+                let raw_mat_usage_obj = {};
+                fetch_body.append('expenses', JSON.stringify(added_expenses));
+                fetch_body.append('key', user_key);
+                fetch_body.append('row-id', row_id);
+
+                //Педерадём соответсвующуу инфу об использовании сырья
+                const raw_mat_usage = this.props.rawMatUsage.slice();
+                raw_mat_usage.forEach((incomes_obj) => {
+                    if(+incomes_obj.incomes_id === +row_id) {
+                        raw_mat_usage_obj = incomes_obj;
+                    }
+                });
+                fetch_body.append('raw-mat-usage-obj', JSON.stringify(raw_mat_usage_obj));
+
+                fetch('/src/php/add_incomes_expenses.php', {
+                    body: fetch_body,
+                    method: 'POST',
+                }).then(
+                    response => {
+                        if(response.status === 520) {
+                            alert('Ошибка при подключении к базе данных');
+                            return;
+                        }
+                        if(response.status === 500) {
+                            alert('Ошибка при отправке запроса');
+                            return;
+                        }
+                        if(response.status !== 200) {
+                            alert('Неизвестная ошибка при отправке запроса');
+                            return;
+                        }
+
+                        return response.text();
+                    },
+                    error => {
+                        alert('Неизвестная ошибка при отправке запроса');
+                        console.log('Fetch error: ', error);
+                    }
+                )*/
+            }
         );
     }
 
@@ -2071,9 +2071,10 @@ class TableArea extends React.Component {
                         size={'lg'}
                         show={this.props.newEntryModalIsOpen}
                         submitBtnDisabled={!this.isExpensesNewEntryFormValid(this.props.isRowsChecked,
-                            this.props.selectedExpenseId, this.props.newExpNameValid, this.props.newExpColorValid)
+                            this.props.selectedExpenseId, this.props.newExpNameValid, this.props.newExpColorValid,
+                            this.props.expenseSumValid)
                         }
-                        submitHandler={() => {this.handleIncomesNewRawMatSubmit.bind(this)()}}
+                        submitHandler={() => {this.handleNewExpenseEntryModalSubmit.bind(this)()}}
                         onHide={() => {
                             this.handleExpensesNewEntryModalHide.bind(this)(this.props.toggleNewEntryModal);
                         }}

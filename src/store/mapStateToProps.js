@@ -370,10 +370,13 @@ export default function mapStateToProps(component) {
                     newEntryModalIsOpen: state.expenses.newEntryModalIsOpen,
                     isRowsChecked: state.expenses.modalValidation.isRowsChecked,
                     selectedExpenseId: state.expenses.modalFormState.expenseId,
+                    expenseSum: state.expenses.modalFormState.expenseSum,
                     newExpColor: state.expenses.modalFormState.newExpColor,
                     newExpName: state.expenses.modalFormState.newExpName,
                     newExpNameValid: state.expenses.modalValidation.newExpNameValid,
+                    expenseSumValid: state.expenses.modalValidation.expenseSumValid,
                     newExpColorValid: state.expenses.modalValidation.newExpColorValid,
+                    checkedRows: state.expenses.modalFormState.checkedRows,
                 }
             }
         case 'ExpensesControlSection':

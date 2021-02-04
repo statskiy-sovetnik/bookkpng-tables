@@ -37,8 +37,8 @@ class CustomModal extends React.Component {
         this.props.setNewExpColor(null);
         this.props.setNewExpName('');
         //val
-        this.props.setNewExpNameValid(sho_inputs);
-        this.props.setNewExpColorValid(sho_inputs);
+        this.props.setNewExpNameValid(false);
+        this.props.setNewExpColorValid(false);
     }
 
     handleExpNewEntryColorItemClick(color) { //элемент списка дропдауна цветов
@@ -54,13 +54,21 @@ class CustomModal extends React.Component {
         this.props.setNewExpNameValid(is_valid);
     }
 
+    handleExpNewEntryNewExpSumInput(event) {
+        const value = event.currentTarget.value;
+        const is_valid = isFloat(value);
+
+        this.props.setExpenseSum(value);
+        this.props.setExpenseSumValid(is_valid);
+    }
+
     renderExpensesNewEntryModalBody(table_area) {
         const basic_colors = this.props.basicColors;
         const basic_colors_names = this.props.basicColorsNames;
         const expenses_data = this.props.expensesData;
-        const no_expenses = expenses_data.length === 0;
+        const not_show_type_chooser = expenses_data.length === 0;
         const new_exp_btn_text = this.props.showNewExpenseInputs ? 'Отмена' : '+ Новый';
-        const selected_expense_id = this.props.selectedExpenseId || Object.keys(expenses_data)[0];
+        const selected_expense_id = this.props.selectedExpenseId;
         let selected_exp_data = expenses_data[selected_expense_id] || {};
         let selected_exp_color = selected_exp_data.color;
         let selected_exp_name = selected_exp_data.name;
@@ -77,10 +85,24 @@ class CustomModal extends React.Component {
         );
         let colors_list_items = [];
 
+
         //Если создаётся новый тип расходов, то меняем текст и цвет в кнопке типа
         if(this.props.showNewExpenseInputs) {
             selected_exp_color = basic_colors[this.props.newExpColor];
             selected_exp_name = this.props.newExpName;
+        }
+
+        let type_chooser_color_circle = (
+            <span
+                className={'expenses-table__color-circle'}
+                style={{'backgroundColor': selected_exp_color || 'grey'}}
+            />
+        );
+
+        //Если тип расходов не выбран и не создаётся новый
+        if(selected_expense_id === null && !this.props.showNewExpenseInputs) {
+            type_chooser_color_circle = '';
+            selected_exp_name = 'Выбрать';
         }
 
         //Добавляем ссылки с расходами в выпадающий список
@@ -180,7 +202,7 @@ class CustomModal extends React.Component {
         ) : null;
 
         //Если нет расходов
-        const btn_section = no_expenses ? (
+        const btn_section = not_show_type_chooser ? (
             ''
         ) : (
             <Dropdown className={'inline-block-elem modal__input-group__side-margin-button'}>
@@ -188,10 +210,7 @@ class CustomModal extends React.Component {
                     variant={'dark'}
                     className={'expenses-table__color-tab color-tab_theme-dark'}
                 >
-                    <span
-                        className={'expenses-table__color-circle'}
-                        style={{'backgroundColor': selected_exp_color || 'grey'}}
-                    />
+                    {type_chooser_color_circle}
                     <span className={'text text_size-13'}>
                         {selected_exp_name}
                     </span>
@@ -211,10 +230,6 @@ class CustomModal extends React.Component {
                     noValidate
                     onSubmit={event => {
                         event.preventDefault();
-                        /*this.handleJournalNewEntryFormSubmit(event, event.currentTarget, this.props.rawMatNameValid,
-                            this.props.providerNameValid, this.props.priceValid, this.props.amountValid,
-                            this.props.expensesValid);
-                        return false;*/
                     }}
                 >
                     <Form.Group as={Row}>
@@ -236,6 +251,19 @@ class CustomModal extends React.Component {
                         </Col>
                     </Form.Group>
                     {new_expense_group}
+                    <Form.Group as={Row}>
+                        <Col xs={3}>
+                            <Form.Label className={'text text_size-14'}>Сумма (руб)</Form.Label>
+                            <Form.Control
+                                type={'number'}
+                                size={'sm'}
+                                onInput={event => {
+                                    this.handleExpNewEntryNewExpSumInput(event);
+                                    setValidation(event.currentTarget, isFloat(event.currentTarget.value));
+                                }}
+                            />
+                        </Col>
+                    </Form.Group>
                 </Form>
 
                 <p className={'modal__column-label text text_color-black text_size-14'}>

@@ -1015,6 +1015,17 @@ export default function reducer(state, action) {
                     }
                 }
             }
+        case actionTypes.EXPENSES_NEW_ENTRY_SET_EXPENSE_SUM:
+            return {
+                ...state,
+                expenses: {
+                    ...state.expenses,
+                    modalFormState: {
+                        ...state.expenses.modalFormState,
+                        expenseSum: action.value,
+                    }
+                }
+            }
         //validation
         case actionTypes.EXPENSES_NEW_ENTRY_SET_CHECKED_ROWS_VALID:
             return {
@@ -1046,6 +1057,17 @@ export default function reducer(state, action) {
                     modalValidation: {
                         ...state.expenses.modalValidation,
                         newExpColorValid: action.value,
+                    }
+                }
+            }
+        case actionTypes.EXPENSES_NEW_ENTRY_SET_EXPENSE_SUM_VALID:
+            return {
+                ...state,
+                expenses: {
+                    ...state.expenses,
+                    modalValidation: {
+                        ...state.expenses.modalValidation,
+                        expenseSumValid: action.value,
                     }
                 }
             }

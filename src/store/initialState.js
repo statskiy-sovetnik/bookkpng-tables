@@ -336,13 +336,15 @@ const initialState = {
             showNewExpenseInputs: false,
             rowsChecked: [],
             expenseId: null,
+            expenseSum: null,
             newExpColor: null,
             newExpName: '',
         },
         modalValidation: {
-            newExpNameValid: true,
+            newExpNameValid: false,
             newExpColorValid: true,
             isRowsChecked: false,
+            expenseSumValid: false,
         },
     }
 }

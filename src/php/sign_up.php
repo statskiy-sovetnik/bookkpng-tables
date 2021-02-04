@@ -102,6 +102,21 @@
         die();
     }
 
+    //Создаем таблицу расходов
+    try {
+        $createExensesTable = "CREATE TABLE expenses(
+                        id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+                        date DATE NOT NULL,
+                        sum FLOAT NOT NULL,
+                        expense_id INT NOT NULL
+                    )";
+        $keyConn->exec($createExensesTable);
+    }
+    catch(PDOException $ex) {
+        header('HTTP/1.1 500 Mysql error', true, 500);
+        die();
+    }
+
     //Создаём таблицу данных с типами расходов expenses_data
 
     try {
