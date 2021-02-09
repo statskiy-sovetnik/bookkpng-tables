@@ -122,6 +122,7 @@ export default {
     EXPENSES_SET_SELECTED_COLOR: 'expensesSetSelectedColor',
     EXPENSES_SET_EXPENSE_NAME: 'expensesSetExpenseName',
     EXPENSES_SET_EXPENSE_NAME_VALID: 'expensesSetExpenseNameValid',
+    EXPENSES_LOAD_ROWS: 'expensesLoadRows',
     //control section
     EXPENSES_SET_SORT_NAME: 'expensesSetSortName',
     EXPENSES_SET_SORT_DIR: 'expensesSetSortFromLeast',
@@ -146,6 +147,7 @@ export default {
     EXPENSES_NEW_ENTRY_SET_NEW_EXP_COLOR: 'expensesNewEntrySetNewExpColor',
     EXPENSES_NEW_ENTRY_SET_NEW_EXP_NAME: 'expensesNewEntrySetNewExpName',
     EXPENSES_NEW_ENTRY_SET_EXPENSE_SUM: 'expensesNewEntrySetExpenseSum',
+    EXPENSES_NEW_ENTRY_SET_EXPENSE_DATE: 'expensesNewEntrySetExpenseDate',
     //validation
     EXPENSES_NEW_ENTRY_SET_CHECKED_ROWS_VALID: 'expensesNewEntrySetCheckedRowsValid',
     EXPENSES_NEW_ENTRY_SET_NEW_EXP_NAME_VALID: 'expensesNewEntrySetNewExpNameValid',

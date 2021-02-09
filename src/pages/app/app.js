@@ -9,7 +9,7 @@ import {JOURNAL_AREA_W as JournalArea,
         INCOMES_AREA_W as IncomesArea,
         EXPENSES_AREA_W as ExpensesArea,
 } from '../../blocks/table-area/table-area'
-import {getCookieValue, isEmptyObj} from "../../common";
+import {GET_EXPENSES_ROWS_PATH, getCookieValue, isEmptyObj, SERVER_ROOT} from "../../common";
 
 /*___ Libs _________________*/
 import parse from 'date-fns/parse';
@@ -64,7 +64,11 @@ class App extends React.Component {
             }
         ).then(
             expenses_data_from_db => {
-                //всё
+                return this.updateExpensesRowsFromDb(user_key, expenses_data_from_db);
+            }
+        ).then(
+            expenses_rows => {
+
             }
         );
     }
@@ -463,6 +467,62 @@ class App extends React.Component {
         );
     }
 
+    updateExpensesRowsFromDb(user_key, expenses_data) {
+        let fetchBody = new FormData();
+        fetchBody.append('key', user_key);
+
+        return fetch(SERVER_ROOT + GET_EXPENSES_ROWS_PATH, {
+            method: 'POST',
+            body: fetchBody,
+        }).then(
+            response => {
+                if(response.status === 520) {
+                    alert('Ошибка при подключении к серверу');
+                    return;
+                }
+                if(response.status !== 200) {
+                    alert('Неизвестная серверная ошибка');
+                    console.log('not 200 response status in upd expenses rows');
+                    return;
+                }
+
+                return response.json();
+            },
+            error => {
+                console.log('Fetch error: ', error);
+                alert('Неизвестная ошибка при обработке запроса');
+            }
+        ).then(
+            body => {
+                const exp_rows_upd = getUpdateExpensesRows(body, expenses_data);
+                this.props.loadExpensesRows(exp_rows_upd);
+                return exp_rows_upd;
+            }
+        );
+
+        function getUpdateExpensesRows(rows, expenses_data) {
+            let upd_exp_rows = {};
+            Object.assign(upd_exp_rows, rows);
+
+            for(let row_id in upd_exp_rows) {
+                let cur_row_exp_id = upd_exp_rows[row_id].expense_id;
+                let expense_color = expenses_data[cur_row_exp_id].color;
+                let expense_name = expenses_data[cur_row_exp_id].name;
+
+                const date_db_str = upd_exp_rows[row_id].date || "";
+                const date_db = parse(date_db_str, 'yyyy-MM-dd', new Date());
+
+                upd_exp_rows[row_id].date = format(date_db, 'dd/MM/yyyy');
+                upd_exp_rows[row_id].sum = +upd_exp_rows[row_id].sum;
+                upd_exp_rows[row_id].color = expense_color;
+                upd_exp_rows[row_id].name = expense_name;
+                delete upd_exp_rows[row_id].expense_id;
+            }
+
+            return upd_exp_rows;
+        }
+    }
+
     render() {
         const journal_sort_names = ['Наименованию', 'Дате', 'Поставщику', 'Кол-ву', 'Цене', 'Сумме', 'Расходам'];
         const incomes_sort_names = ['Наименованию', 'Дате', 'Покупателю', 'Кол-ву', 'Цене', 'Сумме', 'Расходам всего'];
@@ -487,6 +547,7 @@ class App extends React.Component {
                     updateExpensesDataFromDb = {this.updateExpensesDataFromDb.bind(this)}
                     updateJournalRowsFromDb = {this.updateJournalRowsFromDb.bind(this)}
                     updateIncomesRowsFromDb = {this.updateIncomesRowsFromDb.bind(this)}
+                    updateExpensesRowsFromDb = {this.updateExpensesRowsFromDb.bind(this)}
                     data={'expenses'}
                 />
             </div>

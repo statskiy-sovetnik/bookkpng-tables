@@ -337,6 +337,7 @@ const initialState = {
             rowsChecked: [],
             expenseId: null,
             expenseSum: null,
+            expenseDate: +new Date(),
             newExpColor: null,
             newExpName: '',
         },

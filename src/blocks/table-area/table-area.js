@@ -45,7 +45,8 @@ import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from 'react-bootstrap/FormControl';
 
 import {
-    ADD_INCOMES_EXPENSES_PATH,
+    ADD_EXPENSES_ROW_PATH,
+    ADD_INCOMES_EXPENSES_PATH, convertDateToMysqlDate, GET_EXPENSES_DATA_PATH,
     GET_INCOMES_ROWS_PATH,
     GET_JOURNAL_ROWS_PATH, getIncomesUsageObj,
     isEmptyObj,
@@ -601,7 +602,7 @@ class TableArea extends React.Component {
                                         onClick={event => {
                                             event.preventDefault();
                                             event.currentTarget.setAttribute('disabled', true);
-                                            this.removeExpenseType(row_id);
+                                            this.removeExpensesRow(row_id);
                                         }}
                                 >
                                     <BtstrapIcon
@@ -913,50 +914,14 @@ class TableArea extends React.Component {
                     )
                 }
                 else if(col_name === 'sum') {
-
-                    if(data === 'expenses') {
-                        //Считаем расходы этого типа _____________
-                        const journalRows = this.props.journalRows || {};
-                        const incomesRows = this.props.incomesRows || {};
-                        let total_exp_sum = 0;
-
-                        /*//проходим строки журнала
-                        for(let key in journalRows) {
-                            let cur_expenses_arr = journalRows[key].expenses || [];
-                            cur_expenses_arr.forEach((exp_obj) => {
-                                if(+exp_obj.id === +row_id) {
-                                    total_exp_sum += exp_obj.amount;
-                                }
-                            });
-                        }*/
-                        //проходим строки Доходов
-                        for(let key in incomesRows) {
-                            let cur_expenses_arr = incomesRows[key].expenses || [];
-                            cur_expenses_arr.forEach((exp_obj) => {
-                                if(+exp_obj.id === +row_id) {
-                                    total_exp_sum += exp_obj.amount;
-                                }
-                            });
-                        }
-
-                        cur_row.push(
-                            <td className={cell_class}
-                                key={data + '-' + row_id + '-' + col_name}
-                            >
-                                {total_exp_sum.toFixed(3)}
-                            </td>
-                        )
-                    }
-                    else {
-                        let cur_value = row_data[col_name].toFixed(3);
-                        cur_row.push(
-                            <td className={cell_class}
-                                key={data + '-' + row_id + '-' + col_name}
-                            >
-                                {cur_value}
-                            </td>
-                        )
-                    }
+                    let cur_value = (+row_data[col_name]).toFixed(3);
+                    cur_row.push(
+                        <td className={cell_class}
+                            key={data + '-' + row_id + '-' + col_name}
+                        >
+                            {cur_value}
+                        </td>
+                    )
                 }
                 //common
                 else {
@@ -1681,13 +1646,49 @@ class TableArea extends React.Component {
         return isRowsChecked && new_exp_data_valid && exp_sum_valid;
     }
 
-    handleNewExpenseEntryModalSubmit() {
+    addExpensesRow(exp_id, exp_date, exp_sum, user_key) {
+        let fetch_body = new FormData();
+        fetch_body.append('sum', exp_sum);
+        fetch_body.append('key', user_key);
+        fetch_body.append('expense_id', exp_id);
+        fetch_body.append('date', convertDateToMysqlDate(exp_date));
+
+        return fetch(SERVER_ROOT + ADD_EXPENSES_ROW_PATH, {
+            method: 'POST',
+            body: fetch_body,
+        }).then(
+            response => {
+                if(response.status === 520) {
+                    alert('Ошибка при подключении к базе данных');
+                    return;
+                }
+                if(response.status === 500) {
+                    alert('Ошибка при отправке запроса mysql');
+                    return;
+                }
+                if(response.status !== 200) {
+                    alert('Неизвестная серверная ошибка');
+                    return;
+                }
+
+                return response.text();
+            },
+            error => {
+                alert('Неизвестная ошибка при обработке запроса');
+                console.log('Fetch: ', error);
+            }
+        );
+    }
+
+    async handleNewExpenseEntryModalSubmit() {
         let expense_id = this.props.selectedExpenseId;
         const selected_color = this.props.newExpColor;
         const expense_name = this.props.newExpName;
         const checked_rows = this.props.checkedRows;
         let new_exp_type;
         let add_new_exp_type_promise;
+
+        this.handleExpensesNewEntryModalHide(this.props.toggleNewEntryModal);
 
         //Создаём новый тип расходов, если требуется
         if(expense_id !== null) { //если уже имеющийся тип расходов
@@ -1730,8 +1731,14 @@ class TableArea extends React.Component {
             );
         }
 
+        expense_id = await add_new_exp_type_promise;
+
+        //Обновляем расходы
+        const exp_data_upd = await this.props.updateExpensesDataFromDb(SERVER_ROOT + GET_EXPENSES_DATA_PATH,
+            this.props.userKey);
+
         //Распределяем расходы
-        add_new_exp_type_promise.then(
+        await add_new_exp_type_promise.then(
             body => {
                 expense_id = new_exp_type ? +body : expense_id;
                 let cur_incomes_row_expenses_promise = new Promise((resolve, reject) => {
@@ -1797,6 +1804,25 @@ class TableArea extends React.Component {
                 console.log('Wow that happened rather fast');
             }
         );
+
+        //Добавляем строку в Расходы
+        await this.addExpensesRow(expense_id, this.props.expenseDate, this.props.expenseSum,
+            this.props.userKey);
+
+        //Обновляем Расходы
+        await this.props.updateExpensesRowsFromDb(this.props.userKey, exp_data_upd);
+
+        //Обновляем Журнал
+        const journal_rows_upd = await this.props.updateJournalRowsFromDb(SERVER_ROOT + GET_JOURNAL_ROWS_PATH,
+            this.props.userKey, this.props.rawMatUsageForJournal, this.props.rawMatData);
+
+        //Обновляем Доходы
+        const incomes_rows_upd = await this.props.updateIncomesRowsFromDb(SERVER_ROOT + GET_INCOMES_ROWS_PATH,
+            this.props.userKey, this.props.rawMatUsage, this.props.rawMatData, journal_rows_upd);
+    }
+
+    async removeExpensesRow(row_id) {
+
     }
 
     render() {
@@ -2104,7 +2130,7 @@ class TableArea extends React.Component {
                                         this.props.tableColsOrder,
                                         dark_head_classnames,
                                     ),
-                                    this.renderTableBody('expenses', this.props.expensesData, this.props.tableColsOrder,
+                                    this.renderTableBody('expenses', this.props.expensesRows, this.props.tableColsOrder,
                                         null, dark_tbody_classnames, this.props.entriesShouldBeShown,
                                         null, null, null, null,
                                         null, null, null,

@@ -348,6 +348,7 @@ export default function mapStateToProps(component) {
                     userKey: state.auth.userKey,
                     journalRows: state.journal.rows,
                     incomesRows: state.incomes.rows,
+                    expensesRows: state.expenses.rows,
                     expensesData: state.expenses_data,
                     rawMatUsageForJournal: state.raw_mat_usage_for_journal,
                     rawMatUsage: state.raw_mat_usage,
@@ -371,6 +372,7 @@ export default function mapStateToProps(component) {
                     isRowsChecked: state.expenses.modalValidation.isRowsChecked,
                     selectedExpenseId: state.expenses.modalFormState.expenseId,
                     expenseSum: state.expenses.modalFormState.expenseSum,
+                    expenseDate: state.expenses.modalFormState.expenseDate,
                     newExpColor: state.expenses.modalFormState.newExpColor,
                     newExpName: state.expenses.modalFormState.newExpName,
                     newExpNameValid: state.expenses.modalValidation.newExpNameValid,
@@ -476,6 +478,7 @@ export default function mapStateToProps(component) {
                     selectedExpenseId: state.expenses.modalFormState.expenseId,
                     newExpColor: state.expenses.modalFormState.newExpColor,
                     newExpName: state.expenses.modalFormState.newExpName,
+                    expenseDate: state.expenses.modalFormState.expenseDate,
                     basicColors: state.expenses.basicColors,
                     basicColorsNames: state.expenses.basicColorsNames,
                 }

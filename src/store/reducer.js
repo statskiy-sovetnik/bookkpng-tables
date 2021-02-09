@@ -825,6 +825,14 @@ export default function reducer(state, action) {
             }
 
         //__________ EXPENSES ______________
+        case actionTypes.EXPENSES_LOAD_ROWS:
+            return {
+                ...state,
+                expenses: {
+                    ...state.expenses,
+                    rows: action.value,
+                }
+            }
         case actionTypes.EXPENSES_SET_SELECTED_COLOR:
             return {
                 ...state,
@@ -1023,6 +1031,17 @@ export default function reducer(state, action) {
                     modalFormState: {
                         ...state.expenses.modalFormState,
                         expenseSum: action.value,
+                    }
+                }
+            }
+        case actionTypes.EXPENSES_NEW_ENTRY_SET_EXPENSE_DATE:
+            return {
+                ...state,
+                expenses: {
+                    ...state.expenses,
+                    modalFormState: {
+                        ...state.expenses.modalFormState,
+                        expenseDate: action.value,
                     }
                 }
             }

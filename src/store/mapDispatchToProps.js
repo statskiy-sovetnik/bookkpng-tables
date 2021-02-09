@@ -133,6 +133,8 @@ import expensesNewEntrySetNewExpNameValid from "./actionCreators/expenses/expens
 import expensesNewEntrySetNewExpColorValid from "./actionCreators/expenses/expensesNewEntrySetNewExpColorValid";
 import expensesNewEntrySetExpenseSumValid from "./actionCreators/expenses/expensesNewEntrySetExpenseSumValid";
 import expensesNewEntrySetExpenseSum from "./actionCreators/expenses/expensesNewEntrySetExpenseSum";
+import expensesNewEntrySetExpenseDate from "./actionCreators/expenses/expensesNewEntrySetExpenseDate";
+import expensesLoadRows from "./actionCreators/expenses/expensesLoadRows";
 
 export default function mapDispatchToProps(component) {
     switch (component) {
@@ -147,6 +149,7 @@ export default function mapDispatchToProps(component) {
                     loadRawMatUsage: (raw_mat_arr) => dispatch(loadRawMatUsage(raw_mat_arr)),
                     loadRawMatUsageForJournal: (raw_mat_arr) => dispatch(loadRawMatUsageForJournal(raw_mat_arr)),
                     loadRawMatData: (raw_mat) => dispatch(loadRawMatData(raw_mat)),
+                    loadExpensesRows: (rows) => dispatch(expensesLoadRows(rows)),
                 }
             }
 
@@ -404,12 +407,10 @@ export default function mapDispatchToProps(component) {
         case 'ExpensesArea':
             return function (dispatch) {
                 return {
-                    setSelectedColor: value => dispatch(expensesSetSelectedColor(value)),
-                    setExpenseName: value => dispatch(expensesSetExpenseName(value)),
-                    setExpenseNameValid: value => dispatch(expensesSetExpenseNameValid(value)),
                     toggleNewEntryModal: bool => dispatch(expensesNewEntryModalToggleOpen(bool)),
                     changeEntriesPack: value => dispatch(expensesSetEntriesPack(value)),
                     changeEntriesShouldBeShown: value => dispatch(expensesSetEntriesShowNum(value)),
+
                 }
             }
         case 'ExpensesButtonSection':
@@ -496,6 +497,7 @@ export default function mapDispatchToProps(component) {
                     setNewExpColor: value => dispatch(expensesNewEntrySetNewExpColor(value)),
                     setNewExpName: value => dispatch(expensesNewEntrySetNewExpName(value)),
                     setExpenseSum: value => dispatch(expensesNewEntrySetExpenseSum(value)),
+                    setExpenseDate: value => dispatch(expensesNewEntrySetExpenseDate(value)),
                     setNewExpNameValid: bool => dispatch(expensesNewEntrySetNewExpNameValid(bool)),
                     setNewExpColorValid: bool => dispatch(expensesNewEntrySetNewExpColorValid(bool)),
                     setExpenseSumValid: bool => dispatch(expensesNewEntrySetExpenseSumValid(bool)),

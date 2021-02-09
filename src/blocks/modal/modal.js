@@ -15,6 +15,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import {isExpenseNameValid, isFloat, isProviderNameValid, isRawMatNameValid, setValidation} from "../../common";
 import Dropdown from "react-bootstrap/Dropdown";
+import DatePicker from "react-datepicker";
 
 class CustomModal extends React.Component {
     constructor(props) {
@@ -62,6 +63,11 @@ class CustomModal extends React.Component {
         this.props.setExpenseSumValid(is_valid);
     }
 
+    handleExpNewEntryDateChange(date) {
+        const null_date = date.setHours(0, 0, 0, 0);
+        this.props.setExpenseDate(+null_date);
+    }
+
     renderExpensesNewEntryModalBody(table_area) {
         const basic_colors = this.props.basicColors;
         const basic_colors_names = this.props.basicColorsNames;
@@ -84,7 +90,6 @@ class CustomModal extends React.Component {
             ''
         );
         let colors_list_items = [];
-
 
         //Если создаётся новый тип расходов, то меняем текст и цвет в кнопке типа
         if(this.props.showNewExpenseInputs) {
@@ -261,6 +266,21 @@ class CustomModal extends React.Component {
                                     this.handleExpNewEntryNewExpSumInput(event);
                                     setValidation(event.currentTarget, isFloat(event.currentTarget.value));
                                 }}
+                            />
+                        </Col>
+                        <Col xs={3}>
+                            <Form.Label>Дата</Form.Label>
+                            <DatePicker
+                                selected={this.props.expenseDate}
+                                onChange={date => {
+                                    this.handleExpNewEntryDateChange(date);
+                                }}
+                                id={'expense-new-entry-modal-form-date'}
+                                className={'form-control form-control-sm is-valid modal__datepicker-input'}
+                                name={'raw_mat_date'}
+                                locale={'ru'}
+                                dateFormat={'dd/MM/yyyy'}
+                                required
                             />
                         </Col>
                     </Form.Group>
