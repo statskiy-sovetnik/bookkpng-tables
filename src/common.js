@@ -22,6 +22,17 @@ function removeCookie(name) {
     }
 }
 
+function getIncomesUsageObj(incomes_id, raw_mat_usage) {
+    let target_incomes_obj = {};
+    raw_mat_usage = raw_mat_usage ? raw_mat_usage : [];
+    raw_mat_usage.forEach(incomes_obj => {
+        if(+incomes_obj.incomes_id === +incomes_id) {
+            Object.assign(target_incomes_obj, incomes_obj);
+        }
+    })
+    return target_incomes_obj;
+}
+
 function isEmptyObj(obj) {
     return !obj || Object.keys(obj).length === 0;
 }
@@ -104,10 +115,12 @@ const GET_RAW_MAT_DATA_PATH = '/src/php/get_raw_mat_data.php';
 const GET_RAW_MAT_USAGE_PATH = '/src/php/get_raw_mat_usage.php';
 const REMOVE_EXPENSE_TYPE_PATH = '/src/php/remove_expense_type.php';
 const REMOVE_ROW_PATH = '/src/php/remove_row.php';
+const REMOVE_INCOMES_ROW_EXPENSES_PATH = '/src/php/remove_incomes_row_expenses.php';
 
 export {getCookieValue, removeCookie, isRawMatNameValid, isProviderNameValid, convertDateToMysqlDate, isEmptyObj, formatDay,
-        isFloat, setValidation, isGoodsNameValid, isExpenseNameValid, SERVER_ROOT, SIGN_IN_SCRIPT_PATH, SIGN_UP_SCRIPT_PATH,
+        isFloat, setValidation, isGoodsNameValid, isExpenseNameValid, getIncomesUsageObj,
+    SERVER_ROOT, SIGN_IN_SCRIPT_PATH, SIGN_UP_SCRIPT_PATH,
     ADD_EXPENSE_TYPE_PATH, ADD_EXPENSES_DATA_PATH, ADD_INCOMES_ENTRY_PATH, ADD_INCOMES_EXPENSES_PATH, ADD_JOURNAL_ENTRY_PATH,
     ADD_JOURNAL_EXPENSES_PATH, ADD_RAW_MAT_USAGE_PATH, GET_INCOMES_ROWS_PATH, GET_JOURNAL_ROWS_PATH, GET_RAW_MAT_DATA_PATH,
-    GET_RAW_MAT_USAGE_PATH, REMOVE_EXPENSE_TYPE_PATH, REMOVE_ROW_PATH
+    GET_RAW_MAT_USAGE_PATH, REMOVE_EXPENSE_TYPE_PATH, REMOVE_ROW_PATH, REMOVE_INCOMES_ROW_EXPENSES_PATH
 };

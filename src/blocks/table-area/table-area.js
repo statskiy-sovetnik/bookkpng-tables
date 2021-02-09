@@ -45,13 +45,14 @@ import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from 'react-bootstrap/FormControl';
 
 import {
+    ADD_INCOMES_EXPENSES_PATH,
     GET_INCOMES_ROWS_PATH,
-    GET_JOURNAL_ROWS_PATH,
+    GET_JOURNAL_ROWS_PATH, getIncomesUsageObj,
     isEmptyObj,
     isExpenseNameValid,
     isFloat,
     isGoodsNameValid,
-    isProviderNameValid, SERVER_ROOT,
+    isProviderNameValid, REMOVE_INCOMES_ROW_EXPENSES_PATH, SERVER_ROOT,
     setValidation
 } from "../../common";
 import Dropdown from "react-bootstrap/Dropdown";
@@ -122,12 +123,16 @@ class TableArea extends React.Component {
                 console.log(body);
                 switch (data) {
                     case 'journal':
-                        handleJournalRowRemoval(user_key, raw_mat_data, this.props.updateRawMatDataFromDb,
+                        let cur_raw_mat_usage = this.props.rawMatUsage.slice();
+                        let cur_raw_mat_usage_for_journal = this.props.rawMatUsageForJournal.slice();
+
+                        handleJournalRowRemoval.bind(this)(user_key, raw_mat_data, this.props.updateRawMatDataFromDb,
                             this.props.updateRawMatUsageFromDb, this.props.updateJournalRowsFromDb,
-                            this.props.updateIncomesRowsFromDb);
+                            this.props.updateIncomesRowsFromDb, this.resetIncomesRowExpenses, row_id,
+                            cur_raw_mat_usage_for_journal, cur_raw_mat_usage, this.removeIncomesRowExpenses);
                         break;
                     case 'incomes':
-                        handleIncomesRowRemoval(user_key, raw_mat_data, this.props.journalRows,
+                        handleIncomesRowRemoval.bind(this)(user_key, raw_mat_data, this.props.journalRows,
                             this.props.updateRawMatUsageFromDb, this.props.updateIncomesRowsFromDb,
                             this.props.updateJournalRowsFromDb);
                         break;
@@ -136,28 +141,64 @@ class TableArea extends React.Component {
         );
 
         function handleJournalRowRemoval(user_key, raw_mat_data, updateRawMatDataFromDb, updateRawMatUsageFromDb,
-                                         updateJournalRowsFromDb, updateIncomesRowsFromDb) {
+                                         updateJournalRowsFromDb, updateIncomesRowsFromDb, resetIncomesRowExpenses,
+                                         row_id, cur_raw_mat_usage_for_journal, cur_raw_mat_usage, removeIncomesRowExp) {
             let raw_mat_usage = {};
+            let raw_mat_usage_for_journal = {};
 
-            //Обновляем данные о сырье
             updateRawMatDataFromDb('/src/php/get_raw_mat_data.php', user_key).then(
-
                 //Обновляем данные об использовании сырья
                 raw_mat_data => {
                     return updateRawMatUsageFromDb('/src/php/get_raw_mat_usage.php', user_key);
                 }
             ).then(
-
-                //Обновляем строки журнала
+                //Перераспределяем расходы строк
                 all_raw_mat_usage => {
-                    const raw_mat_usage_for_journal = all_raw_mat_usage.raw_mat_usage_for_journal;
+                    raw_mat_usage_for_journal = all_raw_mat_usage.raw_mat_usage_for_journal;
                     raw_mat_usage = all_raw_mat_usage.raw_mat_usage.slice();
+
+                    //Находим объект с использованием сырья, соответствующий удаляемой строке
+                    let row_usage_obj = {};
+                    cur_raw_mat_usage_for_journal.forEach((journal_obj) => {
+                        if(+journal_obj.journal_id === +row_id) {
+                            row_usage_obj = journal_obj;
+                        }
+                    });
+                    let iteration_promise = new Promise(resolve => resolve());
+
+                    async function renewRowExp(row_id, last_raw_mat_usage, raw_mat_usage) {
+                        console.log('remove ', row_id);
+                        await removeIncomesRowExp.bind(this)(row_id, last_raw_mat_usage);
+                        //console.log('I finished remove');
+                        //console.log('reset ', row_id);
+                        await resetIncomesRowExpenses.bind(this)(row_id, raw_mat_usage);
+                        return 1;
+                    }
+
+                    //Для каждой строки Доходов, которая использует это сырьё, перераспределяем расходы
+                    async function renewAllRowsExp() {
+                        let iterations_promises = row_usage_obj.raw_mat_used_by.map((incomes_obj, i) => {
+                            //console.log('Starting an iteration ', i);
+                            //Достаём нужные данные об использовании сырья
+                            let cur_row_raw_mat_usage = getIncomesUsageObj(incomes_obj.incomes_id, cur_raw_mat_usage);
+                            return renewRowExp.bind(this)(incomes_obj.incomes_id, cur_row_raw_mat_usage, raw_mat_usage);
+                        });
+                        await Promise.all(iterations_promises);
+                        return 1;
+                    }
+                    console.log("I return cycle");
+                    return renewAllRowsExp.bind(this)();
+                }
+            ).then(
+                body => {
+                    console.log('Im updating journal');
                     return updateJournalRowsFromDb('/src/php/get_journal_rows.php', user_key,
                         raw_mat_usage_for_journal, raw_mat_data);
                 }
             ).then(
                 journal_rows_upd => {
                     //Обновляем строки Доходов
+                    console.log('Im updating incomes');
                     updateIncomesRowsFromDb('/src/php/get_incomes_rows.php', user_key, raw_mat_usage, raw_mat_data,
                         journal_rows_upd);
                 }
@@ -294,6 +335,48 @@ class TableArea extends React.Component {
             }
         }
         return valid;
+    }
+
+    reformRawMatUsageForJournal(raw_mat_usage) {
+        let raw_mat_usage_reformed = [];
+        let journal_ids_used = [];
+
+        if(isEmptyObj(raw_mat_usage)) {
+            return [];
+        }
+
+        raw_mat_usage.forEach((incomes_obj) => {
+            const incomes_id = incomes_obj.incomes_id;
+            const raw_mat_used = incomes_obj.raw_mat_used;
+
+            raw_mat_used.forEach((raw_mat_obj) => {
+                if(journal_ids_used.indexOf(raw_mat_obj.journal_id) === -1) {
+                    journal_ids_used.push(raw_mat_obj.journal_id);
+                    raw_mat_usage_reformed.push({
+                        journal_id: raw_mat_obj.journal_id,
+                        raw_mat_used_total: 0,
+                        raw_mat_used_by: [],
+                    })
+                }
+                journal_ids_used.push(raw_mat_obj.journal_id);
+
+                //Добавим используемое сырьё
+
+                raw_mat_usage_reformed.forEach((obj) => {
+                    if(obj.journal_id === raw_mat_obj.journal_id) {
+
+                        obj.raw_mat_used_by.push({
+                            incomes_id: incomes_id,
+                            used: raw_mat_obj.used,
+                        });
+
+                        obj.raw_mat_used_total += raw_mat_obj.used;
+                    }
+                });
+            });
+        });
+
+        return raw_mat_usage_reformed;
     }
 
     isNewRawMatModalValid(isRowChecked, isRowsUsageValid) {
@@ -653,33 +736,35 @@ class TableArea extends React.Component {
                         cur_expenses_arr.forEach((expense) => {
                             cur_expenses_total += expense.amount;
 
-                            expenses_color_cells.push(
-                                <li
-                                    key={'color-cell_row-' + row_id + '_id-' + expense.id}
-                                >
-                                    <a onClick={event => {event.preventDefault()}} href={'#'}
-                                       className={'expense-color-square'}
-                                       style={{backgroundColor: expenses_data[expense.id].color}}
-                                       title={expenses_data[expense.id].name}
-                                    />
-                                </li>
-                            )
+                            if(+expense.amount !== 0) {
+                                expenses_color_cells.push(
+                                    <li
+                                        key={'color-cell_row-' + row_id + '_id-' + expense.id}
+                                    >
+                                        <a onClick={event => {event.preventDefault()}} href={'#'}
+                                           className={'expense-color-square'}
+                                           style={{backgroundColor: expenses_data[expense.id].color}}
+                                           title={expenses_data[expense.id].name}
+                                        />
+                                    </li>
+                                );
 
-                            popover_list.push(
-                                <li
-                                    key={'popover_color-cell_row-' + row_id + '_id-' + expense.id}
-                                >
-                                    <a className={'expense-color-square'}
-                                       onClick={event => {event.preventDefault()}}
-                                       style={{backgroundColor: expenses_data[expense.id].color}}
-                                       href="#"
-                                    />
-                                    <span className={'expenses-name text text_color-black text_size-13'}>
+                                popover_list.push(
+                                    <li
+                                        key={'popover_color-cell_row-' + row_id + '_id-' + expense.id}
+                                    >
+                                        <a className={'expense-color-square'}
+                                           onClick={event => {event.preventDefault()}}
+                                           style={{backgroundColor: expenses_data[expense.id].color}}
+                                           href="#"
+                                        />
+                                        <span className={'expenses-name text text_color-black text_size-13'}>
                                     {expenses_data[expense.id].name + ': '}
-                                        <strong>{expense.amount}</strong>
+                                            <strong>{expense.amount}</strong>
                                 </span>
-                                </li>
-                            )
+                                    </li>
+                                );
+                            }
                         });
                     }
 
@@ -1141,174 +1226,6 @@ class TableArea extends React.Component {
         return isExpensesValid;
     }
 
-    handleJournalAddExpPopoverSubmit(added_expenses, user_key, row_id) {
-        let fetch_body = new FormData();
-        fetch_body.append('expenses', JSON.stringify(added_expenses));
-        fetch_body.append('key', user_key);
-        fetch_body.append('row-id', row_id);
-
-        fetch('/src/php/add_journal_expenses.php', {
-            body: fetch_body,
-            method: 'POST',
-        }).then(
-            response => {
-                if(response.status === 520) {
-                    alert('Ошибка при подключении к базе данных');
-                    return;
-                }
-                if(response.status === 500) {
-                    alert('Ошибка при отправке запроса');
-                    return;
-                }
-                if(response.status !== 200) {
-                    alert('Неизвестная ошибка при отправке запроса');
-                    return;
-                }
-
-                return response.text();
-            },
-            error => {
-                alert('Неизвестная ошибка при отправке запроса');
-                console.log('Fetch error: ', error);
-            }
-        ).then(
-            body => {
-                //Обновляем строки журнала
-                return this.props.updateJournalRowsFromDb('/src/php/get_journal_rows.php', user_key,
-                    this.props.rawMatUsageForJournal, this.props.rawMatData);
-            }
-        ).then(
-            journal_rows => {
-                //Обновляем строки Доходов
-                this.props.updateIncomesRowsFromDb('/src/php/get_incomes_rows.php', user_key, this.props.rawMatUsage,
-                    this.props.rawMatData, journal_rows);
-            }
-        );
-    }
-
-    renderAddExpenseJournalPopover(journal_row_id, expenses_data, added_expenses, setAddedExpenses, isExpensesValid,
-                                   setExpensesValid, triggerElemId) {
-        let  expenses_links = [];
-        let added_expenses_list_items = [];
-
-        //Добавляем ссылки с расходами в выпадающий список
-        for(let expense_id in expenses_data) {
-            expenses_links.push(
-                <Dropdown.Item href={'#'}
-                               key={'dropdown-link-' + expense_id}
-                               className={'text text_size-13 modal__dropdown-item'}
-                               onClick={event => {
-                                   event.preventDefault();
-                                   let new_added_expenses = {};
-                                   Object.assign(new_added_expenses, added_expenses);
-                                   new_added_expenses[expense_id] = added_expenses[expense_id] || '';
-                                   setAddedExpenses(new_added_expenses);
-                                   //валидация
-                                   setExpensesValid(false);
-                               }}
-                >
-                    {expenses_data[expense_id].name}
-                </Dropdown.Item>
-            );
-        }
-
-        //Добавляем блок со списком добавленных расходов
-        for(let expense_id in added_expenses) {
-            added_expenses_list_items.push(
-                <li key={'-expense-list-item-' + expense_id}
-                    className={'popover__added-expense-list-item'}
-                >
-                    <a href={'#'} onClick={event => event.preventDefault()}
-                       className={'popover__added-expense-square'}
-                       style={{'backgroundColor': expenses_data[expense_id].color}}
-                    />
-                    <span className={'text text_size-13 text_color-dark popover__added-expense-text'}>
-                        {expenses_data[expense_id].name}
-                    </span>
-                    <Form.Control type={'number'} maxLength={9}
-                                  required
-                                  name={'expense-' + expense_id}
-                                  placeholder={'Сумма'}
-                                  size={'sm'}
-                                  className={'popover__added-expense-input'}
-                                  onInput={event => {
-                                      event.preventDefault();
-                                      this.handlePopoverExpenseInput(expense_id, event.currentTarget.value, added_expenses,
-                                          setAddedExpenses, this.isPopoverExpensesValuesValid,
-                                          this.props.setPopoverExpensesValid,
-                                      );
-                                      const value = event.currentTarget.value;
-                                      const isValid = isFloat(value);
-                                      setValidation(event.currentTarget, isValid);
-                                  }}
-                    />
-                    <Button
-                        variant={'secondary'}
-                        data-target={expense_id}
-                        className={'button button_size-small'}
-                        onClick={event => {
-                            event.preventDefault();
-                            let new_added_expenses = {};
-                            Object.assign(new_added_expenses, added_expenses);
-                            //Удаляем свойство, тем самым убирается поле из списка
-                            delete new_added_expenses[expense_id];
-                            setAddedExpenses(new_added_expenses);
-                            //новая валидность
-                            //проверяй сайт
-                            setExpensesValid(this.isPopoverExpensesValuesValid(new_added_expenses));
-                        }}
-                    >
-                        Удалить
-                    </Button>
-                </li>
-            );
-        }
-
-        return (
-            <Popover
-                id={'journal_#{id}__add-expenses-popover'.replace('#{id}', journal_row_id)}
-            >
-                <Popover.Title as={'h5'}>Добавить расходы</Popover.Title>
-                <Popover.Content>
-                    <p className={'text text_size-12 text_color-grey popover__prompt-text'}>
-                        Чтобы свернуть окно, повторно нажмите на иконку
-                    </p>
-                    <Dropdown>
-                        <ul className={'ulist popover__added-expenses-list'}>
-                            {added_expenses_list_items}
-                        </ul>
-                        <Dropdown.Toggle
-                            size={'sm'}
-                            variant={'dark'}
-                            className={'button button_size-small popover__expenses-toggle'}
-                        >
-                            Добавить
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu>
-                            {expenses_links}
-                        </Dropdown.Menu>
-                    </Dropdown>
-
-                    <Button
-                        block
-                        size={'sm'}
-                        variant={'success'}
-                        disabled={!this.isAddExpPopoverValid(isExpensesValid)}
-                        onClick={event => {
-                            event.preventDefault();
-                            this.handleJournalAddExpPopoverSubmit(this.props.popoverAddedExpenses, this.props.userKey,
-                                journal_row_id);
-                            //закрываем и очищаем поповер
-                            document.getElementById(triggerElemId).click();
-                        }}
-                    >
-                        Применить
-                    </Button>
-                </Popover.Content>
-            </Popover>
-        )
-    }
-
     handleIncomesAddExpPopoverSubmit(added_expenses, user_key, row_id) {
         let fetch_body = new FormData();
         let raw_mat_usage_obj = {};
@@ -1548,16 +1465,113 @@ class TableArea extends React.Component {
         this.props.clearNewRawMatModal();
     }
 
+    removeIncomesRowExpenses(row_id, row_raw_mat_usage) {
+        let fetch_body = new FormData();
+        fetch_body.append('key', this.props.userKey);
+        fetch_body.append('row_id', row_id);
+        fetch_body.append('raw-mat-usage', JSON.stringify(row_raw_mat_usage));
+
+        return fetch(SERVER_ROOT + REMOVE_INCOMES_ROW_EXPENSES_PATH, {
+            body: fetch_body,
+            method: 'POST',
+        }).then(
+            response => {
+                if(response.status === 520) {
+                    alert('Ошибка при подключении к базе данных');
+                    return;
+                }
+                if(response.status === 500) {
+                    alert('Ошибка при отправке запроса');
+                    return;
+                }
+                if(response.status !== 200) {
+                    alert('Неизвестная ошибка при отправке запроса');
+                    return;
+                }
+
+                const text_resp = response.text();
+                return text_resp;
+            },
+            error => {
+                alert('Неизвестная ошибка при отправке запроса');
+                console.log('Fetch error: ', error);
+            }
+        );
+    }
+
+    resetIncomesRowExpenses(row_id, raw_mat_usage) {
+        const row_expenses = this.props.incomesRows[row_id].expenses.slice();
+        let added_expenses = {};
+
+        //Заполняем added_expenses
+        row_expenses.forEach(exp_obj => {
+            added_expenses[exp_obj.id] = exp_obj.amount;
+        });
+
+        //Добавляем расходы
+        let fetch_body = new FormData();
+        let raw_mat_usage_obj = {};
+        fetch_body.append('expenses', JSON.stringify(added_expenses));
+        fetch_body.append('key', this.props.userKey);
+        fetch_body.append('row-id', row_id);
+
+        //Передаём соответствующую инфу об использовании сырья
+        raw_mat_usage.forEach((incomes_obj) => {
+            if (+incomes_obj.incomes_id === +row_id) {
+                Object.assign(raw_mat_usage_obj, incomes_obj);
+            }
+        });
+        fetch_body.append('raw-mat-usage-obj', JSON.stringify(raw_mat_usage_obj));
+
+        return fetch(SERVER_ROOT + ADD_INCOMES_EXPENSES_PATH, {
+            body: fetch_body,
+            method: 'POST',
+        }).then(
+            response => {
+                if (response.status === 520) {
+                    alert('Ошибка при подключении к базе данных');
+                    return;
+                }
+                if (response.status === 500) {
+                    alert('Ошибка при отправке запроса');
+                    return;
+                }
+                if (response.status !== 200) {
+                    alert('Неизвестная ошибка при отправке запроса');
+                    return;
+                }
+
+                return response.text();
+            },
+            error => {
+                alert('Неизвестная ошибка при отправке запроса');
+                console.log('Fetch error: ', error);
+            }
+        );
+    }
+
     handleIncomesNewRawMatSubmit() {
+        let raw_mat_usage = {};
+        let raw_mat_usage_for_journal = {};
+
         let fetch_body = new FormData();
         fetch_body.append('rows-usage', JSON.stringify(this.props.rowsUsageState));
         fetch_body.append('key', this.props.userKey);
         fetch_body.append('incomes-row-id', this.props.targetRow);
 
-        fetch('/src/php/add_raw_mat_usage.php', {
-            body: fetch_body,
-            method: 'POST',
-        }).then(
+        //Сначала удаляем расходы строки
+        let target_row = this.props.targetRow;
+        let cur_row_raw_mat_usage = getIncomesUsageObj(target_row, this.props.rawMatUsage.slice());
+        this.removeIncomesRowExpenses(this.props.targetRow, cur_row_raw_mat_usage).then(
+            body => {
+                console.log(body);
+                //Добавляем новые расходы на сырьё
+                return fetch('/src/php/add_raw_mat_usage.php', {
+                    body: fetch_body,
+                    method: 'POST',
+                });
+            }
+        ).then(
             response => {
                 if(response.status === 520) {
                     alert('Ошибка при подключении к базе данных');
@@ -1580,22 +1594,31 @@ class TableArea extends React.Component {
             }
         ).then(
             body => {
+                //console.log(body);
                 //обновляем raw_mat_usage
                 return this.props.updateRawMatUsageFromDb('/src/php/get_raw_mat_usage.php',
                     this.props.userKey);
             }
         ).then(
+            // Теперь перераспределяем расходы всех типов на использованное сырьё
             all_raw_mat_usage => {
-                //обновляем локально строки Доходов и строки Журнала
-                const incomes_rows_upd = this.updateIncomesRowsLocally(this.props.incomesRows, this.props.journalRows,
-                    all_raw_mat_usage.raw_mat_usage);
-                let copy = {};
-                Object.assign(copy, this.props.journalRows);
-                const journal_rows_upd = this.updateJournalRowsLocally(copy,
-                    all_raw_mat_usage.raw_mat_usage_for_journal);
-                this.props.loadDataBaseJournal(journal_rows_upd);
-                this.props.loadDataBaseIncomes(incomes_rows_upd);
+                raw_mat_usage = all_raw_mat_usage.raw_mat_usage;
+                raw_mat_usage_for_journal = all_raw_mat_usage.raw_mat_usage_for_journal;
+                let tr = this.props.targetRow;
                 this.handleIncomesNewRawMatModalHide(this.props.toggleNewRawMatModal);
+                //return new Promise(resolve => resolve());
+                return this.resetIncomesRowExpenses(tr, raw_mat_usage);
+            }
+        ).then(
+            body => {
+                //обновляем строки Журнала
+                return this.props.updateJournalRowsFromDb(SERVER_ROOT + GET_JOURNAL_ROWS_PATH, this.props.userKey,
+                    raw_mat_usage_for_journal, this.props.rawMatData);
+            }
+        ).then(
+            journal_rows_upd => {
+                return this.props.updateIncomesRowsFromDb(SERVER_ROOT + GET_INCOMES_ROWS_PATH, this.props.userKey,
+                    raw_mat_usage, this.props.rawMatData, journal_rows_upd);
             }
         );
     }
@@ -1650,57 +1673,6 @@ class TableArea extends React.Component {
         }
 
         return new_journal_rows;
-    }
-
-    isExpensesAddExpensePopoverValid(is_expense_name_valid) {
-        return is_expense_name_valid;
-    }
-
-    handleExpensesAddExpenseSubmit(selected_color, expense_name) {
-        let fetch_body = new FormData();
-        fetch_body.append('exp-color', this.props.basicColors[selected_color]);
-        fetch_body.append('key', this.props.userKey);
-        fetch_body.append('exp-name', expense_name);
-
-        fetch('/src/php/add_expense_type.php', {
-            body: fetch_body,
-            method: 'POST',
-        }).then(
-            response => {
-                if(response.status === 520) {
-                    alert('Ошибка при подключении к базе данных');
-                    return;
-                }
-                if(response.status === 500) {
-                    alert('Ошибка при отправке запроса mysql');
-                    return;
-                }
-                if(response.status !== 200) {
-                    alert('Неизвестная ошибка при отправке запроса');
-                    return;
-                }
-
-                return response.text();
-            },
-            error => {
-                alert('Неизвестная ошибка при отправке запроса');
-                console.log('Fetch error: ', error);
-            }
-        ).then(
-            body => {
-                //Обновляем информацию о расходах
-                this.props.updateExpensesDataFromDb('/src/php/get_expenses_data.php', this.props.userKey);
-            }
-        );
-    }
-
-    handleExpensesAddEntryBtnClick(toggleModal) {
-        toggleModal(true);
-    }
-
-    clearExpensesAddExpPopover() {
-        this.props.setExpenseName('');
-        this.props.setExpenseNameValid(false);
     }
 
     isExpensesNewEntryFormValid(isRowsChecked, expense_id, new_exp_name_valid, new_exp_color_valid, exp_sum_valid) {
@@ -1762,48 +1734,67 @@ class TableArea extends React.Component {
         add_new_exp_type_promise.then(
             body => {
                 expense_id = new_exp_type ? +body : expense_id;
-
-
-                /*let fetch_body = new FormData();
-                let raw_mat_usage_obj = {};
-                fetch_body.append('expenses', JSON.stringify(added_expenses));
-                fetch_body.append('key', user_key);
-                fetch_body.append('row-id', row_id);
-
-                //Педерадём соответсвующуу инфу об использовании сырья
-                const raw_mat_usage = this.props.rawMatUsage.slice();
-                raw_mat_usage.forEach((incomes_obj) => {
-                    if(+incomes_obj.incomes_id === +row_id) {
-                        raw_mat_usage_obj = incomes_obj;
-                    }
+                let cur_incomes_row_expenses_promise = new Promise((resolve, reject) => {
+                    resolve();
                 });
-                fetch_body.append('raw-mat-usage-obj', JSON.stringify(raw_mat_usage_obj));
+                let checked_incomes_amount_total = 0;
 
-                fetch('/src/php/add_incomes_expenses.php', {
-                    body: fetch_body,
-                    method: 'POST',
-                }).then(
-                    response => {
-                        if(response.status === 520) {
-                            alert('Ошибка при подключении к базе данных');
-                            return;
-                        }
-                        if(response.status === 500) {
-                            alert('Ошибка при отправке запроса');
-                            return;
-                        }
-                        if(response.status !== 200) {
-                            alert('Неизвестная ошибка при отправке запроса');
-                            return;
-                        }
+                //Считаем общий вес продукции в отмеченных рядах
+                checked_rows.forEach((incomes_row_id) => {
+                    checked_incomes_amount_total += +this.props.incomesRows[incomes_row_id].amount;
+                });
 
-                        return response.text();
-                    },
-                    error => {
-                        alert('Неизвестная ошибка при отправке запроса');
-                        console.log('Fetch error: ', error);
-                    }
-                )*/
+                //Для каждой отмеченной строки распределяем расходы (посылаем запрос)
+                checked_rows.forEach((incomes_row_id) => {
+                    cur_incomes_row_expenses_promise.then(server_text => {
+                        let added_expenses = {};
+                        const incomes_row_amount = +this.props.incomesRows[incomes_row_id].amount;
+                        added_expenses[expense_id] = +this.props.expenseSum / checked_incomes_amount_total * incomes_row_amount;
+
+                        let fetch_body = new FormData();
+                        let raw_mat_usage_obj = {};
+                        fetch_body.append('expenses', JSON.stringify(added_expenses));
+                        fetch_body.append('key', this.props.userKey);
+                        fetch_body.append('row-id', incomes_row_id);
+
+                        //Передаём соответствующую инфу об использовании сырья
+                        const raw_mat_usage = this.props.rawMatUsage.slice();
+                        raw_mat_usage.forEach((incomes_obj) => {
+                            if (+incomes_obj.incomes_id === +incomes_row_id) {
+                                raw_mat_usage_obj = incomes_obj;
+                            }
+                        });
+                        fetch_body.append('raw-mat-usage-obj', JSON.stringify(raw_mat_usage_obj));
+
+                        cur_incomes_row_expenses_promise = fetch('/src/php/add_incomes_expenses.php', {
+                            body: fetch_body,
+                            method: 'POST',
+                        }).then(
+                            response => {
+                                if (response.status === 520) {
+                                    alert('Ошибка при подключении к базе данных');
+                                    return;
+                                }
+                                if (response.status === 500) {
+                                    alert('Ошибка при отправке запроса');
+                                    return;
+                                }
+                                if (response.status !== 200) {
+                                    alert('Неизвестная ошибка при отправке запроса');
+                                    return;
+                                }
+
+                                return response.text();
+                            },
+                            error => {
+                                alert('Неизвестная ошибка при отправке запроса');
+                                console.log('Fetch error: ', error);
+                            }
+                        );
+                    })
+                });
+
+                console.log('Wow that happened rather fast');
             }
         );
     }

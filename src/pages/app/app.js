@@ -181,6 +181,9 @@ class App extends React.Component {
 
                 rows_data[id].expenses.forEach((expense, i) => {
                     expense.amount = +expense.amount;  //преобразуем в число (из бд приходит строка)
+                    if(+expense.amount.toFixed(3) === 0) {
+                        expense.amount = 0;
+                    }
                     cur_expenses_total += expense.amount;
                 });
 
@@ -265,6 +268,9 @@ class App extends React.Component {
                 if(rows_data[id].expenses) {
                     rows_data[id].expenses.forEach((expense, i) => {
                         expense.amount = +expense.amount;
+                        if(+expense.amount.toFixed(3) === 0) {
+                            expense.amount = 0;
+                        }
                     });
                 }
 

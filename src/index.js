@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
 import store from './store/store'
 import {getCookieValue} from "./common";
+import 'babel-polyfill';
 
 import App from './pages/app/app'
 import {AUTH_W as Auth} from "./pages/auth/auth";
