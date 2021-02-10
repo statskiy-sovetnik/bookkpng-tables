@@ -135,6 +135,7 @@ import expensesNewEntrySetExpenseSumValid from "./actionCreators/expenses/expens
 import expensesNewEntrySetExpenseSum from "./actionCreators/expenses/expensesNewEntrySetExpenseSum";
 import expensesNewEntrySetExpenseDate from "./actionCreators/expenses/expensesNewEntrySetExpenseDate";
 import expensesLoadRows from "./actionCreators/expenses/expensesLoadRows";
+import expensesLoadUsage from "./actionCreators/expenses/expensesLoadUsage";
 
 export default function mapDispatchToProps(component) {
     switch (component) {
@@ -150,6 +151,7 @@ export default function mapDispatchToProps(component) {
                     loadRawMatUsageForJournal: (raw_mat_arr) => dispatch(loadRawMatUsageForJournal(raw_mat_arr)),
                     loadRawMatData: (raw_mat) => dispatch(loadRawMatData(raw_mat)),
                     loadExpensesRows: (rows) => dispatch(expensesLoadRows(rows)),
+                    loadExpensesUsage: (usage) => dispatch(expensesLoadUsage(usage)),
                 }
             }
 

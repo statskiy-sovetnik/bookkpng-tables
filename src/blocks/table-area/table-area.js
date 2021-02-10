@@ -1829,6 +1829,9 @@ class TableArea extends React.Component {
         //Обновляем Расходы
         await this.props.updateExpensesRowsFromDb(this.props.userKey, exp_data_upd);
 
+        //Обновляем данные об испоьзовании расходов
+        await this.props.updateExpensesUsageFromDb(this.props.userKey);
+
         //Обновляем Журнал
         const journal_rows_upd = await this.props.updateJournalRowsFromDb(SERVER_ROOT + GET_JOURNAL_ROWS_PATH,
             this.props.userKey, this.props.rawMatUsageForJournal, this.props.rawMatData);
@@ -1838,7 +1841,55 @@ class TableArea extends React.Component {
             this.props.userKey, this.props.rawMatUsage, this.props.rawMatData, journal_rows_upd);
     }
 
+    async substractIncomesUsageExpenses(exp_row_id, expense_id, expenses_usage, raw_mat_usage) {
+        const row_expenses_usage_arr = (expenses_usage[exp_row_id] || []).slice();
+
+        //Для каждой строки Доходов, которая использует эти расходы, мы посылаем запрос
+        for(let i in row_expenses_usage_arr) {
+            let added_expenses = {};
+            let usage_obj = row_expenses_usage_arr[i];
+
+            let cur_incomes_row_id = usage_obj.incomes_id;
+            let raw_mat_usage_obj = getIncomesUsageObj(cur_incomes_row_id, raw_mat_usage);
+            let fetch_body = new FormData();
+            added_expenses[expense_id] = -usage_obj.sum;
+
+            fetch_body.append('expenses', JSON.stringify(added_expenses));
+            fetch_body.append('key', this.props.userKey);
+            fetch_body.append('row-id', cur_incomes_row_id);
+            fetch_body.append('raw-mat-usage-obj', JSON.stringify(raw_mat_usage_obj));
+
+            await fetch(SERVER_ROOT + ADD_INCOMES_EXPENSES_PATH, {
+                body: fetch_body,
+                method: 'POST',
+            }).then(
+                response => {
+                    if (response.status === 520) {
+                        alert('Ошибка при подключении к базе данных');
+                        return;
+                    }
+                    if (response.status === 500) {
+                        alert('Ошибка при отправке запроса');
+                        return;
+                    }
+                    if (response.status !== 200) {
+                        alert('Неизвестная ошибка при отправке запроса');
+                        return;
+                    }
+
+                    return response.text();
+                },
+                error => {
+                    alert('Неизвестная ошибка при отправке запроса');
+                    console.log('Fetch error: ', error);
+                }
+            );
+        }
+
+    }
+
     async removeExpensesRow(row_id) {
+        let expense_id = this.props.expensesRows[row_id].expense_id;
         let fetch_body = new FormData();
         fetch_body.append('key', this.props.userKey);
         fetch_body.append('row_id', row_id);
@@ -1868,10 +1919,23 @@ class TableArea extends React.Component {
                 console.log('Fetch error: ', error);
             }
         );
-        console.log(txt);
+        //console.log(txt);
 
         //Обновляем таблицу с расходами
         await this.props.updateExpensesRowsFromDb(this.props.userKey, this.props.expensesData);
+
+        await this.substractIncomesUsageExpenses(row_id, expense_id, this.props.expensesUsage, this.props.rawMatUsage);
+
+        //Обновляем данные об испоьзовании расходов
+        await this.props.updateExpensesUsageFromDb(this.props.userKey);
+
+        //Обновляем строки Журнала
+        const journal_rows_upd = await this.props.updateJournalRowsFromDb(SERVER_ROOT + GET_JOURNAL_ROWS_PATH,
+            this.props.userKey, this.props.rawMatUsageForJournal, this.props.rawMatData);
+
+        //Обновляем строки Доходов
+        const incomes_rows_upd = await this.props.updateIncomesRowsFromDb(SERVER_ROOT + GET_INCOMES_ROWS_PATH,
+            this.props.userKey, this.props.rawMatUsage, this.props.rawMatData, journal_rows_upd);
     }
 
     render() {

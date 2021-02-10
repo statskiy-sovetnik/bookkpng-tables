@@ -9,7 +9,7 @@ import {JOURNAL_AREA_W as JournalArea,
         INCOMES_AREA_W as IncomesArea,
         EXPENSES_AREA_W as ExpensesArea,
 } from '../../blocks/table-area/table-area'
-import {GET_EXPENSES_ROWS_PATH, getCookieValue, isEmptyObj, SERVER_ROOT} from "../../common";
+import {GET_EXPENSES_ROWS_PATH, GET_EXPENSES_USAGE_PATH, getCookieValue, isEmptyObj, SERVER_ROOT} from "../../common";
 
 /*___ Libs _________________*/
 import parse from 'date-fns/parse';
@@ -68,6 +68,10 @@ class App extends React.Component {
             }
         ).then(
             expenses_rows => {
+                return this.updateExpensesUsageFromDb(user_key);
+            }
+        ).then(
+            expenses_usage => {
 
             }
         );
@@ -516,11 +520,44 @@ class App extends React.Component {
                 upd_exp_rows[row_id].sum = +upd_exp_rows[row_id].sum;
                 upd_exp_rows[row_id].color = expense_color;
                 upd_exp_rows[row_id].name = expense_name;
-                delete upd_exp_rows[row_id].expense_id;
+                //delete upd_exp_rows[row_id].expense_id;
             }
 
             return upd_exp_rows;
         }
+    }
+
+    updateExpensesUsageFromDb(user_key) {
+        let fetchBody = new FormData();
+        fetchBody.append('key', user_key);
+
+        return fetch(SERVER_ROOT + GET_EXPENSES_USAGE_PATH, {
+            method: 'POST',
+            body: fetchBody,
+        }).then(
+            response => {
+                if(response.status === 520) {
+                    alert('Ошибка при подключении к серверу');
+                    return;
+                }
+                if(response.status !== 200) {
+                    alert('Неизвестная серверная ошибка');
+                    console.log('not 200 response status in upd expenses rows');
+                    return;
+                }
+
+                return response.json();
+            },
+            error => {
+                console.log('Fetch error: ', error);
+                alert('Неизвестная ошибка при обработке запроса');
+            }
+        ).then(
+            usage => {
+                this.props.loadExpensesUsage(usage);
+                return usage;
+            }
+        );
     }
 
     render() {
@@ -548,6 +585,7 @@ class App extends React.Component {
                     updateJournalRowsFromDb = {this.updateJournalRowsFromDb.bind(this)}
                     updateIncomesRowsFromDb = {this.updateIncomesRowsFromDb.bind(this)}
                     updateExpensesRowsFromDb = {this.updateExpensesRowsFromDb.bind(this)}
+                    updateExpensesUsageFromDb = {this.updateExpensesUsageFromDb.bind(this)}
                     data={'expenses'}
                 />
             </div>

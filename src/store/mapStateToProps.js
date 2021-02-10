@@ -349,6 +349,7 @@ export default function mapStateToProps(component) {
                     journalRows: state.journal.rows,
                     incomesRows: state.incomes.rows,
                     expensesRows: state.expenses.rows,
+                    expensesUsage: state.expenses.usage,
                     expensesData: state.expenses_data,
                     rawMatUsageForJournal: state.raw_mat_usage_for_journal,
                     rawMatUsage: state.raw_mat_usage,

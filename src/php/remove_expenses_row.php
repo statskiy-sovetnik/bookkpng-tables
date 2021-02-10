@@ -18,11 +18,11 @@ catch (PDOException $ex) {
     die();
 }
 
-//Удаляем ряд и таблицу с использованием расходов
+
+//Удаляем ряд и таблицу с использованием расходов;
 try {
     $removeExpRow = "DELETE FROM expenses WHERE id='$rowId'";
     $keyConn->exec($removeExpRow);
-    echo $keyConn->errorInfo()[2];
 
     $removeUsageTable = "DROP TABLE expenses_usage_$rowId";
     $keyConn->exec($removeUsageTable);

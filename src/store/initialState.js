@@ -301,6 +301,13 @@ const initialState = {
             expenseNameValid: false,
         },
         rows: {},
+        usage: {
+            /* 0: [{
+                    incomes_id: 16,
+                    sum: 3500.50,
+                  }]
+            * */
+        },
         tableWidth: 800,
         //control section
         entriesPack: ENTRIES_PACK,

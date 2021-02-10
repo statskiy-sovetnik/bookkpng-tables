@@ -833,6 +833,14 @@ export default function reducer(state, action) {
                     rows: action.value,
                 }
             }
+        case actionTypes.EXPENSES_LOAD_USAGE:
+            return {
+                ...state,
+                expenses: {
+                    ...state.expenses,
+                    usage: action.value,
+                }
+            }
         case actionTypes.EXPENSES_SET_SELECTED_COLOR:
             return {
                 ...state,

@@ -123,6 +123,7 @@ export default {
     EXPENSES_SET_EXPENSE_NAME: 'expensesSetExpenseName',
     EXPENSES_SET_EXPENSE_NAME_VALID: 'expensesSetExpenseNameValid',
     EXPENSES_LOAD_ROWS: 'expensesLoadRows',
+    EXPENSES_LOAD_USAGE: 'expensesLoadUsage',
     //control section
     EXPENSES_SET_SORT_NAME: 'expensesSetSortName',
     EXPENSES_SET_SORT_DIR: 'expensesSetSortFromLeast',
