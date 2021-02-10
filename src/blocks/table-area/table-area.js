@@ -53,7 +53,7 @@ import {
     isExpenseNameValid,
     isFloat,
     isGoodsNameValid,
-    isProviderNameValid, REMOVE_INCOMES_ROW_EXPENSES_PATH, SERVER_ROOT,
+    isProviderNameValid, REMOVE_EXPENSES_ROW_PATH, REMOVE_INCOMES_ROW_EXPENSES_PATH, SERVER_ROOT,
     setValidation
 } from "../../common";
 import Dropdown from "react-bootstrap/Dropdown";
@@ -602,7 +602,7 @@ class TableArea extends React.Component {
                                         onClick={event => {
                                             event.preventDefault();
                                             event.currentTarget.setAttribute('disabled', true);
-                                            this.removeExpensesRow(row_id);
+                                            this.removeExpensesRow(row_id).then(response => {});
                                         }}
                                 >
                                     <BtstrapIcon
@@ -1646,12 +1646,30 @@ class TableArea extends React.Component {
         return isRowsChecked && new_exp_data_valid && exp_sum_valid;
     }
 
-    addExpensesRow(exp_id, exp_date, exp_sum, user_key) {
+    addExpensesRow(exp_id, exp_date, exp_sum, user_key, checked_rows) {
         let fetch_body = new FormData();
         fetch_body.append('sum', exp_sum);
         fetch_body.append('key', user_key);
         fetch_body.append('expense_id', exp_id);
         fetch_body.append('date', convertDateToMysqlDate(exp_date));
+
+        //Считаем общий вес продукции в отмеченных рядах
+        let checked_incomes_amount_total = 0;
+        checked_rows.forEach((incomes_row_id) => {
+            checked_incomes_amount_total += +this.props.incomesRows[incomes_row_id].amount;
+        });
+
+        //Использование расходов
+        let expenses_row_exp_usage = [];
+        checked_rows.forEach((incomes_row_id) => {
+            let cur_row_amount = this.props.incomesRows[incomes_row_id].amount;
+
+            expenses_row_exp_usage.push({
+                incomes_id: incomes_row_id,
+                sum: exp_sum / checked_incomes_amount_total * cur_row_amount,
+            });
+        });
+        fetch_body.append('expenses-usage', JSON.stringify(expenses_row_exp_usage));
 
         return fetch(SERVER_ROOT + ADD_EXPENSES_ROW_PATH, {
             method: 'POST',
@@ -1670,7 +1688,6 @@ class TableArea extends React.Component {
                     alert('Неизвестная серверная ошибка');
                     return;
                 }
-
                 return response.text();
             },
             error => {
@@ -1694,7 +1711,7 @@ class TableArea extends React.Component {
         if(expense_id !== null) { //если уже имеющийся тип расходов
             new_exp_type = false;
             add_new_exp_type_promise = new Promise((resolve, reject) => {
-                resolve();
+                resolve(expense_id);
             }) ;
         }
         else { //создаём новый
@@ -1806,8 +1823,8 @@ class TableArea extends React.Component {
         );
 
         //Добавляем строку в Расходы
-        await this.addExpensesRow(expense_id, this.props.expenseDate, this.props.expenseSum,
-            this.props.userKey);
+        const txt = await this.addExpensesRow(expense_id, this.props.expenseDate, this.props.expenseSum,
+            this.props.userKey, checked_rows);
 
         //Обновляем Расходы
         await this.props.updateExpensesRowsFromDb(this.props.userKey, exp_data_upd);
@@ -1822,7 +1839,39 @@ class TableArea extends React.Component {
     }
 
     async removeExpensesRow(row_id) {
+        let fetch_body = new FormData();
+        fetch_body.append('key', this.props.userKey);
+        fetch_body.append('row_id', row_id);
 
+        let txt = await fetch(SERVER_ROOT + REMOVE_EXPENSES_ROW_PATH, {
+            body: fetch_body,
+            method: 'POST',
+        }).then(
+            response => {
+                if(response.status === 520) {
+                    alert('Ошибка при подключении к базе данных');
+                    return;
+                }
+                if(response.status === 500) {
+                    alert('Ошибка при отправке запроса mysql');
+                    return;
+                }
+                if(response.status !== 200) {
+                    alert('Неизвестная ошибка при отправке запроса');
+                    return;
+                }
+
+                return response.text();
+            },
+            error => {
+                alert('Неизвестная ошибка при отправке запроса');
+                console.log('Fetch error: ', error);
+            }
+        );
+        console.log(txt);
+
+        //Обновляем таблицу с расходами
+        await this.props.updateExpensesRowsFromDb(this.props.userKey, this.props.expensesData);
     }
 
     render() {
