@@ -32,6 +32,9 @@ html, body {
 .text_color-dark-green {
   color: #17451a; }
 
+.text_color-white {
+  color: #efefef; }
+
 .text_size-11 {
   font-size: 11px; }
 
@@ -409,6 +412,9 @@ ul.popover__added-expenses-list {
 
 .text_color-dark-green {
   color: #17451a; }
+
+.text_color-white {
+  color: #efefef; }
 
 .text_size-11 {
   font-size: 11px; }

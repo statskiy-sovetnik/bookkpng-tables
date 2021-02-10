@@ -941,6 +941,18 @@ export default function reducer(state, action) {
                     newEntryModalIsOpen: action.value,
                 }
             }
+        case actionTypes.EXPENSES_NEW_ENTRY_MODAL_CLEAR_FORM:
+            const exp_new_entry_modal_validation = {};
+            const exp_new_entry_modal_form_state = {};
+            return {
+                ...state,
+                expenses: {
+                    ...state.expenses,
+                    modalFormState: Object.assign(exp_new_entry_modal_form_state, initialState.expenses.modalFormState),
+                    modalValidation: Object.assign(exp_new_entry_modal_validation, initialState.expenses.modalValidation),
+                }
+            }
+
         //control section
         case actionTypes.EXPENSES_NEW_ENTRY_SET_SORT_NAME:
             return {

@@ -48,7 +48,7 @@ import {
     ADD_EXPENSES_ROW_PATH,
     ADD_INCOMES_EXPENSES_PATH, convertDateToMysqlDate, GET_EXPENSES_DATA_PATH,
     GET_INCOMES_ROWS_PATH,
-    GET_JOURNAL_ROWS_PATH, getIncomesUsageObj,
+    GET_JOURNAL_ROWS_PATH, getExpensesUsageObj, getIncomesUsageObj,
     isEmptyObj,
     isExpenseNameValid,
     isFloat,
@@ -386,7 +386,7 @@ class TableArea extends React.Component {
 
     renderTableBody(data, rows, cols_order, expenses_data, body_classnames, show_how_many,
                     fromDate, toDate, sort_type, sort_from_least, another_table_rows, raw_mat_usage_for_journal, raw_mat_usage,
-                    incomes_head_cols, journal_head_cols) {
+                    incomes_head_cols, journal_head_cols, expenses_usage) {
         if(Object.keys(rows).length === 0) {return}
 
         let table_rows = [];
@@ -915,11 +915,27 @@ class TableArea extends React.Component {
                 }
                 else if(col_name === 'sum') {
                     let cur_value = (+row_data[col_name]).toFixed(3);
+                    //Добавляем поповер просмотра используемых расходов
+                    let incomes_cut_cols_order = ['total', 'date', 'name', 'customer_name', 'sum', 'amount'];
+                    const exp_usage_popover = this.renderExpensesUsagePopover(row_id, incomes_cut_cols_order,
+                        incomes_head_cols, expenses_usage, another_table_rows);
+
                     cur_row.push(
                         <td className={cell_class}
                             key={data + '-' + row_id + '-' + col_name}
                         >
                             {cur_value}
+                            <OverlayTrigger overlay={exp_usage_popover} placement={'bottom'} trigger={'focus'}>
+                                <a href={'#'}
+                                   onClick={event => event.preventDefault()}
+                                   className={'text body-cell__icon-wrapper_sum-of-raw'}
+                                >
+                                    <BtstrapIcon
+                                        data={'bi-eye-fill'}
+                                        className={'bi-eye-fill btstrap-icon_size-13 btstrap-icon_color-white'}
+                                    />
+                                </a>
+                            </OverlayTrigger>
                         </td>
                     )
                 }
@@ -1423,7 +1439,7 @@ class TableArea extends React.Component {
 
     handleExpensesNewEntryModalHide(toggleModal) {
         toggleModal(false);
-        //this.clearNewRawMatModal();
+        this.props.clearNewEntryModalForm();
     }
 
     clearNewRawMatModal() {
@@ -1697,6 +1713,93 @@ class TableArea extends React.Component {
         );
     }
 
+    renderExpensesUsagePopover(expenses_row_id, incomes_cut_cols_order, incomes_head_cols, expenses_usage,
+                               incomes_rows) {
+        let cur_raw_mat_data = {};
+        let inc_table_head_cells = [];
+        let inc_table_rows = [];
+        let cut_cols_counter = 0;
+
+        //Заполняем head таблицы
+        incomes_cut_cols_order.forEach((col_name, i) => {
+            let head_cell_text = incomes_head_cols[col_name];
+            if(col_name === 'total') {
+                head_cell_text = 'Затраты';
+            }
+
+            inc_table_head_cells.push(
+                <th key={'_head-cell-' + i}>
+                    {head_cell_text}
+                </th>
+            );
+
+            cut_cols_counter++;
+        });
+
+        //Находим нужный объект с данными об использовании
+        let cur_row_exp_usage = getExpensesUsageObj(expenses_row_id, expenses_usage);
+
+        //Заполняем body таблицы
+        cur_row_exp_usage.forEach((inc_usage_obj, i) => {
+            const cur_incomes_row = incomes_rows[inc_usage_obj.incomes_id];
+            const this_expenses_sum = +inc_usage_obj.sum;
+            if(!cur_incomes_row) {
+                return;
+            }
+            let cur_table_row = [];
+
+            incomes_cut_cols_order.forEach((col_name, j) => {
+                let cell_data = cur_incomes_row[col_name];
+                if(typeof cell_data === 'number') {
+                    cell_data = +cell_data.toFixed(3);
+                }
+                if(col_name === 'total') {
+                    cell_data = this_expenses_sum.toFixed(3);
+                }
+
+                cur_table_row.push(
+                    <td  key={'r-' + i + '_cell-' + j}>
+                        {cell_data}
+                    </td>
+                );
+            });
+
+            inc_table_rows.push(
+                <tr key={'_roww-' + i}>
+                    {cur_table_row}
+                </tr>
+            );
+        });
+
+        return (
+            <Popover id={'expenses-usage-popover_row-' + expenses_row_id}>
+                <Popover.Title as="h5">
+                    Распределённые расходы
+                </Popover.Title>
+                <Popover.Content>
+                    <Table
+                        size={'sm'}
+                        bordered
+                        striped
+                        variant={'dark'}
+                        className={'text text_size-13'}
+                        responsive
+                        style={{'width': '750px'}}
+                    >
+                        <thead>
+                        <tr>
+                            {inc_table_head_cells}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {inc_table_rows}
+                        </tbody>
+                    </Table>
+                </Popover.Content>
+            </Popover>
+        );
+    }
+
     async handleNewExpenseEntryModalSubmit() {
         let expense_id = this.props.selectedExpenseId;
         const selected_color = this.props.newExpColor;
@@ -1704,8 +1807,6 @@ class TableArea extends React.Component {
         const checked_rows = this.props.checkedRows;
         let new_exp_type;
         let add_new_exp_type_promise;
-
-        this.handleExpensesNewEntryModalHide(this.props.toggleNewEntryModal);
 
         //Создаём новый тип расходов, если требуется
         if(expense_id !== null) { //если уже имеющийся тип расходов
@@ -1831,6 +1932,8 @@ class TableArea extends React.Component {
 
         //Обновляем данные об испоьзовании расходов
         await this.props.updateExpensesUsageFromDb(this.props.userKey);
+
+        this.handleExpensesNewEntryModalHide(this.props.toggleNewEntryModal);
 
         //Обновляем Журнал
         const journal_rows_upd = await this.props.updateJournalRowsFromDb(SERVER_ROOT + GET_JOURNAL_ROWS_PATH,
@@ -2246,8 +2349,8 @@ class TableArea extends React.Component {
                                     this.renderTableBody('expenses', this.props.expensesRows, this.props.tableColsOrder,
                                         null, dark_tbody_classnames, this.props.entriesShouldBeShown,
                                         null, null, null, null,
-                                        null, null, null,
-                                        null, null),
+                                        this.props.incomesRows, null, null,
+                                        this.props.incomesHeadCols, null, this.props.expensesUsage),
                                 ]}
                             </ExpensesTable>
                             {

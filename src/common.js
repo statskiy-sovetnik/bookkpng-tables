@@ -33,6 +33,17 @@ function getIncomesUsageObj(incomes_id, raw_mat_usage) {
     return target_incomes_obj;
 }
 
+function getExpensesUsageObj(expenses_id, expenses_usage) {
+    let target_exp_arr = [];
+    expenses_usage = expenses_usage ? expenses_usage : {};
+    for(let exp_row_id in expenses_usage) {
+        if(+expenses_id === +exp_row_id) {
+            target_exp_arr = expenses_usage[exp_row_id].slice();
+        }
+    }
+    return target_exp_arr;
+}
+
 function isEmptyObj(obj) {
     return !obj || Object.keys(obj).length === 0;
 }
@@ -123,7 +134,7 @@ const REMOVE_EXPENSES_ROW_PATH = '/src/php/remove_expenses_row.php';
 const GET_EXPENSES_USAGE_PATH = '/src/php/get_expenses_usage.php';
 
 export {getCookieValue, removeCookie, isRawMatNameValid, isProviderNameValid, convertDateToMysqlDate, isEmptyObj, formatDay,
-        isFloat, setValidation, isGoodsNameValid, isExpenseNameValid, getIncomesUsageObj,
+        isFloat, setValidation, isGoodsNameValid, isExpenseNameValid, getIncomesUsageObj, getExpensesUsageObj,
     SERVER_ROOT, SIGN_IN_SCRIPT_PATH, SIGN_UP_SCRIPT_PATH,
     ADD_EXPENSE_TYPE_PATH, ADD_EXPENSES_DATA_PATH, ADD_INCOMES_ENTRY_PATH, ADD_INCOMES_EXPENSES_PATH, ADD_JOURNAL_ENTRY_PATH,
     ADD_JOURNAL_EXPENSES_PATH, ADD_RAW_MAT_USAGE_PATH, GET_INCOMES_ROWS_PATH, GET_JOURNAL_ROWS_PATH, GET_RAW_MAT_DATA_PATH,

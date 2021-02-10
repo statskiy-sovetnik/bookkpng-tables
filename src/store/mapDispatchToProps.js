@@ -136,6 +136,7 @@ import expensesNewEntrySetExpenseSum from "./actionCreators/expenses/expensesNew
 import expensesNewEntrySetExpenseDate from "./actionCreators/expenses/expensesNewEntrySetExpenseDate";
 import expensesLoadRows from "./actionCreators/expenses/expensesLoadRows";
 import expensesLoadUsage from "./actionCreators/expenses/expensesLoadUsage";
+import expensesNewEntryModalClearForm from "./actionCreators/expenses/expensesNewEntryModalClearForm";
 
 export default function mapDispatchToProps(component) {
     switch (component) {
@@ -412,7 +413,7 @@ export default function mapDispatchToProps(component) {
                     toggleNewEntryModal: bool => dispatch(expensesNewEntryModalToggleOpen(bool)),
                     changeEntriesPack: value => dispatch(expensesSetEntriesPack(value)),
                     changeEntriesShouldBeShown: value => dispatch(expensesSetEntriesShowNum(value)),
-
+                    clearNewEntryModalForm: () => dispatch(expensesNewEntryModalClearForm()),
                 }
             }
         case 'ExpensesButtonSection':

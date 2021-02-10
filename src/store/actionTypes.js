@@ -135,6 +135,7 @@ export default {
 
     //_________ EXPENSES NEW ENTRY MODAL ______________
     EXPENSES_NEW_ENTRY_MODAL_TOGGLE_OPEN: 'expensesNewEntryModalToggleOpen',
+    EXPENSES_NEW_ENTRY_MODAL_CLEAR_FORM: 'expensesNewEntryModalClearForm',
     //control section
     EXPENSES_NEW_ENTRY_SET_SORT_NAME: 'expensesNewEntrySetSortName',
     EXPENSES_NEW_ENTRY_SET_SORT_DIR: 'expensesNewEntrySetSortFromLeast',

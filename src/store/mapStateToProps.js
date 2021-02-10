@@ -348,6 +348,8 @@ export default function mapStateToProps(component) {
                     userKey: state.auth.userKey,
                     journalRows: state.journal.rows,
                     incomesRows: state.incomes.rows,
+                    //incomesColsOrder: state.incomes.columns_order,
+                    incomesHeadCols: state.incomes.head_col_names,
                     expensesRows: state.expenses.rows,
                     expensesUsage: state.expenses.usage,
                     expensesData: state.expenses_data,
