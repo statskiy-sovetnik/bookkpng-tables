@@ -218,7 +218,7 @@ class App extends React.Component {
                     provider_name: cur_row_raw_mat_data.provider_name,
                     price: raw_mat_price,
                     total: cur_sum + cur_expenses_total,
-                    cost_price: (cur_sum + cur_expenses_total) / rows_data[id].amount_data.amount_total,
+                    cost_price: Math.floor((cur_sum + cur_expenses_total) / rows_data[id].amount_data.amount_total),
                     amount_data: {
                         amount_total: rows_data[id].amount_data.amount_total,
                         amount_used_total: cur_raw_mat_used_total,
@@ -312,7 +312,7 @@ class App extends React.Component {
                     date: formated_date_str,
                     amount_of_raw: cur_amount_of_raw,
                     sum_of_raw: cur_sum_of_raw,
-                    cost_price: (cur_sum_of_raw) / cur_amount,
+                    cost_price: Math.round((cur_sum_of_raw) / cur_amount),
                     blockage_perc: blockage_perc,
                     //expenses_total: cur_sum_of_raw + cur_expenses_total,
                     revenue: cur_sum - cur_sum_of_raw,

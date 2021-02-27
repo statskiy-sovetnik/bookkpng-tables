@@ -305,7 +305,10 @@ class CustomModal extends React.Component {
 
         switch (this.props.data) {
             case 'incomes-new-raw-mat':
-                title = 'Добавить расходы на сырьё';
+                const tr_name = this.props.targetRowName || "";
+                const tr_date = this.props.targetRowDate || "";
+                title = 'Добавить расходы на сырьё для ' + tr_name + '(#{date})';
+                title = title.replace('#{date}', tr_date);
                 table_area = (
                     <IncomesNewRawMatArea
                         className={'modal__table-area'}

@@ -965,22 +965,35 @@ class TableArea extends React.Component {
                 </tr>
             );
         }
-        return (
-            <tbody key={data + '-tablebody'} className={body_classnames}>
+
+        let table_content = [];
+
+        //Добавляем строку с общими значениями
+        let table_total_row = "";
+        if(data === 'incomes') {
+            table_total_row = this.renderTableTotal(data, rows, rows_keys_sorted, this.props.incomesTotalColOrder,
+                this.props.avgValuesColsOrder, this.props.totalValuesColsOrder);
+        }
+
+        //Добавляем тело таблицы
+        table_content.push(
+            <tbody key={'-tablebody'} className={body_classnames}>
                 {table_rows}
             </tbody>
-        )
+        );
+        table_content.push(table_total_row);
+
+        return table_content;
     }
 
-    renderTableTotal(data, rows, cols_order, avg_values_names, total_values_names) {
+    renderTableTotal(data, rows, rows_keys_sorted, cols_order, avg_values_names, total_values_names) {
         let cols_values = new Array(cols_order.length).fill(0);
         rows = rows || {};
         let total_cells = [];
 
         //Проходим по строкам таблицы
-        const rows_ids = Object.keys(rows) || [];
-        const rows_num = rows_ids.length;
-        rows_ids.forEach((row_id, i) => {
+        const rows_num = rows_keys_sorted.length;
+        rows_keys_sorted.forEach((row_id, i) => {
             const cur_row = rows[row_id];
 
             //Добавляем величины к значениям
@@ -1011,6 +1024,7 @@ class TableArea extends React.Component {
 
         //Добавляем ячейки со средними значениями
         for(let i in cols_values) {
+
             total_cells.push(
                 <th
                     key={'total_cell_' + i}
@@ -1019,7 +1033,6 @@ class TableArea extends React.Component {
                 </th>
             )
         }
-
 
         return (
             <thead
@@ -2140,7 +2153,7 @@ class TableArea extends React.Component {
 
         switch(this.props.data) {
             case 'journal':
-                area_name = 'Журнал';
+                area_name = 'Журнал материалов и сырья';
                 table_area_content.push(
                     <Heading className={'text_color-dark'}>{area_name}</Heading>
                 );
@@ -2236,8 +2249,7 @@ class TableArea extends React.Component {
                                 this.props.rawMatUsageForJournal, this.props.rawMatUsage, this.props.incomesColNames,
                                 this.props.journalColNames
                             ),
-                            this.renderTableTotal('incomes', this.props.incomesRows, this.props.incomesTotalColOrder,
-                            this.props.avgValuesColsOrder, this.props.totalValuesColsOrder),
+
                         ]}
                     </TableIncomes>
                 );

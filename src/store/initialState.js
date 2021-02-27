@@ -22,8 +22,8 @@ const initialState = {
 
     journal: {
         newEntryModalIsOpen: false,
-        sortName: 'Наименованию',
-        sortFromLeast: true,
+        sortName: 'Дате',
+        sortFromLeast: false,
         localFromDate: '',
         localToDate: '',
         appliedFromDate: '',
@@ -69,8 +69,8 @@ const initialState = {
             price: 'Цена (руб)',
             sum: 'Сумма (руб)',
             expenses: 'Расходы (руб)',
-            total: 'Итого с учётом расходов (руб)',
-            cost_price: 'Себестоимость (руб)',
+            total: 'Итого (руб)',
+            cost_price: 'Себ-ть (руб)',
             control: 'Управление',
         },
         //table popover
@@ -78,7 +78,7 @@ const initialState = {
         popoverValidation: {
             isExpensesValid: false,
         },
-        table_width: 1600,
+        table_width: 1400,
     },
 
     journal_new_entry_modal: {
@@ -147,8 +147,8 @@ const initialState = {
     },
 
     incomes: {
-        sortName: 'Наименованию',
-        sortFromLeast: true,
+        sortName: 'Дате',
+        sortFromLeast: false,
         localFromDate: '',
         localToDate: '',
         appliedFromDate: '',
@@ -168,12 +168,12 @@ const initialState = {
             blockage_perc: 'Засор (%)',
             price: 'Цена продажи (руб)',
             sum: 'Сумма продажи (руб)',
-            cost_price: 'Себестоимость (руб)',
+            cost_price: 'Себ-ть (руб)',
             sum_of_raw: 'Расходы на сырьё (руб)',
             expenses: 'Прочие расходы (руб)',
             expenses_total: 'Расходов всего (руб)',
             revenue: 'Прибыль (руб)',
-            profitability: 'Рентабельность (%)',
+            profitability: 'Рентаб-ть (%)',
             control: 'Управление',
         },
         total_columns_order: ['amount', 'amount_of_raw', 'blockage_perc', 'price', 'sum', 'cost_price', 'sum_of_raw',
@@ -186,7 +186,7 @@ const initialState = {
         popoverValidation: {
             isExpensesValid: false,
         },
-        table_width: 2200,
+        table_width: 2050,
     },
 
     incomes_new_raw_mat_modal: {

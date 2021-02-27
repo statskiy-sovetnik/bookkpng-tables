@@ -148,8 +148,14 @@ export default function mapStateToProps(component) {
         //modal
         case 'IncomesNewRawMatModal':
             return function (state) {
+                const trow = state.incomes_new_raw_mat_modal.targetRow || 0;
+                const tr_itself = state.incomes.rows[state.incomes_new_raw_mat_modal.targetRow] || {};
+
                 return {
                     newRawMatSortNames: state.incomes_new_raw_mat_modal.sortNames,
+                    targetRow: trow,
+                    targetRowDate: tr_itself.date || 0,
+                    targetRowName: tr_itself.name || "",
                 }
             }
 
