@@ -972,6 +972,73 @@ class TableArea extends React.Component {
         )
     }
 
+    renderTableTotal(data, rows, cols_order, avg_values_names, total_values_names) {
+        let cols_values = new Array(cols_order.length).fill(0);
+        rows = rows || {};
+        let total_cells = [];
+
+        //Проходим по строкам таблицы
+        const rows_ids = Object.keys(rows) || [];
+        const rows_num = rows_ids.length;
+        rows_ids.forEach((row_id, i) => {
+            const cur_row = rows[row_id];
+
+            //Добавляем величины к значениям
+            cols_order.forEach((col_name, col_j) => {
+                let cur_value = 0;
+
+                if(col_name === 'expenses' && rows_num !== 0) {
+                    cur_row.expenses.forEach((exp_obj) => {
+                        cur_value += exp_obj.amount;
+                    });
+                    cols_values[col_j] += cur_value;
+                }
+                else if(avg_values_names.indexOf(col_name) !== -1  && rows_num !== 0) {
+                    cur_value = +cur_row[col_name];
+                    cols_values[col_j] += (cur_value / rows_num);
+                }
+                else if(total_values_names.indexOf(col_name) !== -1  && rows_num !== 0) {
+                    cur_value = +cur_row[col_name];
+                    cols_values[col_j] += cur_value;
+                }
+                else if(rows_num !== 0) {
+                    cur_value = +cur_row[col_name];
+                    cols_values[col_j] += (cur_value / rows_num);
+                }
+
+            });
+        });
+
+        //Добавляем ячейки со средними значениями
+        for(let i in cols_values) {
+            total_cells.push(
+                <th
+                    key={'total_cell_' + i}
+                >
+                    {cols_values[i].toFixed(3)}
+                </th>
+            )
+        }
+
+
+        return (
+            <thead
+                className={'thead-light text text_size-13 text_color-dark'}
+                key={'table-total-row'}
+            >
+                <tr>
+                    <th
+                        style={{'textAlign': 'right'}}
+                        colSpan={this.props.totalRowGap}
+                    >
+                        ИТОГО:
+                    </th>
+                    {total_cells}
+                </tr>
+            </thead>
+        )
+    }
+
     renderRawMatJournalRowPopover(journal_row_id, incomes_rows, incomes_cut_cols_order, incomes_head_cols,
                                   raw_mat_usage_for_journal, row_amount_of_raw) {
         let cur_raw_mat_data = {};
@@ -2107,7 +2174,8 @@ class TableArea extends React.Component {
                                 tbody_classnames, journal_entries_should_be_shown, journal_applied_from_date,
                                 journal_applied_to_date, journal_sort_name, journal_sort_from_least,
                                 this.props.incomesRows, this.props.rawMatUsageForJournal, this.props.rawMatUsage,
-                                this.props.incomesColNames, this.props.journalColNames),
+                                this.props.incomesColNames, this.props.journalColNames
+                            ),
                         ]}
                     </TableJournal>
                 );
@@ -2166,7 +2234,10 @@ class TableArea extends React.Component {
                                 this.props.incomesAppliedFromDate, this.props.incomesAppliedToDate,
                                 this.props.incomesSortType, this.props.incomesSortFromLeast, journal_rows_data,
                                 this.props.rawMatUsageForJournal, this.props.rawMatUsage, this.props.incomesColNames,
-                                this.props.journalColNames),
+                                this.props.journalColNames
+                            ),
+                            this.renderTableTotal('incomes', this.props.incomesRows, this.props.incomesTotalColOrder,
+                            this.props.avgValuesColsOrder, this.props.totalValuesColsOrder),
                         ]}
                     </TableIncomes>
                 );

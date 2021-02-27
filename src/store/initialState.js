@@ -176,6 +176,11 @@ const initialState = {
             profitability: 'Рентабельность (%)',
             control: 'Управление',
         },
+        total_columns_order: ['amount', 'amount_of_raw', 'blockage_perc', 'price', 'sum', 'cost_price', 'sum_of_raw',
+        'expenses', 'revenue', 'profitability'],
+        avg_values_cols_order: ['blockage_perc', 'price', 'cost_price', 'profitability'],
+        total_values_cols_order: ['amount', 'amount_of_raw', 'sum', 'sum_of_raw', 'expenses', 'revenue'],
+        total_row_gap: 4,
         //table popover
         popoverAddedExpenses: {},
         popoverValidation: {
