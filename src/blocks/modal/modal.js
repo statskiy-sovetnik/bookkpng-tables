@@ -302,11 +302,13 @@ class CustomModal extends React.Component {
         let modal_body;
         let title;
         let modal_footer;
+        let modal_extra_classes = "";
 
         switch (this.props.data) {
             case 'incomes-new-raw-mat':
                 const tr_name = this.props.targetRowName || "";
                 const tr_date = this.props.targetRowDate || "";
+                modal_extra_classes += " modal_size-very-wide";
                 title = 'Добавить расходы на сырьё для ' + tr_name + '(#{date})';
                 title = title.replace('#{date}', tr_date);
                 table_area = (
@@ -396,7 +398,9 @@ class CustomModal extends React.Component {
         return (
             <Modal show={this.props.show}
                    size={this.props.size}
-                   onHide={this.props.onHide}>
+                   onHide={this.props.onHide}
+                   className={modal_extra_classes}
+            >
                 <Modal.Header closeButton>
                     <Modal.Title>{title}</Modal.Title>
                 </Modal.Header>

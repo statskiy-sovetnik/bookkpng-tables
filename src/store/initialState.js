@@ -206,14 +206,14 @@ const initialState = {
         columns_order: [ 'select', 'usage', 'date', 'name', 'provider_name', 'amount_data', 'price'],
         head_col_names: {
             date: 'Дата',
-            usage: 'Использ-ть сырья (кг)',
+            usage: 'Исп-ть сырья (кг)',
             name: 'Наименование',
             provider_name: 'Поставщик',
             amount_data: 'Кол-во (кг)',
             price: 'Цена (руб)',
             select: 'Выбрать',
         },
-        tableWidth: 920,
+        tableWidth: 840,
         validation: {
             isRowsUsageValid: false,
             isRowChecked: false,

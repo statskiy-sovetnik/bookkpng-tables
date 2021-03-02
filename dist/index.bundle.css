@@ -225,6 +225,9 @@ tr.table__checked-row {
 .modal-content .modal__table-checkbox {
   margin: 0 auto; }
 
+.modal_size-very-wide .modal-lg {
+  max-width: 900px !important; }
+
 .popover__prompt-text {
   margin-bottom: 15px; }
 
