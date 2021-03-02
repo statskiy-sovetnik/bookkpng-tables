@@ -694,7 +694,7 @@ class TableArea extends React.Component {
                     let cur_amount_left_total = +cur_value - cur_amount_used_total;
                     amount_content.push(cur_value);
 
-                    //Добавляем использованный вес сырья
+                    //Добавляем оставшийся вес сырья
                     amount_content.push(
                         <span className={'text text_color-dark'} key={data + '-' + row_id + '_' + 'total_usde'}>
                            &nbsp; | &nbsp; {cur_amount_left_total}
@@ -704,8 +704,17 @@ class TableArea extends React.Component {
                     //Добавляем иконку глаза с поповером
 
                     const incomes_cut_col_order = ['date', 'name', 'customer_name'];
-                    const raw_mat_popover = this.renderRawMatJournalRowPopover(row_id, another_table_rows, incomes_cut_col_order,
-                        incomes_head_cols, raw_mat_usage_for_journal, cur_value);
+                    let raw_mat_popover;
+                    switch (data) {
+                        case 'journal':
+                            raw_mat_popover = this.renderRawMatJournalRowPopover(row_id, another_table_rows, incomes_cut_col_order,
+                                incomes_head_cols, raw_mat_usage_for_journal, cur_value);
+                            break;
+                        case 'incomes-new-raw-mat':
+                            raw_mat_popover = this.renderRawMatJournalRowPopover(row_id, another_table_rows,
+                                incomes_cut_col_order, incomes_head_cols, raw_mat_usage_for_journal, cur_value);
+                            break;
+                    }
 
                     amount_content.push(
                         <OverlayTrigger trigger={'focus'} overlay={raw_mat_popover} placement={'bottom'}>
@@ -1085,7 +1094,6 @@ class TableArea extends React.Component {
                         {incomes_head_cols[col_name]}
                     </th>
                 );
-
 
                 cut_cols_counter++;
             });
@@ -2327,8 +2335,10 @@ class TableArea extends React.Component {
                                 this.props.journalRows || {},
                                 this.props.colsOrder,
                                 [], tbody_classnames, this.props.entriesShouldBeShown, null,
-                                null, this.props.sortName, this.props.sortFromLeast, {},
-                                {}, {}, [], []
+                                null, this.props.sortName, this.props.sortFromLeast,
+                                this.props.incomesRows, this.props.rawMatUsageForJournal, {},
+                                this.props.incomesHeadCols,
+                                []
                             )
                         ]}
                     </TableIncomesNewRawMat>

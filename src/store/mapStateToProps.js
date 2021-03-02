@@ -171,7 +171,10 @@ export default function mapStateToProps(component) {
                     tableWidth: state.incomes_new_raw_mat_modal.tableWidth,
                     colsNames: state.incomes_new_raw_mat_modal.head_col_names,
                     colsOrder: state.incomes_new_raw_mat_modal.columns_order,
+                    incomesHeadCols: state.incomes.head_col_names,
                     journalRows: state.journal.rows,
+                    incomesRows: state.incomes.rows,
+                    rawMatUsageForJournal: state.raw_mat_usage_for_journal,
                     rowsChecked: state.incomes_new_raw_mat_modal.rowsChecked,
                     rowsUsageState: state.incomes_new_raw_mat_modal.rowsUsageState,
                 }
