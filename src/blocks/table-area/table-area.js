@@ -691,12 +691,13 @@ class TableArea extends React.Component {
                     let amount_content = [];
                     let cur_value = +row_data[col_name].amount_total.toFixed(3);
                     let cur_amount_used_total = +row_data[col_name].amount_used_total.toFixed(3);
+                    let cur_amount_left_total = +cur_value - cur_amount_used_total;
                     amount_content.push(cur_value);
 
                     //Добавляем использованный вес сырья
                     amount_content.push(
                         <span className={'text text_color-dark'} key={data + '-' + row_id + '_' + 'total_usde'}>
-                           &nbsp; | &nbsp; {cur_amount_used_total}
+                           &nbsp; | &nbsp; {cur_amount_left_total}
                         </span>
                     );
 
