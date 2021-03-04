@@ -584,6 +584,7 @@ class TableArea extends React.Component {
             let cell_class = 'table__body-cell';
             const row_place_id = rows_checked.indexOf(row_id);
             const cur_row_checked = !(row_place_id === -1);
+            let skip_row = false;
 
             if(data === 'incomes-new-entry' || data === 'incomes-new-raw-mat' || data === 'expenses-new-entry') {
                 trow_classnames += cur_row_checked ? ' table__checked-row' : '';
@@ -691,7 +692,12 @@ class TableArea extends React.Component {
                     let amount_content = [];
                     let cur_value = +row_data[col_name].amount_total.toFixed(3);
                     let cur_amount_used_total = +row_data[col_name].amount_used_total.toFixed(3);
-                    let cur_amount_left_total = +cur_value - cur_amount_used_total;
+                    let cur_amount_left_total = (+cur_value - cur_amount_used_total).toFixed(3);
+                    if(data === 'incomes-new-raw-mat' && cur_amount_left_total <= 0) {
+                        console.log('So anyway its set to true');
+                        skip_row = true;
+                    }
+
                     amount_content.push(cur_value);
 
                     //Добавляем оставшийся вес сырья
@@ -966,14 +972,16 @@ class TableArea extends React.Component {
                 }
             });
 
-            table_rows.push(
-                <tr
-                    className={trow_classnames}
-                    key={data + '-' + row_id + '-row'}
-                >
-                    {cur_row}
-                </tr>
-            );
+            if(!skip_row) {
+                table_rows.push(
+                    <tr
+                        className={trow_classnames}
+                        key={data + '-' + row_id + '-row'}
+                    >
+                        {cur_row}
+                    </tr>
+                );
+            }
         }
 
         let table_content = [];
