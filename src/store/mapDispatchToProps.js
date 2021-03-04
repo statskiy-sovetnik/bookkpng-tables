@@ -137,6 +137,8 @@ import expensesNewEntrySetExpenseDate from "./actionCreators/expenses/expensesNe
 import expensesLoadRows from "./actionCreators/expenses/expensesLoadRows";
 import expensesLoadUsage from "./actionCreators/expenses/expensesLoadUsage";
 import expensesNewEntryModalClearForm from "./actionCreators/expenses/expensesNewEntryModalClearForm";
+import journalSetSelectedRow from "./actionCreators/journalSetSelectedRow";
+import incomesSetSelectedRow from "./actionCreators/incomes/incomesSetSelectedRow";
 
 export default function mapDispatchToProps(component) {
     switch (component) {
@@ -180,6 +182,7 @@ export default function mapDispatchToProps(component) {
                     changeEntriesShouldBeShown: (value) => dispatch(entriesShouldBeShownChangeJournal(value)),
                     setPopoverAddedExpenses: (data) => dispatch(journalAddExpPopoverSetAddedExpenses(data)),
                     setPopoverExpensesValid: (bool) => dispatch(journalAddExpPopoverSetAddedExpensesValid(bool)),
+                    setSelectedRow: (value) => dispatch(journalSetSelectedRow(value)),
                 }
             }
 
@@ -281,6 +284,7 @@ export default function mapDispatchToProps(component) {
             return function (dispatch) {
                 return {
                     changeEntriesShouldBeShown: (value) => dispatch(entriesShouldBeShownChangeIncomes(value)),
+                    setSelectedRow: (value) => dispatch(incomesSetSelectedRow(value)),
 
                     //__________ INCOMES NEW RAW MAT MODAL ____________
                     toggleNewRawMatModal: bool => dispatch(incomesNewRawMatModalToggleOpen(bool)),

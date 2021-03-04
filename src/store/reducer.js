@@ -156,6 +156,14 @@ export default function reducer(state, action) {
                     rows: action.value,
                 }
             }
+        case actionTypes.JOURNAL_SET_SELECTED_ROW:
+            return {
+                ...state,
+                journal: {
+                    ...state.journal,
+                    selected_row: action.value,
+                }
+            }
 
         //_______ Journal Add Entry Modal
         case actionTypes.JOURNAL_TOGGLE_NEW_ENTRY_MODAL:
@@ -737,6 +745,14 @@ export default function reducer(state, action) {
                 incomes: {
                     ...state.incomes,
                     rows: action.value,
+                }
+            }
+        case actionTypes.INCOMES_SET_SELECTED_ROW:
+            return {
+                ...state,
+                incomes: {
+                    ...state.incomes,
+                    selected_row: action.value,
                 }
             }
 

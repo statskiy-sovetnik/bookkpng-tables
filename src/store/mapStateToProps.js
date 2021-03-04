@@ -28,6 +28,7 @@ export default function mapStateToProps(component) {
                 return {
                     userKey: state.auth.userKey,
                     journalRows: state.journal.rows,
+                    selectedRow: state.journal.selected_row,
                     incomesRows: state.incomes.rows,
                     incomesColNames: state.incomes.head_col_names,
                     rawMatUsageForJournal: state.raw_mat_usage_for_journal,
@@ -273,6 +274,7 @@ export default function mapStateToProps(component) {
                 return {
                     userKey: state.auth.userKey,
                     incomesRows: state.incomes.rows,
+                    selectedRow: state.incomes.selected_row,
                     incomesColOrder: state.incomes.columns_order,
                     incomesTotalColOrder: state.incomes.total_columns_order,
                     totalRowGap: state.incomes.total_row_gap,

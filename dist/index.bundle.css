@@ -119,6 +119,10 @@ tr.table__checked-row {
   background-color: #d7e1ec;
   border-left: 5px solid #99bbe4; }
 
+tr.table__main-row-selected {
+  background-color: #d7e1ec;
+  border-left: 5px solid #99bbe4; }
+
 .expenses-table__color-square {
   width: 9px;
   height: 9px;

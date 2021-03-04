@@ -79,6 +79,7 @@ export default {
     //Journal Table
     LOAD_DATA_BASE_JOURNAL: 'loadDataBaseJournal',
     ENTRIES_SHOWN_CHANGE_JOURNAL: 'entriesShouldBeShownChangeJournal',
+    JOURNAL_SET_SELECTED_ROW: 'journalSetSelectedRow',
     JOURNAL_ADD_EXP_POPOVER_SET_ADDED_EXPENSES: 'journalAddExpPopoverSetAddedExpenses',
     JOURNAL_ADD_EXP_POPOVER_SET_ADDED_EXPENSES_VALID: 'journalAddExpPopoverSetAddedExpensesValid',
 
@@ -115,6 +116,7 @@ export default {
 
     LOAD_DATA_BASE_INCOMES: 'loadDataBaseIncomes',
     ENTRIES_SHOWN_CHANGE_INCOMES: 'entriesShouldBeShownChangeIncomes',
+    INCOMES_SET_SELECTED_ROW: 'incomesSetSelectedRow',
     INCOMES_ADD_EXP_POPOVER_SET_ADDED_EXPENSES: 'incomesAddExpPopoverSetAddedExpenses',
     INCOMES_ADD_EXP_POPOVER_SET_ADDED_EXPENSES_VALID: 'incomesAddExpPopoverSetAddedExpensesValid',
 

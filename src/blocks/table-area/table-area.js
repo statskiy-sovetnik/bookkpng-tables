@@ -386,7 +386,7 @@ class TableArea extends React.Component {
 
     renderTableBody(data, rows, cols_order, expenses_data, body_classnames, show_how_many,
                     fromDate, toDate, sort_type, sort_from_least, another_table_rows, raw_mat_usage_for_journal, raw_mat_usage,
-                    incomes_head_cols, journal_head_cols, expenses_usage) {
+                    incomes_head_cols, journal_head_cols, expenses_usage, selected_row) {
         if(Object.keys(rows).length === 0) {return}
 
         let table_rows = [];
@@ -585,6 +585,8 @@ class TableArea extends React.Component {
             const row_place_id = rows_checked.indexOf(row_id);
             const cur_row_checked = !(row_place_id === -1);
             let skip_row = false;
+            const cur_row_selected = (+selected_row === +row_id);
+            trow_classnames += cur_row_selected ? ' table__main-row-selected' : '';
 
             if(data === 'incomes-new-entry' || data === 'incomes-new-raw-mat' || data === 'expenses-new-entry') {
                 trow_classnames += cur_row_checked ? ' table__checked-row' : '';
@@ -977,6 +979,11 @@ class TableArea extends React.Component {
                     <tr
                         className={trow_classnames}
                         key={data + '-' + row_id + '-row'}
+                        onClick={event => {
+                            event.preventDefault();
+                            console.log("suka: " + row_id);
+                            this.props.setSelectedRow(row_id);
+                        }}
                     >
                         {cur_row}
                     </tr>
@@ -2204,7 +2211,7 @@ class TableArea extends React.Component {
                                 tbody_classnames, journal_entries_should_be_shown, journal_applied_from_date,
                                 journal_applied_to_date, journal_sort_name, journal_sort_from_least,
                                 this.props.incomesRows, this.props.rawMatUsageForJournal, this.props.rawMatUsage,
-                                this.props.incomesColNames, this.props.journalColNames
+                                this.props.incomesColNames, this.props.journalColNames, null, this.props.selectedRow,
                             ),
                         ]}
                     </TableJournal>
@@ -2264,7 +2271,7 @@ class TableArea extends React.Component {
                                 this.props.incomesAppliedFromDate, this.props.incomesAppliedToDate,
                                 this.props.incomesSortType, this.props.incomesSortFromLeast, journal_rows_data,
                                 this.props.rawMatUsageForJournal, this.props.rawMatUsage, this.props.incomesColNames,
-                                this.props.journalColNames
+                                this.props.journalColNames, null, this.props.selectedRow,
                             ),
 
                         ]}

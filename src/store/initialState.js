@@ -59,6 +59,7 @@ const initialState = {
                 cost_price: 0,
             }*/
         },
+        selected_row: null,
         columns_order: [ 'control', 'date', 'name', 'provider_name', 'amount_data', 'price',
         'sum', 'expenses', 'total', 'cost_price'],
         head_col_names: {
@@ -157,6 +158,7 @@ const initialState = {
         entriesShouldBeShown: ENTRIES_PACK,
         rowsOpened: new Array(ENTRIES_PACK).fill(0),
         rows: {},
+        selected_row: null,
         columns_order: ['control', 'date', 'name', 'customer_name', 'amount', 'amount_of_raw', 'blockage_perc',
         'price', 'sum', 'cost_price', 'sum_of_raw', 'expenses', 'revenue', 'profitability'],
         head_col_names: {
